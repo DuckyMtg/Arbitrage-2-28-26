@@ -32,5 +32,5 @@ def compute_ev(req: EVRequest):
         report = model.run()
         return asdict(report)
 
-    data = ev_cache.get_or_compute_ev_report(code, _compute)
+    data = ev_cache.get_or_compute_ev_report(code, "box", _compute)
     return jsonable_encoder(data)

@@ -60,9 +60,14 @@ _PACK_ONLY_HINTS = (
     "6 pack",
     "pack lot",
     "packs lot",
-    "booster pack",
-    "play pack",
 )
+
+# Set boosters aren't returned when you call draft boosters and vice versa
+_CROSS_TYPE_REJECTS: dict[str, tuple[str, ...]] = {
+    "draft_box": ("set booster",),
+    "set_box":   ("draft booster",),
+    "play_box":  ("draft booster", "set booster"),
+}
 
 # "lot/bundle/bulk" tends to be non-box; we treat as a reject unless "box" intent is present
 _LOT_HINTS = ("lot", "bundle", "bulk")
@@ -80,28 +85,27 @@ def _has_any(t: str, phrases: tuple[str, ...]) -> bool:
     return any(p in t for p in phrases)
 
 
-def _is_box_intent(title: str) -> bool:
+def _is_box_intent(title: str, product_kind: str | None = None) -> bool:
     t = _norm(title)
 
-    # hard rejects first
     if _has_any(t, _ALWAYS_REJECT):
         return False
 
-    # pack-only phrases override box hints (e.g. "Play Booster Pack - FACTORY SEALED BOX FRESH")
     if _has_any(t, _PACK_ONLY_HINTS):
         return False
 
-    # strong accept if unambiguous box hints present
+    if product_kind:
+        cross_rejects = _CROSS_TYPE_REJECTS.get(product_kind, ())
+        if _has_any(t, cross_rejects):
+            return False
+
     if _has_any(t, _BOX_HINTS):
         return True
 
-    # "case" only counts if it implies a multi-unit case with a quantity
-    # e.g. "case of 6", "case of 15" — NOT "case fresh" or "box fresh"
     if re.search(r"\bcase\s+of\s+\d+|\bcase\s+\d+|\b\d+\s*(?:x\s*)?\bcase\b", t):
         if "booster" in t or "display" in t or "sealed" in t or "box" in t:
             return True
 
-    # reject obvious lots/bundles if no box hints
     if _has_any(t, _LOT_HINTS) and "box" not in t and "booster" not in t and "display" not in t:
         return False
 
@@ -330,7 +334,7 @@ def search_items_simplified(
         # Box-only mode: keep ONLY box/case/multi-box listings
         if product_kind in {"play_box", "set_box", "draft_box", "collector_box"}:
             simplified = [it for it in simplified if _is_box_intent(
-                it.get("title") or "")]
+                it.get("title") or "", product_kind)]
 
         # Sort by per-box price when available (best for sniping),
         # fallback to normalized_price (total), then None-last.

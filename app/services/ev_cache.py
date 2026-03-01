@@ -27,16 +27,11 @@ _client: Optional[redis.Redis] = None
 
 
 def redis_client() -> redis.Redis:
-    """
-    Lazily constructed Redis client.
-    Important: Redis.from_url() does not necessarily connect immediately;
-    errors typically happen when commands run. We still keep this simple.
-    """
     global _client
     if _client is None:
         _client = redis.Redis.from_url(
             REDIS_URL,
-            decode_responses=True,  # store/read as str
+            decode_responses=True,
             socket_connect_timeout=2,
             socket_timeout=5,
         )
@@ -47,8 +42,8 @@ def _sha1(s: str) -> str:
     return hashlib.sha1(s.encode("utf-8")).hexdigest()
 
 
-def key_ev(set_code: str) -> str:
-    return f"ev:{MODEL_VERSION}:{set_code.upper()}"
+def key_ev(set_code: str, kind: str = "box") -> str:
+    return f"ev:{MODEL_VERSION}:{set_code.upper()}:{kind.lower()}"
 
 
 def key_cards(query: str, unique: str) -> str:
@@ -64,9 +59,6 @@ def key_lock(name: str) -> str:
 
 
 def cache_get_json(k: str) -> Optional[Any]:
-    """
-    Fail-open cache read: if Redis is down/unreachable, treat as cache miss.
-    """
     try:
         r = redis_client()
         val = r.get(k)
@@ -82,9 +74,6 @@ def cache_get_json(k: str) -> Optional[Any]:
 
 
 def cache_set_json(k: str, obj: Any, ttl: int) -> None:
-    """
-    Fail-open cache write: if Redis is down/unreachable, skip caching.
-    """
     try:
         r = redis_client()
         r.setex(k, ttl, json.dumps(
@@ -94,29 +83,17 @@ def cache_set_json(k: str, obj: Any, ttl: int) -> None:
 
 
 class RedisLock:
-    """
-    Simple Redis lock using SET NX EX.
-    Fail-open: if Redis is down, acquire() returns False (no lock),
-    and release() never raises.
-    Not re-entrant; good enough to prevent stampedes when Redis is available.
-    """
-
     def __init__(self, lock_key: str, ttl_s: int = LOCK_TTL):
         self.lock_key = lock_key
         self.ttl_s = ttl_s
         self.acquired = False
 
-        # Hold a client reference if we can. If anything goes weird, fail open.
         try:
             self.r: Optional[redis.Redis] = redis_client()
         except Exception:
             self.r = None
 
     def acquire(self) -> bool:
-        """
-        Return True iff we successfully acquired the lock.
-        If Redis is unavailable, return False (fail-open; caller will compute).
-        """
         if self.r is None:
             self.acquired = False
             return False
@@ -126,14 +103,10 @@ class RedisLock:
             self.acquired = bool(ok)
             return self.acquired
         except Exception:
-            # Redis down / timeout / command error => behave as "no lock"
             self.acquired = False
             return False
 
     def release(self) -> None:
-        """
-        Never raises. If Redis is unavailable, just clear local state.
-        """
         if not self.acquired:
             return
 
@@ -141,17 +114,12 @@ class RedisLock:
             if self.r is not None:
                 self.r.delete(self.lock_key)
         except Exception:
-            # Ignore Redis errors on release; fail-open behavior
             pass
         finally:
             self.acquired = False
 
 
 def wait_for_key(k: str, wait_s: float = LOCK_WAIT) -> Optional[Any]:
-    """
-    Wait briefly for another request to populate the cache.
-    This is also fail-open because cache_get_json is fail-open.
-    """
     deadline = time.time() + wait_s
     while time.time() < deadline:
         v = cache_get_json(k)
@@ -161,10 +129,6 @@ def wait_for_key(k: str, wait_s: float = LOCK_WAIT) -> Optional[Any]:
     return None
 
 
-# -------------------------------------------------------------------
-# NEW: Shared cache-or-compute helpers (used by /v1/ev and deals endpoints)
-# -------------------------------------------------------------------
-
 def get_or_compute_json(
     *,
     cache_key: str,
@@ -173,37 +137,22 @@ def get_or_compute_json(
     compute_fn: Callable[[], Any],
     wait_s: float = LOCK_WAIT,
 ) -> Any:
-    """
-    Generic 'cache-or-compute' helper with best-effort stampede protection.
-
-    - Fast path: return cached value if present.
-    - Best-effort lock: if not acquired, wait briefly for another request
-      to populate the cache; if still missing, compute anyway.
-    - If lock acquired: compute, cache, return.
-
-    Fully fail-open if Redis is down: compute_fn() still runs and returns a response.
-    """
-    # 1) Fast path: cache hit
     cached = cache_get_json(cache_key)
     if cached is not None:
         return cached
 
-    # 2) Best-effort lock
     lock = RedisLock(key_lock(lock_name), ttl_s=LOCK_TTL)
 
     if not lock.acquire():
-        # Someone else might be computing, or Redis is down. Wait briefly.
         waited = wait_for_key(cache_key, wait_s=wait_s)
         if waited is not None:
             return waited
 
-        # Still missing => compute without lock
         data = compute_fn()
         cache_set_json(cache_key, data, ttl_s)
         return data
 
     try:
-        # Double-check cache after acquiring lock (another worker might have filled it)
         cached2 = cache_get_json(cache_key)
         if cached2 is not None:
             return cached2
@@ -215,16 +164,16 @@ def get_or_compute_json(
         lock.release()
 
 
-def get_or_compute_ev_report(set_code: str, compute_fn: Callable[[], dict]) -> dict:
+def get_or_compute_ev_report(set_code: str, kind: str, compute_fn: Callable[[], dict]) -> dict:
     """
-    EV-specific wrapper so every endpoint uses the same Redis key + lock logic.
-
-    compute_fn must return a JSON-serializable dict (ex: dataclasses.asdict(report)).
+    EV-specific wrapper. Includes kind in the cache key so WOE/box and
+    WOE/draft_box do not collide.
     """
     code = set_code.strip().upper()
+    k = kind.strip().lower()
     return get_or_compute_json(
-        cache_key=key_ev(code),
-        lock_name=f"ev:{code}",
+        cache_key=key_ev(code, k),
+        lock_name=f"ev:{code}:{k}",
         ttl_s=TTL_EV,
         compute_fn=compute_fn,
         wait_s=LOCK_WAIT,

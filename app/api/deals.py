@@ -66,7 +66,7 @@ def deals_box(
         raise HTTPException(
             status_code=404, detail="Unknown set_code/product_key combo")
 
-    if p.get("ev_kind") != "box" or not p.get("ev_set_code"):
+    if not p.get("ev_kind") or not p.get("ev_set_code"):
         raise HTTPException(
             status_code=400,
             detail="This product is not configured for box EV yet (add ev_set_code + ev_kind=box in catalog)",
@@ -85,7 +85,8 @@ def deals_box(
         report = model.run()
         return asdict(report)
 
-    ev_data = ev_cache.get_or_compute_ev_report(ev_set_code, _compute_ev)
+    ev_data = ev_cache.get_or_compute_ev_report(
+        ev_set_code, ev_kind, _compute_ev)
 
     try:
         ev_box = float(ev_data.get("box_ev"))
