@@ -98,9 +98,10 @@ def deals(
             status_code=500, detail="Catalog product missing ebay_query")
 
     ev_set_code = str(p["ev_set_code"]).strip().upper()
+    ev_kind = str(p.get("ev_kind", "box")).strip().lower()
 
     # 2) Get EV (cached)
-    model = ev_core.model_for_code(ev_set_code)
+    model = ev_core.model_for_code(ev_set_code, ev_kind)
     if not model:
         raise HTTPException(
             status_code=400, detail=f"No EV model for set code {ev_set_code}")

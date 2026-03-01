@@ -45,6 +45,7 @@ _ALWAYS_REJECT = (
     "code",
     "preorder",
     "pre-order",
+    "prerelease",
     "empty",
     "wrapper",
 )
@@ -59,6 +60,8 @@ _PACK_ONLY_HINTS = (
     "6 pack",
     "pack lot",
     "packs lot",
+    "booster pack",
+    "play pack",
 )
 
 # "lot/bundle/bulk" tends to be non-box; we treat as a reject unless "box" intent is present
@@ -78,38 +81,30 @@ def _has_any(t: str, phrases: tuple[str, ...]) -> bool:
 
 
 def _is_box_intent(title: str) -> bool:
-    """
-    Decide if a listing is a box/case/multi-box listing.
-
-    IMPORTANT: We do NOT reject titles just because they contain "pack"/"packs"
-    because real sealed boxes often say "36 packs" / "30 packs" / etc.
-
-    We reject pack-only phrases like "1 pack", "loose pack", etc unless the title
-    also contains strong box intent.
-    """
     t = _norm(title)
 
-    # hard rejects
+    # hard rejects first
     if _has_any(t, _ALWAYS_REJECT):
         return False
 
-    # strong accept if box hints present
+    # pack-only phrases override box hints (e.g. "Play Booster Pack - FACTORY SEALED BOX FRESH")
+    if _has_any(t, _PACK_ONLY_HINTS):
+        return False
+
+    # strong accept if unambiguous box hints present
     if _has_any(t, _BOX_HINTS):
         return True
 
-    # accept "case" if it smells like sealed product
-    if "case" in t and ("booster" in t or "display" in t or "sealed" in t or "box" in t):
-        return True
-
-    # reject pack-only / loose-pack language if no box hints
-    if _has_any(t, _PACK_ONLY_HINTS):
-        return False
+    # "case" only counts if it implies a multi-unit case with a quantity
+    # e.g. "case of 6", "case of 15" — NOT "case fresh" or "box fresh"
+    if re.search(r"\bcase\s+of\s+\d+|\bcase\s+\d+|\b\d+\s*(?:x\s*)?\bcase\b", t):
+        if "booster" in t or "display" in t or "sealed" in t or "box" in t:
+            return True
 
     # reject obvious lots/bundles if no box hints
     if _has_any(t, _LOT_HINTS) and "box" not in t and "booster" not in t and "display" not in t:
         return False
 
-    # otherwise: not confident it's a box
     return False
 
 
