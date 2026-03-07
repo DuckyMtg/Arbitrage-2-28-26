@@ -1551,6 +1551,278 @@ def print_report(r: EVReport) -> None:
             print(f"  - {w}")
 
 
+# ============================================================
+# New sets appended (2026-03-01)
+# ============================================================
+
+# Notes:
+# - These Play Booster models keep the existing config structure (PlayBoosterConfig + model_from_config).
+# - Pack-per-box counts are taken from the provided Ebay.docx listings and/or current product listings.
+# - Where a set has a bonus sheet that *replaces a common* (e.g. Special Guests / Source Material),
+#   we model that explicitly using the sheet's set code + collector-number range extracted from the
+#   provided mtg.wtf HTML files.
+# - Wildcard and foil rarity mixes are left on the existing generic assumptions (wc_rm_rate=1/12,
+#   foil derived from card counts) until you provide the XML pull-rate file you mentioned.
+
+def slot_replaces_common_with_pool(*, slot_name: str, replace_rate: float, pool_label: str, query: str) -> Slot:
+    """Generic 'replaces a common' bonus slot."""
+    return Slot(
+        name=slot_name,
+        outcomes=[
+            (1.0 - replace_rate, 0.0),
+            (replace_rate, QueryPool(pool_label, query,
+             fallback=query, unique="prints", price_field="usd")),
+        ],
+        strict_probs=True,
+    )
+
+
+def _std_land_types_any_land(*, foil_rate: float = 0.20) -> list[LandTypeConfig]:
+    # "type:land" is broad (basics + nonbasics) and works even when we don't know the exact land breakdown yet.
+    return [LandTypeConfig("any", ["type:land"], rate=1.0, foil_rate=foil_rate)]
+
+
+def _std_land_types_basic_only(*, foil_rate: float = 0.20) -> list[LandTypeConfig]:
+    return [LandTypeConfig("basic", ["type:basic"], rate=1.0, foil_rate=foil_rate)]
+
+
+# ----------------------------
+# BLB — Bloomburrow (36 packs/box)
+# Special Guests: SPG 54–63, replaces a common in 15/1000 packs (= 3/200)
+# (788+12 non-foil-land variants = 800/1000; 12+3 have the_list = 15/1000)
+# ----------------------------
+BLB_CONFIG = PlayBoosterConfig(
+    set_code="blb",
+    packs_per_box=36,
+    mythic_rate=DEFAULT_MYTHIC_RATE,
+    wc_rm_rate=1 / 12,
+    land_types=_std_land_types_any_land(foil_rate=0.20),
+)
+
+
+def slot_blb_special_guests() -> Slot:
+    return slot_replaces_common_with_pool(
+        slot_name="Special Guests replacement (15 in 1000)",
+        replace_rate=15 / 1000,
+        pool_label="blb_spg",
+        query=_q("set:spg", "cn>=54", "cn<=63", "game:paper"),
+    )
+
+
+def model_blb_play_box() -> ProductModel:
+    return model_from_config(BLB_CONFIG, extra_slots=[slot_blb_special_guests()])
+
+
+# ----------------------------
+# DSK — Duskmourn: House of Horror (36 packs/box) + Special Guests
+# Special Guests: SPG 64–73, replaces a common in 1/64 packs
+# ----------------------------
+DSK_CONFIG = PlayBoosterConfig(
+    set_code="dsk",
+    packs_per_box=36,
+    mythic_rate=DEFAULT_MYTHIC_RATE,
+    wc_rm_rate=1 / 12,
+    land_types=_std_land_types_any_land(foil_rate=0.20),
+)
+
+
+def slot_dsk_special_guests() -> Slot:
+    return slot_replaces_common_with_pool(
+        slot_name="Special Guests replacement (1 in 64)",
+        replace_rate=1 / 64,
+        pool_label="dsk_spg",
+        query=_q("set:spg", "cn>=64", "cn<=73", "game:paper"),
+    )
+
+
+def model_dsk_play_box() -> ProductModel:
+    return model_from_config(DSK_CONFIG, extra_slots=[slot_dsk_special_guests()])
+
+
+# ----------------------------
+# DFT — Aetherdrift (30 packs/box) + Special Guests
+# Special Guests: SPG 84–93, replaces a common in 1/64 packs
+# ----------------------------
+DFT_CONFIG = PlayBoosterConfig(
+    set_code="dft",
+    packs_per_box=30,
+    mythic_rate=DEFAULT_MYTHIC_RATE,
+    wc_rm_rate=1 / 12,
+    land_types=_std_land_types_any_land(foil_rate=0.20),
+)
+
+
+def slot_dft_special_guests() -> Slot:
+    return slot_replaces_common_with_pool(
+        slot_name="Special Guests replacement (1 in 64)",
+        replace_rate=1 / 64,
+        pool_label="dft_spg",
+        query=_q("set:spg", "cn>=84", "cn<=93", "game:paper"),
+    )
+
+
+def model_dft_play_box() -> ProductModel:
+    return model_from_config(DFT_CONFIG, extra_slots=[slot_dft_special_guests()])
+
+
+# ----------------------------
+# FDN — Foundations (36 packs/box) + Special Guests
+# Special Guests: SPG 74–83, replaces a common in 3/200 packs (0.015)
+# ----------------------------
+FDN_CONFIG = PlayBoosterConfig(
+    set_code="fdn",
+    packs_per_box=36,
+    mythic_rate=DEFAULT_MYTHIC_RATE,
+    wc_rm_rate=1 / 12,
+    land_types=_std_land_types_any_land(foil_rate=0.20),
+)
+
+
+def slot_fdn_special_guests() -> Slot:
+    return slot_replaces_common_with_pool(
+        slot_name="Special Guests replacement (3 in 200)",
+        replace_rate=3 / 200,
+        pool_label="fdn_spg",
+        query=_q("set:spg", "cn>=74", "cn<=83", "game:paper"),
+    )
+
+
+def model_fdn_play_box() -> ProductModel:
+    return model_from_config(FDN_CONFIG, extra_slots=[slot_fdn_special_guests()])
+
+
+# ----------------------------
+# FIN — Final Fantasy (30 packs/box)
+# Through the Ages: FCA set, replaces a common in 5/15 packs (= 1/3)
+# (4/15 + 1/15 variants contain Sheet through_the_ages instead of 1 common)
+# ----------------------------
+FIN_CONFIG = PlayBoosterConfig(
+    set_code="fin",
+    packs_per_box=30,
+    mythic_rate=DEFAULT_MYTHIC_RATE,
+    wc_rm_rate=1 / 12,
+    land_types=_std_land_types_any_land(foil_rate=0.20),
+)
+
+
+def slot_fin_through_the_ages() -> Slot:
+    return slot_replaces_common_with_pool(
+        slot_name="Through the Ages replacement (1 in 3)",
+        replace_rate=1 / 3,
+        pool_label="fin_fca",
+        query=_q("set:fca", "game:paper"),
+    )
+
+
+def model_fin_play_box() -> ProductModel:
+    return model_from_config(FIN_CONFIG, extra_slots=[slot_fin_through_the_ages()])
+
+
+# ----------------------------
+# EOE — Edge of Eternities (30 packs/box) + Special Guests
+# Special Guests: SPG 119–128, replaces a common in 9/500 packs (0.018)
+# ----------------------------
+EOE_CONFIG = PlayBoosterConfig(
+    set_code="eoe",
+    packs_per_box=30,
+    mythic_rate=DEFAULT_MYTHIC_RATE,
+    wc_rm_rate=1 / 12,
+    land_types=_std_land_types_any_land(foil_rate=0.20),
+)
+
+
+def slot_eoe_special_guests() -> Slot:
+    return slot_replaces_common_with_pool(
+        slot_name="Special Guests replacement (9 in 500)",
+        replace_rate=9 / 500,
+        pool_label="eoe_spg",
+        query=_q("set:spg", "cn>=119", "cn<=128", "game:paper"),
+    )
+
+
+def model_eoe_play_box() -> ProductModel:
+    return model_from_config(EOE_CONFIG, extra_slots=[slot_eoe_special_guests()])
+
+
+# ----------------------------
+# TDM — Tarkir: Dragonstorm (30 packs/box) + Special Guests
+# Special Guests: SPG 104–113, replaces a common in 1/64 packs
+# ----------------------------
+TDM_CONFIG = PlayBoosterConfig(
+    set_code="tdm",
+    packs_per_box=30,
+    mythic_rate=DEFAULT_MYTHIC_RATE,
+    wc_rm_rate=1 / 12,
+    land_types=_std_land_types_any_land(foil_rate=0.20),
+)
+
+
+def slot_tdm_special_guests() -> Slot:
+    return slot_replaces_common_with_pool(
+        slot_name="Special Guests replacement (1 in 64)",
+        replace_rate=1 / 64,
+        pool_label="tdm_spg",
+        query=_q("set:spg", "cn>=104", "cn<=113", "game:paper"),
+    )
+
+
+def model_tdm_play_box() -> ProductModel:
+    return model_from_config(TDM_CONFIG, extra_slots=[slot_tdm_special_guests()])
+
+
+# ----------------------------
+# INR — Innistrad Remastered (36 packs/box) + Retro slot
+# Retro slot: INR 329–480 appears once per pack in the provided mtg.wtf pack breakdown.
+# ----------------------------
+INR_CONFIG = PlayBoosterConfig(
+    set_code="inr",
+    packs_per_box=36,
+    mythic_rate=DEFAULT_MYTHIC_RATE,
+    wc_rm_rate=1 / 12,
+    land_types=_std_land_types_basic_only(foil_rate=0.20),
+)
+
+
+def slot_inr_retro() -> Slot:
+    q_retro = _q("set:inr", "cn>=329", "cn<=480", "game:paper")
+    return Slot(
+        name="Retro slot",
+        outcomes=[(1.0, QueryPool("inr_retro", q_retro,
+                   fallback=q_retro, unique="prints", price_field="usd"))],
+        strict_probs=True,
+    )
+
+
+def model_inr_play_box() -> ProductModel:
+    return model_from_config(INR_CONFIG, extra_slots=[slot_inr_retro()])
+
+
+# ----------------------------
+# SPM — Marvel's Spider-Man (30 packs/box) + Source Material slot
+# Source Material: MAR 1–40 replaces a common in 1/24 packs (from mtg.wtf variants)
+# ----------------------------
+SPM_CONFIG = PlayBoosterConfig(
+    set_code="spm",
+    packs_per_box=30,
+    mythic_rate=DEFAULT_MYTHIC_RATE,
+    wc_rm_rate=1 / 12,
+    land_types=_std_land_types_any_land(foil_rate=0.20),
+)
+
+
+def slot_spm_source_material() -> Slot:
+    return slot_replaces_common_with_pool(
+        slot_name="Source Material replacement (1 in 24)",
+        replace_rate=1 / 24,
+        pool_label="spm_mar",
+        query=_q("set:mar", "cn>=1", "cn<=40", "game:paper"),
+    )
+
+
+def model_spm_play_box() -> ProductModel:
+    return model_from_config(SPM_CONFIG, extra_slots=[slot_spm_source_material()])
+
+
 # ---------------------------------------------------------------------------
 # Registry: maps (SET_CODE, kind) -> factory function
 # To add a new set: write a model_xxx() function above, then add one line here.
@@ -1563,6 +1835,15 @@ MODEL_REGISTRY: dict[tuple[str, str], Callable[[], "ProductModel"]] = {
     ("MH3", "box"):       model_mh3_play_box,
     ("ECL", "box"):       model_ecl_play_box,
     ("TLA", "box"):       model_tla_play_box,
+    ("BLB", "box"):       model_blb_play_box,
+    ("DSK", "box"):       model_dsk_play_box,
+    ("DFT", "box"):       model_dft_play_box,
+    ("FDN", "box"):       model_fdn_play_box,
+    ("FIN", "box"):       model_fin_play_box,
+    ("EOE", "box"):       model_eoe_play_box,
+    ("TDM", "box"):       model_tdm_play_box,
+    ("INR", "box"):       model_inr_play_box,
+    ("SPM", "box"):       model_spm_play_box,
 }
 
 

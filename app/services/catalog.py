@@ -9,15 +9,22 @@ class ProductType(TypedDict, total=False):
     label: str
     ebay_query: str
 
-    # NEW: how to compute EV for this product (optional for now)
-    ev_set_code: str      # e.g. "MH3", "OTJ", "WOE"
-    ev_kind: str          # "box" (future: "bundle", "collector_box", etc.)
+    # How to compute EV for this product (optional)
+    ev_set_code: str   # e.g. "MH3", "OTJ", "WOE"
+    ev_kind: str       # "box" (future: "bundle", "collector_box", etc.)
 
+    # Optional eBay browse filters / sorting (not required)
     ebay_filter: str
     default_sort: str
 
 
+# ---------------------------------------------------------------------------
+# Catalog
+# - Keys are set codes (upper).
+# - Each set has one or more product "types" users can query.
+# ---------------------------------------------------------------------------
 CATALOG: Dict[str, List[ProductType]] = {
+    # Existing
     "MH3": [
         {
             "key": "play_box",
@@ -74,6 +81,100 @@ CATALOG: Dict[str, List[ProductType]] = {
             "ebay_query": "The Last Airbender play booster box MTG",
             "ev_set_code": "TLA",
             "ev_kind": "box",
+        },
+    ],
+
+    # Newly appended sets (from the uploaded example listings)
+    "BLB": [
+        {
+            "key": "play_box",
+            "label": "Play Booster Box",
+            "ebay_query": "Bloomburrow play booster box",
+            "ev_set_code": "BLB",
+            "ev_kind": "box",
+        },
+    ],
+    "DSK": [
+        {
+            "key": "play_box",
+            "label": "Play Booster Box",
+            "ebay_query": "Duskmourn House of Horror play booster box",
+            "ev_set_code": "DSK",
+            "ev_kind": "box",
+        },
+    ],
+    "FDN": [
+        {
+            "key": "play_box",
+            "label": "Play Booster Box",
+            "ebay_query": "Foundations play booster box MTG",
+            "ev_set_code": "FDN",
+            "ev_kind": "box",
+        },
+    ],
+    "DFT": [
+        {
+            "key": "play_box",
+            "label": "Play Booster Box",
+            "ebay_query": "Aetherdrift play booster box",
+            "ev_set_code": "DFT",
+            "ev_kind": "box",
+        },
+    ],
+    "INR": [
+        {
+            "key": "play_box",
+            "label": "Play Booster Box",
+            "ebay_query": "Innistrad Remastered play booster box",
+            "ev_set_code": "INR",
+            "ev_kind": "box",
+        },
+    ],
+    "TDM": [
+        {
+            "key": "play_box",
+            "label": "Play Booster Box",
+            "ebay_query": "Tarkir Dragonstorm play booster box",
+            "ev_set_code": "TDM",
+            "ev_kind": "box",
+        },
+    ],
+    "FIN": [
+        {
+            "key": "play_box",
+            "label": "Play Booster Box",
+            "ebay_query": "Final Fantasy play booster box MTG",
+            "ev_set_code": "FIN",
+            "ev_kind": "box",
+        },
+    ],
+    "EOE": [
+        {
+            "key": "play_box",
+            "label": "Play Booster Box",
+            "ebay_query": "Edge of Eternities play booster box MTG",
+            "ev_set_code": "EOE",
+            "ev_kind": "box",
+        },
+    ],
+    "SPM": [
+        {
+            "key": "play_box",
+            "label": "Play Booster Box",
+            "ebay_query": "Marvel's Spider-Man play booster box MTG",
+            "ev_set_code": "SPM",
+            "ev_kind": "box",
+        },
+    ],
+
+    # MB2 is intentionally omitted for EV for now because its pack collation
+    # uses large PLST sheets with non-numeric collector numbers (e.g. PCY-1),
+    # which needs a different query strategy than the current config builder.
+    "MB2": [
+        {
+            "key": "display",
+            "label": "Mystery Booster 2 Display (24 packs)",
+            "ebay_query": "Mystery Booster 2 display 24 packs",
         },
     ],
 }
