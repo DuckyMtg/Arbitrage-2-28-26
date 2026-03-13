@@ -1,0 +1,157 @@
+# MTG Sealed Product Catalog
+# ---------------------------------------------------------------------------
+# To add a new set: add a new top-level key (set code, uppercase).
+# To add a new product to a set: append an entry to that set's list.
+#
+# Required fields:
+#   key          internal product key (e.g. play_box, draft_box, bundle)
+#   label        human-readable name shown in API responses
+#   ebay_query   keyword string sent to eBay Browse API
+#
+# Optional fields (needed for EV / deals endpoints):
+#   ev_set_code  set code passed to the EV model (usually same as set key)
+#   ev_kind      "box" | "draft_box" — selects the EV model variant
+#   product_kind used for eBay title filtering (play_box, set_box, draft_box, collector_box)
+#
+# Optional eBay overrides (per-product defaults; callers may still override):
+#   ebay_filter  Browse API filter string (e.g. "conditionIds:{1000}")
+#   default_sort Browse API sort (e.g. price, newlyListed, bestMatch)
+# ---------------------------------------------------------------------------
+
+MH3:
+  - key: play_box
+    label: Play Booster Box
+    ebay_query: "Modern Horizons 3 play booster box"
+    ev_set_code: MH3
+    ev_kind: box
+    product_kind: play_box
+
+  - key: bundle
+    label: Bundle
+    ebay_query: "Modern Horizons 3 bundle"
+
+OTJ:
+  - key: play_box
+    label: Play Booster Box
+    ebay_query: "Outlaws of Thunder Junction play booster box"
+    ev_set_code: OTJ
+    ev_kind: box
+    product_kind: play_box
+
+  - key: bundle
+    label: Bundle
+    ebay_query: "Outlaws of Thunder Junction bundle"
+
+WOE:
+  - key: set_box
+    label: Set Booster Box
+    ebay_query: "Wilds of Eldraine set booster box"
+    ev_set_code: WOE
+    ev_kind: box
+    product_kind: set_box
+
+  - key: draft_box
+    label: Draft Booster Box
+    ebay_query: "Wilds of Eldraine draft booster box"
+    ev_set_code: WOE
+    ev_kind: draft_box
+    product_kind: draft_box
+
+  - key: bundle
+    label: Bundle
+    ebay_query: "Wilds of Eldraine bundle"
+
+ECL:
+  - key: play_box
+    label: Play Booster Box
+    ebay_query: "Lorwyn Eclipsed play booster box"
+    ev_set_code: ECL
+    ev_kind: box
+    product_kind: play_box
+
+TLA:
+  - key: play_box
+    label: Play Booster Box
+    ebay_query: "The Last Airbender play booster box MTG"
+    ev_set_code: TLA
+    ev_kind: box
+    product_kind: play_box
+
+BLB:
+  - key: play_box
+    label: Play Booster Box
+    ebay_query: "Bloomburrow play booster box"
+    ev_set_code: BLB
+    ev_kind: box
+    product_kind: play_box
+
+DSK:
+  - key: play_box
+    label: Play Booster Box
+    ebay_query: "Duskmourn House of Horror play booster box"
+    ev_set_code: DSK
+    ev_kind: box
+    product_kind: play_box
+
+FDN:
+  - key: play_box
+    label: Play Booster Box
+    ebay_query: "Foundations play booster box MTG"
+    ev_set_code: FDN
+    ev_kind: box
+    product_kind: play_box
+
+DFT:
+  - key: play_box
+    label: Play Booster Box
+    ebay_query: "Aetherdrift play booster box"
+    ev_set_code: DFT
+    ev_kind: box
+    product_kind: play_box
+
+INR:
+  - key: play_box
+    label: Play Booster Box
+    ebay_query: "Innistrad Remastered play booster box"
+    ev_set_code: INR
+    ev_kind: box
+    product_kind: play_box
+
+TDM:
+  - key: play_box
+    label: Play Booster Box
+    ebay_query: "Tarkir Dragonstorm play booster box"
+    ev_set_code: TDM
+    ev_kind: box
+    product_kind: play_box
+
+FIN:
+  - key: play_box
+    label: Play Booster Box
+    ebay_query: "Final Fantasy play booster box MTG"
+    ev_set_code: FIN
+    ev_kind: box
+    product_kind: play_box
+
+EOE:
+  - key: play_box
+    label: Play Booster Box
+    ebay_query: "Edge of Eternities play booster box MTG"
+    ev_set_code: EOE
+    ev_kind: box
+    product_kind: play_box
+
+SPM:
+  - key: play_box
+    label: Play Booster Box
+    ebay_query: "Marvel's Spider-Man play booster box MTG"
+    ev_set_code: SPM
+    ev_kind: box
+    product_kind: play_box
+
+MB2:
+  # EV intentionally omitted: MB2 uses large PLST sheets with non-numeric
+  # collector numbers (e.g. PCY-1), requiring a different query strategy.
+  - key: display
+    label: Mystery Booster 2 Display (24 packs)
+    ebay_query: "Mystery Booster 2 display 24 packs"

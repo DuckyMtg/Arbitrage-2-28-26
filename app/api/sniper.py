@@ -1,12 +1,13 @@
 # app/api/sniper.py
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 
 from app.auth import require_api_key
+from app.services.rate_limit import require_rate_limit
 from app.services.catalog import get_product
 from app.services.ebay_browse import search_items_simplified
 
@@ -18,26 +19,23 @@ class SniperItemOut(BaseModel):
     itemId: Optional[str]
     price: Optional[float]
     shipping: Optional[float]
-    shipping_known: bool
-    shipType: Optional[str] = None
-    normalized_price: Optional[float]
-    normalized_price_per_box: Optional[float]
-    boxes: int = 1
+    shipping_known: bool = Field(
+        ..., description="True if eBay provided an explicit shipping cost"
+    )
+    shipType: Optional[str] = Field(
+        None, description="Best-effort shipping type from eBay payload"
+    )
+    normalized_price: Optional[float] = Field(
+        None, description="price + (shipping or 0)"
+    )
+    normalized_price_per_box: Optional[float] = Field(
+        None, description="normalized_price / inferred box count"
+    )
+    boxes: int = Field(
+        1, description="Inferred number of boxes in the listing")
     currency: Optional[str]
     endDate: Optional[str]
     url: Optional[str]
-
-
-class SniperDataOut(BaseModel):
-    q: str
-    filter: Optional[str] = None
-    sort: Optional[str] = None
-    product_kind: Optional[str] = None
-    marketplace_id: Optional[str] = None
-    total: Optional[int] = None
-    limit: Optional[int] = None
-    offset: Optional[int] = None
-    items: List[SniperItemOut]
 
 
 class SniperSearchOut(BaseModel):
@@ -45,56 +43,54 @@ class SniperSearchOut(BaseModel):
     product_key: str
     product_label: str
     ebay_query: str
-    # FIX: was `data: dict` — completely untyped, bypassing all Pydantic
-    # validation and OpenAPI schema generation for the response body.
-    # Replaced with SniperDataOut which mirrors the shape returned by
-    # search_items_simplified().
-    data: SniperDataOut
+    product_kind: Optional[str]
+    total: Optional[int] = None
+    limit: Optional[int] = None
+    offset: Optional[int] = None
+    items: List[SniperItemOut]
 
 
 @router.get(
     "/sniper/search",
     response_model=SniperSearchOut,
-    dependencies=[Depends(require_api_key)],
+    dependencies=[Depends(require_api_key), Depends(require_rate_limit)],
 )
 def sniper_search(
     set_code: str = Query(..., description="Set code like MH3, OTJ, WOE"),
     product_key: str = Query(...,
                              description="Product key from /v1/catalog/products"),
     sort: Optional[str] = Query(
-        None, description="Override sort (e.g. price, newlyListed, bestMatch)"),
+        None, description="Override sort (e.g. price, newlyListed, bestMatch)"
+    ),
     filter_: Optional[str] = Query(
-        None, alias="filter", description="Override Browse filter string"),
+        None, alias="filter", description="Override Browse API filter string"
+    ),
     limit: int = Query(50, ge=1, le=200),
-    offset: int = Query(0, ge=0, le=9_800),
-    marketplace_id: str = Query(
-        "EBAY_US", description="X-EBAY-C-MARKETPLACE-ID"),
+    offset: int = Query(0, ge=0, le=10_000),
+    marketplace_id: str = Query("EBAY_US"),
     use_cache: bool = Query(True),
 ):
     p = get_product(set_code, product_key)
     if not p:
         raise HTTPException(
-            status_code=404, detail="Unknown set_code/product_key combo")
+            status_code=404, detail="Unknown set_code/product_key combo"
+        )
 
     ebay_query = p.get("ebay_query")
     if not ebay_query:
         raise HTTPException(
-            status_code=500, detail="Catalog product missing ebay_query")
-
-    if offset + limit > 10_000:
-        raise HTTPException(
-            status_code=422,
-            detail=(
-                f"offset ({offset}) + limit ({limit}) = {offset + limit} "
-                "exceeds the eBay Browse API cap of 10,000."
-            ),
+            status_code=500, detail="Catalog product missing ebay_query"
         )
 
+    product_kind = str(p.get("product_kind") or p.get("key")
+                       or product_key).strip()
+
+    # Use catalog defaults unless the caller explicitly overrides them
     effective_filter = filter_ if filter_ is not None else p.get("ebay_filter")
     effective_sort = sort if sort is not None else p.get("default_sort")
 
     try:
-        data = search_items_simplified(
+        search = search_items_simplified(
             q=ebay_query,
             filter_=effective_filter,
             sort=effective_sort,
@@ -102,14 +98,26 @@ def sniper_search(
             offset=offset,
             marketplace_id=marketplace_id,
             use_cache=use_cache,
+            product_kind=product_kind,
         )
-    except Exception as e:
-        raise HTTPException(status_code=502, detail=f"eBay search failed: {e}")
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    except Exception as exc:
+        raise HTTPException(
+            status_code=502, detail=f"eBay search failed: {exc}")
+
+    items = search.get("items") or []
+    if not isinstance(items, list):
+        items = []
 
     return SniperSearchOut(
         set_code=set_code.strip().upper(),
         product_key=product_key,
         product_label=p.get("label", product_key),
         ebay_query=ebay_query,
-        data=data,
+        product_kind=product_kind,
+        total=search.get("total"),
+        limit=search.get("limit"),
+        offset=search.get("offset"),
+        items=items,
     )
