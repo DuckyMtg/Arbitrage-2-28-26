@@ -14,6 +14,12 @@ from app.services.ebay_browse import search_items_simplified
 
 router = APIRouter(tags=["deals"])
 
+# eBay Browse API hard cap: offset + limit must not exceed 10,000.
+# Enforcing each parameter independently (ge/le) is not sufficient because
+# a caller can pass offset=9999, limit=200 — both valid individually, but
+# their sum (10,199) will cause eBay to return a 400.
+_EBAY_MAX_OFFSET_PLUS_LIMIT = 10_000
+
 
 class DealItemOut(BaseModel):
     title: Optional[str]
@@ -56,10 +62,23 @@ def deals_box(
     product_key: str = Query(...,
                              description="Product key from /v1/catalog/products"),
     limit: int = Query(50, ge=1, le=200),
-    offset: int = Query(0, ge=0, le=10_000),
+    # FIX: le=9_800 so offset+limit<=10_000 at max limit
+    offset: int = Query(0, ge=0, le=9_800),
     marketplace_id: str = Query("EBAY_US"),
     use_cache: bool = Query(True),
 ):
+    # FIX: Enforce the eBay Browse API hard cap on offset + limit.
+    # The Query validators above prevent the worst cases, but we still check
+    # the combination explicitly so the error message is clear.
+    if offset + limit > _EBAY_MAX_OFFSET_PLUS_LIMIT:
+        raise HTTPException(
+            status_code=422,
+            detail=(
+                f"offset ({offset}) + limit ({limit}) = {offset + limit} "
+                f"exceeds the eBay Browse API cap of {_EBAY_MAX_OFFSET_PLUS_LIMIT}."
+            ),
+        )
+
     # 1) Resolve catalog product
     p = get_product(set_code, product_key)
     if not p:
@@ -93,7 +112,7 @@ def deals_box(
     except Exception:
         raise HTTPException(status_code=500, detail="EV report missing box_ev")
 
-    # 3) Run eBay search (catalog query)
+    # 3) Run eBay search
     ebay_query = p.get("ebay_query")
     if not ebay_query:
         raise HTTPException(
@@ -132,7 +151,6 @@ def deals_box(
         out["spread"] = spread
         enriched.append(out)
 
-    # Sort: best spread first; items with None spread go last
     enriched.sort(key=lambda x: (x.get("spread")
                   is None, -(x.get("spread") or -10**18)))
 

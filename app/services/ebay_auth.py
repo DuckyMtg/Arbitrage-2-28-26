@@ -2,11 +2,14 @@
 from __future__ import annotations
 
 import base64
+import logging
 import os
 
 import requests
 
 from app.services import ev_cache
+
+logger = logging.getLogger(__name__)
 
 SCOPE = "https://api.ebay.com/oauth/api_scope"
 
@@ -25,9 +28,9 @@ def _token_url() -> str:
 
 
 def _basic_auth_header(client_id: str, client_secret: str) -> str:
-    client_id = client_id.strip()
-    client_secret = client_secret.strip()
-    raw = f"{client_id}:{client_secret}".encode("utf-8")
+    # Build the header value directly from bytes — never interpolate credentials
+    # into any string that could end up in a log or exception message.
+    raw = (client_id + ":" + client_secret).encode("utf-8")
     return "Basic " + base64.b64encode(raw).decode("utf-8")
 
 
@@ -48,7 +51,7 @@ def _fetch_fresh_token() -> str:
     url = _token_url()
     headers = {
         "Authorization": _basic_auth_header(client_id, client_secret),
-        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type":  "application/x-www-form-urlencoded",
     }
     data = {"grant_type": "client_credentials", "scope": SCOPE}
 
@@ -57,21 +60,32 @@ def _fetch_fresh_token() -> str:
         r.raise_for_status()
     except requests.HTTPError as e:
         status = getattr(e.response, "status_code", None)
+        # FIX: Log the sanitised detail at DEBUG only — never include the
+        # response body in the raised exception, because eBay's OAuth error
+        # responses can echo back Authorization header contents.
         body = (getattr(e.response, "text", "") or "").strip()
+        logger.debug(
+            "eBay OAuth HTTP error env=%s status=%s body=%.500s",
+            _env(), status, body,
+        )
         raise RuntimeError(
-            f"eBay OAuth token request failed env={_env()} status={status} url={url} body={body[:1500]}"
+            f"eBay OAuth token request failed (env={_env()}, status={status})"
         ) from e
     except requests.RequestException as e:
+        # FIX: Suppress the original exception as the cause so that the
+        # repr of `e` (which may contain the URL with credentials if a
+        # redirect ever mutated it) is not propagated up the call stack.
+        logger.debug("eBay OAuth network error env=%s err=%s", _env(), e)
         raise RuntimeError(
-            f"eBay OAuth token request failed (network) env={_env()} url={url} err={e}"
-        ) from e
+            f"eBay OAuth token request failed (env={_env()}, network error)"
+        ) from None
 
     payload = r.json()
     token = payload.get("access_token")
     if not token:
-        raise RuntimeError(
-            f"eBay token response missing access_token: {payload}"
-        )
+        # Do NOT log or raise the full payload — it may contain token material.
+        logger.debug("eBay OAuth response missing access_token env=%s", _env())
+        raise RuntimeError("eBay OAuth response missing access_token")
 
     return token
 

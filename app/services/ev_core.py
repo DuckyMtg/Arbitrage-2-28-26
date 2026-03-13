@@ -18,6 +18,9 @@ HEADERS = {
     "Accept": "application/json",
 }
 
+_RARITY_COUNTS_TTL: int = 7 * 24 * 3600
+_rarity_counts_cache: dict[str, tuple[dict[str, int], float]] = {}
+
 # ----------------------------
 # Robust HTTP
 # ----------------------------
@@ -132,8 +135,16 @@ def avg_price_usd(
     unique: str = "prints",
     warnings: list[str] | None = None,
 ) -> float:
+    from app.services import ev_cache
+
+    cache_key = ev_cache.key_avg(query, unique, price_field)
+    cached = ev_cache.cache_get_json(cache_key)
+    if isinstance(cached, (int, float)):
+        return float(cached)
+
     cards = fetch_all_cards(query, unique=unique)
     if not cards:
+        ev_cache.cache_set_json(cache_key, 0.0, ev_cache.TTL_AVG)
         return 0.0
 
     total = 0.0
@@ -147,12 +158,12 @@ def avg_price_usd(
                 total += float(p)
                 n_priced += 1
         except (TypeError, ValueError):
-            pass  # skip unparseable prices too
+            pass
 
     if n_priced == 0:
+        ev_cache.cache_set_json(cache_key, 0.0, ev_cache.TTL_AVG)
         return 0.0
 
-    # Warn if significant data gap (< 80% of cards have prices)
     if warnings is not None and n_priced < n_total * 0.8:
         pct = int(100 * n_priced / n_total)
         warnings.append(
@@ -160,7 +171,9 @@ def avg_price_usd(
             f"have a '{price_field}' price for query: {query!r}"
         )
 
-    return total / n_priced
+    result = total / n_priced
+    ev_cache.cache_set_json(cache_key, result, ev_cache.TTL_AVG)
+    return result
 
 
 # ----------------------------
@@ -315,10 +328,19 @@ DEFAULT_MYTHIC_RATE = 1 / 8
 
 @lru_cache(maxsize=256)
 def rarity_counts(set_code: str) -> dict[str, int]:
+    key = set_code.strip().upper()
+    entry = _rarity_counts_cache.get(key)
+    if entry is not None:
+        data, expires_at = entry
+        if time.time() < expires_at:
+            return data
+
     counts: dict[str, int] = {}
     for r in ["common", "uncommon", "rare", "mythic"]:
-        q = _q(f"set:{set_code}", f"rarity:{r}", "is:booster", "game:paper")
+        q = _q(f"set:{key}", f"rarity:{r}", "is:booster", "game:paper")
         counts[r] = len(fetch_all_cards(q, unique="cards"))
+
+    _rarity_counts_cache[key] = (counts, time.time() + _RARITY_COUNTS_TTL)
     return counts
 
 
@@ -1279,29 +1301,22 @@ def slot_mh3_main_rm(cfg: MH3Config = MH3) -> Slot:
     q_r_retro_fb = _q(f"set:{sc}", "frame:1997", "rarity:rare",   "game:paper")
     q_m_retro_fb = _q(f"set:{sc}", "frame:1997", "rarity:mythic", "game:paper")
 
-    q_bl_r = _q(f"set:{sc}", "is:borderless", "rarity:rare",   "game:paper")
-    q_bl_m = _q(f"set:{sc}", "is:borderless", "rarity:mythic", "game:paper")
-    br = len(fetch_all_cards(q_bl_r, unique="cards"))
-    bm = len(fetch_all_cards(q_bl_m, unique="cards"))
-    bt = br + bm
-    p_bl_r = (br / bt) if bt else 0.5
-    p_bl_m = (bm / bt) if bt else 0.5
+    q_bl = _q(f"set:{sc}", "is:borderless",
+              "(rarity:rare or rarity:mythic)", "game:paper")
 
     return Slot(
         name="Main R/M (incl. retro + borderless)",
         outcomes=[
-            (cfg.main_p_r,                            QueryPool("mh3_main_regular_r",
-             q_r_reg,    fallback=q_r_reg_fb,  unique="prints", price_field="usd")),
-            (cfg.main_p_m,                            QueryPool("mh3_main_regular_m",
-             q_m_reg,    fallback=q_m_reg_fb,  unique="prints", price_field="usd")),
-            (p_retro_r,                               QueryPool("mh3_main_retro_r",
-             q_r_retro,  fallback=q_r_retro_fb, unique="prints", price_field="usd")),
-            (p_retro_m,                               QueryPool("mh3_main_retro_m",
-             q_m_retro,  fallback=q_m_retro_fb, unique="prints", price_field="usd")),
-            (cfg.main_p_borderless_total * p_bl_r,   QueryPool("mh3_main_borderless_r",
-             q_bl_r,   fallback=q_bl_r,      unique="prints", price_field="usd")),
-            (cfg.main_p_borderless_total * p_bl_m,   QueryPool("mh3_main_borderless_m",
-             q_bl_m,   fallback=q_bl_m,      unique="prints", price_field="usd")),
+            (cfg.main_p_r,                  QueryPool("mh3_main_regular_r",
+             q_r_reg,  fallback=q_r_reg_fb,  unique="prints", price_field="usd")),
+            (cfg.main_p_m,                  QueryPool("mh3_main_regular_m",
+             q_m_reg,  fallback=q_m_reg_fb,  unique="prints", price_field="usd")),
+            (p_retro_r,                     QueryPool("mh3_main_retro_r",
+             q_r_retro, fallback=q_r_retro_fb, unique="prints", price_field="usd")),
+            (p_retro_m,                     QueryPool("mh3_main_retro_m",
+             q_m_retro, fallback=q_m_retro_fb, unique="prints", price_field="usd")),
+            (cfg.main_p_borderless_total,   QueryPool("mh3_main_borderless",
+             q_bl,     fallback=q_bl,         unique="prints", price_field="usd")),
         ],
         strict_probs=True,
     )
@@ -1622,7 +1637,7 @@ DSK_CONFIG = PlayBoosterConfig(
     packs_per_box=36,
     mythic_rate=DEFAULT_MYTHIC_RATE,
     wc_rm_rate=1 / 12,
-    land_types=_std_land_types_any_land(foil_rate=0.20),
+    land_types=_std_land_types_basic_only(foil_rate=0.20),
 )
 
 
@@ -1701,7 +1716,7 @@ FIN_CONFIG = PlayBoosterConfig(
     packs_per_box=30,
     mythic_rate=DEFAULT_MYTHIC_RATE,
     wc_rm_rate=1 / 12,
-    land_types=_std_land_types_any_land(foil_rate=0.20),
+    land_types=_std_land_types_basic_only(foil_rate=0.20),
 )
 
 
@@ -1727,7 +1742,7 @@ EOE_CONFIG = PlayBoosterConfig(
     packs_per_box=30,
     mythic_rate=DEFAULT_MYTHIC_RATE,
     wc_rm_rate=1 / 12,
-    land_types=_std_land_types_any_land(foil_rate=0.20),
+    land_types=_std_land_types_basic_only(foil_rate=0.20),
 )
 
 
@@ -1852,21 +1867,3 @@ def model_for_code(code: str, kind: str = "box") -> "ProductModel | None":
     key = (code.strip().upper(), kind.strip().lower())
     factory = MODEL_REGISTRY.get(key)
     return factory() if factory else None
-
-
-def main():
-    supported = ", ".join(f"{c}/{k}" for c, k in sorted(MODEL_REGISTRY))
-    user_input = input(f"Enter set code/kind [{supported}]: ").strip().upper()
-    parts = user_input.split("/")
-    set_code = parts[0]
-    kind = parts[1].lower() if len(parts) > 1 else "box"
-    m = model_for_code(set_code, kind)
-    if not m:
-        print(f"Unsupported set/kind: {set_code}/{kind}")
-        return
-    r = m.run()
-    print_report(r)
-
-
-if __name__ == "__main__":
-    main()

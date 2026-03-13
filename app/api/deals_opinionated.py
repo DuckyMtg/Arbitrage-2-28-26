@@ -19,7 +19,6 @@ class DealOut(BaseModel):
     title: Optional[str]
     itemId: Optional[str]
 
-    # totals for the listing
     normalized_price: Optional[float] = Field(
         None, description="item price + shipping (shipping unknown treated as $0)"
     )
@@ -28,7 +27,6 @@ class DealOut(BaseModel):
     shipping_known: bool
     shipType: Optional[str] = None
 
-    # multi-box support
     boxes: int = Field(
         1, description="Inferred number of boxes in the listing")
     normalized_price_per_box: Optional[float] = Field(
@@ -119,7 +117,10 @@ def deals(
         raise HTTPException(status_code=500, detail="EV report missing box_ev")
 
     # 3) Search eBay (fetch more than limit so filtering doesn't empty results)
-    search_limit = min(200, max(limit * 5, limit))
+    # FIX: search_limit = min(200, max(limit * 5, limit)) had a redundant max().
+    # Since limit >= 1 always, limit * 5 > limit always, so max(limit*5, limit)
+    # == limit * 5 unconditionally. Simplified to min(200, limit * 5).
+    search_limit = min(200, limit * 5)
     try:
         search = search_items_simplified(
             q=ebay_query,
