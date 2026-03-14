@@ -2,20 +2,22 @@
 # ---------------------------------------------------------------------------
 # To add a new set: add a new top-level key (set code, uppercase).
 # To add a new product to a set: append an entry to that set's list.
-#
 # Required fields:
 #   key          internal product key (e.g. play_box, draft_box, bundle)
 #   label        human-readable name shown in API responses
 #   ebay_query   keyword string sent to eBay Browse API
-#
 # Optional fields (needed for EV / deals endpoints):
 #   ev_set_code  set code passed to the EV model (usually same as set key)
 #   ev_kind      "box" | "draft_box" — selects the EV model variant
 #   product_kind used for eBay title filtering (play_box, set_box, draft_box, collector_box)
-#
 # Optional eBay overrides (per-product defaults; callers may still override):
 #   ebay_filter  Browse API filter string (e.g. "conditionIds:{1000}")
 #   default_sort Browse API sort (e.g. price, newlyListed, bestMatch)
+#
+# NOTE: All EV-enabled box products use default_sort: price so that eBay
+# returns the cheapest listings first rather than "best match". Without this,
+# eBay's relevance ranking can bury the cheapest listings beyond the 200-item
+# page limit, making the spread calculation incomplete.
 # ---------------------------------------------------------------------------
 
 MH3:
@@ -25,7 +27,7 @@ MH3:
     ev_set_code: MH3
     ev_kind: box
     product_kind: play_box
-
+    default_sort: price
   - key: bundle
     label: Bundle
     ebay_query: "Modern Horizons 3 bundle"
@@ -37,7 +39,7 @@ OTJ:
     ev_set_code: OTJ
     ev_kind: box
     product_kind: play_box
-
+    default_sort: price
   - key: bundle
     label: Bundle
     ebay_query: "Outlaws of Thunder Junction bundle"
@@ -49,14 +51,14 @@ WOE:
     ev_set_code: WOE
     ev_kind: box
     product_kind: set_box
-
+    default_sort: price
   - key: draft_box
     label: Draft Booster Box
     ebay_query: "Wilds of Eldraine draft booster box"
     ev_set_code: WOE
     ev_kind: draft_box
     product_kind: draft_box
-
+    default_sort: price
   - key: bundle
     label: Bundle
     ebay_query: "Wilds of Eldraine bundle"
@@ -68,6 +70,7 @@ ECL:
     ev_set_code: ECL
     ev_kind: box
     product_kind: play_box
+    default_sort: price
 
 TLA:
   - key: play_box
@@ -76,6 +79,7 @@ TLA:
     ev_set_code: TLA
     ev_kind: box
     product_kind: play_box
+    default_sort: price
 
 BLB:
   - key: play_box
@@ -84,6 +88,7 @@ BLB:
     ev_set_code: BLB
     ev_kind: box
     product_kind: play_box
+    default_sort: price
 
 DSK:
   - key: play_box
@@ -92,6 +97,7 @@ DSK:
     ev_set_code: DSK
     ev_kind: box
     product_kind: play_box
+    default_sort: price
 
 FDN:
   - key: play_box
@@ -100,6 +106,7 @@ FDN:
     ev_set_code: FDN
     ev_kind: box
     product_kind: play_box
+    default_sort: price
 
 DFT:
   - key: play_box
@@ -108,6 +115,7 @@ DFT:
     ev_set_code: DFT
     ev_kind: box
     product_kind: play_box
+    default_sort: price
 
 INR:
   - key: play_box
@@ -116,6 +124,7 @@ INR:
     ev_set_code: INR
     ev_kind: box
     product_kind: play_box
+    default_sort: price
 
 TDM:
   - key: play_box
@@ -124,6 +133,7 @@ TDM:
     ev_set_code: TDM
     ev_kind: box
     product_kind: play_box
+    default_sort: price
 
 FIN:
   - key: play_box
@@ -132,6 +142,7 @@ FIN:
     ev_set_code: FIN
     ev_kind: box
     product_kind: play_box
+    default_sort: price
 
 EOE:
   - key: play_box
@@ -140,6 +151,7 @@ EOE:
     ev_set_code: EOE
     ev_kind: box
     product_kind: play_box
+    default_sort: price
 
 SPM:
   - key: play_box
@@ -148,10 +160,12 @@ SPM:
     ev_set_code: SPM
     ev_kind: box
     product_kind: play_box
+    default_sort: price
 
 MB2:
   # EV intentionally omitted: MB2 uses large PLST sheets with non-numeric
   # collector numbers (e.g. PCY-1), requiring a different query strategy.
+  # default_sort intentionally omitted: no EV target, best-match is fine.
   - key: display
     label: Mystery Booster 2 Display (24 packs)
     ebay_query: "Mystery Booster 2 display 24 packs"
