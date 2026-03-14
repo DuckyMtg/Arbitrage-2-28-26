@@ -1,21 +1,18 @@
 from __future__ import annotations
-
 import random
 import time
 from dataclasses import dataclass, field
 from functools import lru_cache
 from typing import Callable, Optional, Union
 from app.services import ev_cache
-
 import requests
 from requests.exceptions import HTTPError, RequestException
 
 SCRYFALL_SET_URL = "https://api.scryfall.com/sets/{code}"
 SCRYFALL_SEARCH_URL = "https://api.scryfall.com/cards/search"
-
 HEADERS = {
     "User-Agent": "mtg-sealed-deals/0.5 (contact: 5.sided.die@gmail.com)",
-    "Accept": "application/json",
+    "Accept":     "application/json",
 }
 
 _RARITY_COUNTS_TTL: int = 7 * 24 * 3600
@@ -32,15 +29,13 @@ def scryfall_get(
     params: dict | None = None,
     timeout: int = 30,
     max_retries: int = 6,
-):
-    backoff = 0.5
+    backoff: float = 0.5,
+) -> requests.Response:
     last_exc: Exception | None = None
-
     for _attempt in range(max_retries):
         try:
             r = requests.get(url, headers=HEADERS,
                              params=params, timeout=timeout)
-
             if r.status_code in (429, 500, 502, 503, 504):
                 retry_after = r.headers.get("Retry-After")
                 if retry_after:
@@ -49,19 +44,15 @@ def scryfall_get(
                         continue
                     except ValueError:
                         pass
-
                 time.sleep(backoff + random.uniform(0, 0.25))
                 backoff = min(backoff * 2, 8.0)
                 continue
-
             r.raise_for_status()
             return r
-
         except (HTTPError, RequestException) as e:
             last_exc = e
             time.sleep(backoff + random.uniform(0, 0.25))
             backoff = min(backoff * 2, 8.0)
-
     raise last_exc if last_exc else RuntimeError(
         "Unknown Scryfall request failure")
 
@@ -80,7 +71,6 @@ def _fetch_all_cards_uncached(query: str, *, unique: str = "cards", sleep_s: flo
     params = {"q": query, "unique": unique, "order": "name"}
     url = SCRYFALL_SEARCH_URL
     out: list[dict] = []
-
     while True:
         try:
             r = scryfall_get(url, params=params if url ==
@@ -90,17 +80,13 @@ def _fetch_all_cards_uncached(query: str, *, unique: str = "cards", sleep_s: flo
             if status == 404:
                 return []
             raise
-
         payload = r.json()
         out.extend(payload.get("data", []))
-
         if not payload.get("has_more"):
             break
-
         url = payload["next_page"]
         params = None
         time.sleep(sleep_s)
-
     return out
 
 
@@ -110,20 +96,12 @@ def fetch_all_cards(query: str, *, unique: str = "cards") -> list[dict]:
     Cached in Redis for 7 days. Falls back to Scryfall on miss.
     """
     from app.services import ev_cache
-
     cache_key = ev_cache.key_cards(query, unique)
     cached = ev_cache.cache_get_json(cache_key)
     if cached is not None:
-        return cached  # list of {"prices": {...}}
-
+        return cached
     full_cards = _fetch_all_cards_uncached(query, unique=unique)
-
-    # Store only what we need — strip all Scryfall metadata
-    minimal = [
-        {"prices": c.get("prices") or {}}
-        for c in full_cards
-    ]
-
+    minimal = [{"prices": c.get("prices") or {}} for c in full_cards]
     ev_cache.cache_set_json(cache_key, minimal, ev_cache.TTL_CARDS)
     return minimal
 
@@ -136,21 +114,17 @@ def avg_price_usd(
     warnings: list[str] | None = None,
 ) -> float:
     from app.services import ev_cache
-
     cache_key = ev_cache.key_avg(query, unique, price_field)
     cached = ev_cache.cache_get_json(cache_key)
     if isinstance(cached, (int, float)):
         return float(cached)
-
     cards = fetch_all_cards(query, unique=unique)
     if not cards:
         ev_cache.cache_set_json(cache_key, 0.0, ev_cache.TTL_AVG)
         return 0.0
-
     total = 0.0
     n_priced = 0
     n_total = len(cards)
-
     for c in cards:
         p = c.get("prices", {}).get(price_field)
         try:
@@ -159,18 +133,15 @@ def avg_price_usd(
                 n_priced += 1
         except (TypeError, ValueError):
             pass
-
     if n_priced == 0:
         ev_cache.cache_set_json(cache_key, 0.0, ev_cache.TTL_AVG)
         return 0.0
-
     if warnings is not None and n_priced < n_total * 0.8:
         pct = int(100 * n_priced / n_total)
         warnings.append(
             f"avg_price_usd: only {n_priced}/{n_total} cards ({pct}%) "
             f"have a '{price_field}' price for query: {query!r}"
         )
-
     result = total / n_priced
     ev_cache.cache_set_json(cache_key, result, ev_cache.TTL_AVG)
     return result
@@ -179,64 +150,64 @@ def avg_price_usd(
 # ----------------------------
 # Reporting
 # ----------------------------
+
 @dataclass
 class PoolEval:
-    label: str
+    label:     str
     used_query: str
-    count: int
-    ev: float
+    count:     int
+    ev:        float
 
 
 @dataclass
 class SlotEval:
-    name: str
-    ev: float
+    name:       str
+    ev:         float
     pool_evals: list[PoolEval] = field(default_factory=list)
 
 
 @dataclass
 class EVReport:
-    set_code: str
-    set_name: str
+    set_code:     str
+    set_name:     str
     packs_per_box: int
-    pack_ev: float
-    box_ev: float
-    slot_evals: list[SlotEval]
-    warnings: list[str]
-    counts: dict[str, int]  # pool-label -> count
+    pack_ev:      float
+    box_ev:       float
+    slot_evals:   list[SlotEval]
+    warnings:     list[str]
+    counts:       dict[str, int]   # pool-label -> count
 
 
 # ----------------------------
 # Pool primitives
 # ----------------------------
+
 @dataclass(frozen=True)
 class QueryPool:
     """
     Prices cards returned by a Scryfall query.
     If primary returns 0 cards, optional fallback is used.
     """
-    label: str
-    primary: str
-    fallback: Optional[str] = None
-    unique: str = "prints"
+    label:       str
+    primary:     str
+    fallback:    Optional[str] = None
+    unique:      str = "prints"
     price_field: str = "usd"
 
     def eval(self, warnings: list[str]) -> PoolEval:
         cards_primary = fetch_all_cards(self.primary, unique=self.unique)
         if cards_primary:
-            ev = avg_price_usd(
-                self.primary, price_field=self.price_field, unique=self.unique, warnings=warnings)
+            ev = avg_price_usd(self.primary, price_field=self.price_field,
+                               unique=self.unique, warnings=warnings)
             return PoolEval(self.label, self.primary, len(cards_primary), ev)
-
         if self.fallback:
             cards_fb = fetch_all_cards(self.fallback, unique=self.unique)
             if cards_fb:
                 warnings.append(
                     f"[{self.label}] primary query returned 0 cards; used fallback.")
-                ev = avg_price_usd(
-                    self.fallback, price_field=self.price_field, unique=self.unique, warnings=warnings)
+                ev = avg_price_usd(self.fallback, price_field=self.price_field,
+                                   unique=self.unique, warnings=warnings)
                 return PoolEval(self.label, self.fallback, len(cards_fb), ev)
-
         warnings.append(
             f"[{self.label}] query returned 0 cards (no fallback or fallback empty).")
         return PoolEval(self.label, self.primary, 0, 0.0)
@@ -245,15 +216,16 @@ class QueryPool:
 # ----------------------------
 # Slot primitives
 # ----------------------------
+
 OutcomeValue = Union[float, QueryPool]
 
 
 @dataclass(frozen=True)
 class Slot:
-    name: str
-    outcomes: list[tuple[float, OutcomeValue]]
+    name:        str
+    outcomes:    list[tuple[float, OutcomeValue]]
     strict_probs: bool = True
-    tol: float = 1e-6
+    tol:         float = 1e-6
     renormalize: bool = False
 
     def eval(self, warnings: list[str], counts: dict[str, int]) -> SlotEval:
@@ -262,7 +234,6 @@ class Slot:
             warnings.append(
                 f"[{self.name}] probability sum <= 0; slot EV forced to 0.")
             return SlotEval(self.name, 0.0, [])
-
         if self.strict_probs and abs(total_p - 1.0) > self.tol and not self.renormalize:
             warnings.append(
                 f"[{self.name}] prob sum != 1.0 (got {total_p:.6f}). Using implicit renorm.")
@@ -270,10 +241,8 @@ class Slot:
         else:
             denom = total_p if (self.renormalize and abs(
                 total_p - 1.0) > self.tol) else 1.0
-
-        ev = 0.0
+        ev: float = 0.0
         pool_evals: list[PoolEval] = []
-
         for p, v in self.outcomes:
             w = p / denom
             if isinstance(v, (int, float)):
@@ -283,31 +252,26 @@ class Slot:
                 pool_evals.append(pe)
                 counts[pe.label] = pe.count
                 ev += w * pe.ev
-
         return SlotEval(self.name, ev, pool_evals)
 
 
 @dataclass(frozen=True)
 class ProductModel:
-    set_code: str
+    set_code:     str
     packs_per_box: int
-    slots: list[Slot]
+    slots:        list[Slot]
 
     def run(self) -> EVReport:
         warnings: list[str] = []
-        counts: dict[str, int] = {}
-
+        counts:   dict[str, int] = {}
         set_name = get_set_name(self.set_code)
-
         slot_evals: list[SlotEval] = []
         pack_ev = 0.0
         for s in self.slots:
             se = s.eval(warnings, counts)
             slot_evals.append(se)
             pack_ev += se.ev
-
         box_ev = pack_ev * self.packs_per_box
-
         return EVReport(
             set_code=self.set_code.upper(),
             set_name=set_name,
@@ -323,6 +287,7 @@ class ProductModel:
 # ----------------------------
 # Shared helpers
 # ----------------------------
+
 DEFAULT_MYTHIC_RATE = 1 / 8
 
 
@@ -334,18 +299,16 @@ def rarity_counts(set_code: str) -> dict[str, int]:
         data, expires_at = entry
         if time.time() < expires_at:
             return data
-
     counts: dict[str, int] = {}
     for r in ["common", "uncommon", "rare", "mythic"]:
         q = _q(f"set:{key}", f"rarity:{r}", "is:booster", "game:paper")
         counts[r] = len(fetch_all_cards(q, unique="cards"))
-
     _rarity_counts_cache[key] = (counts, time.time() + _RARITY_COUNTS_TTL)
     return counts
 
 
 def _normalize_exact_name(n: str) -> str:
-    return n.replace("’", "'").strip()
+    return n.replace("\u2019", "'").strip()
 
 
 def name_or_clause(names: list[str]) -> str:
@@ -355,11 +318,11 @@ def name_or_clause(names: list[str]) -> str:
 
 def slot_any_rarity_from_set(
     *,
-    slot_name: str,
+    slot_name:        str,
     pool_label_prefix: str,
-    set_code: str,
-    price_field: str,
-    unique: str = "prints",
+    set_code:         str,
+    price_field:      str,
+    unique:           str = "prints",
 ) -> Slot:
     """
     Approximate "any rarity from a set" by weighting rarity averages
@@ -371,11 +334,10 @@ def slot_any_rarity_from_set(
         q = _q(f"set:{set_code}", "is:booster", "game:paper")
         return Slot(
             name=slot_name,
-            outcomes=[(1.0, QueryPool(
-                f"{pool_label_prefix}_any", q, unique=unique, price_field=price_field))],
+            outcomes=[(1.0, QueryPool(f"{pool_label_prefix}_any", q,
+                                      unique=unique, price_field=price_field))],
             strict_probs=True,
         )
-
     outcomes: list[tuple[float, OutcomeValue]] = []
     for r in ("common", "uncommon", "rare", "mythic"):
         n = c.get(r, 0)
@@ -383,15 +345,14 @@ def slot_any_rarity_from_set(
             continue
         p = n / total
         q = _q(f"set:{set_code}", f"rarity:{r}", "is:booster", "game:paper")
-        outcomes.append((p, QueryPool(
-            f"{pool_label_prefix}_{r}", q, unique=unique, price_field=price_field)))
-
+        outcomes.append((p, QueryPool(f"{pool_label_prefix}_{r}", q,
+                                      unique=unique, price_field=price_field)))
     return Slot(name=slot_name, outcomes=outcomes, strict_probs=True)
 
-# ============================================================
-# Config/Builder Pattern
-# ============================================================
 
+# ============================================================
+# Config / Builder pattern
+# ============================================================
 
 @dataclass
 class RarityRates:
@@ -406,17 +367,16 @@ class RarityRates:
 class LandTypeConfig:
     """
     One category of land within the land slot.
-
     query_filters       extra Scryfall terms beyond 'set:xxx game:paper'
     rate                fraction of the land slot going to this category
     foil_rate           fraction of THIS category that is foil
     use_booster_filter  whether to add 'is:booster' to the primary query
     """
-    label:              str
-    query_filters:      list[str]
-    rate:               float
-    foil_rate:          float = 0.0
-    unique:             str = "prints"
+    label:             str
+    query_filters:     list[str]
+    rate:              float
+    foil_rate:         float = 0.0
+    unique:            str = "prints"
     use_booster_filter: bool = True
 
 
@@ -424,42 +384,29 @@ class LandTypeConfig:
 class PlayBoosterConfig:
     """
     Data-only description of a standard Play/Set Booster box.
-
     Pass to model_from_config() to build a ProductModel.
     For set-specific bonus slots (The List variant, dedicated bonus set, etc.)
     that cannot be expressed generically, build those Slots separately and
     pass them as the extra_slots argument to model_from_config().
     """
-    set_code:       str
-    packs_per_box:  int
-
+    set_code:      str
+    packs_per_box: int
     # --- Main R/M slot ---
-    mythic_rate:          float = DEFAULT_MYTHIC_RATE
-    # Fixed fraction of the main slot going to borderless treatments.
-    # 0.0 means no borderless; non-zero splits both R and M by this fraction.
-    borderless_fraction:  float = 0.0
-
+    mythic_rate:         float = DEFAULT_MYTHIC_RATE
+    borderless_fraction: float = 0.0
     # --- Wildcard slot ---
-    # Option A: supply explicit fixed rates per rarity
-    wc_rates:         RarityRates | None = None
-    # Option B: supply only the total RM rate; C/U split is derived from
-    # rarity_counts() at model-build time.  Takes precedence over wc_rates.
-    wc_rm_rate:       float | None = None
+    wc_rates:          RarityRates | None = None
+    wc_rm_rate:        float | None = None
     wc_slots_per_pack: int = 1
-
     # --- Foil slot ---
-    # Explicit rarity weights for the foil slot.
-    # If None, weights are derived from rarity_counts() (card-count proportional).
     foil_rates:  RarityRates | None = None
-
     # --- Land slot ---
-    # Leave empty if the set has no distinct land slot (e.g. MH3 land/common).
     land_types:  list[LandTypeConfig] = field(default_factory=list)
+
 
 # ============================================================
 # Generic slot builders
 # ============================================================
-
 
 def build_main_rm_slot(cfg: PlayBoosterConfig) -> Slot:
     """Standard main rare/mythic slot, with optional borderless split."""
@@ -468,7 +415,6 @@ def build_main_rm_slot(cfg: PlayBoosterConfig) -> Slot:
     p_m = cfg.mythic_rate
     p_bl = cfg.borderless_fraction
     p_reg = 1.0 - p_bl
-
     if p_bl > 0:
         q_r = _q(f"set:{sc}", "rarity:rare",   "is:booster",
                  "game:paper", "-is:borderless")
@@ -497,7 +443,6 @@ def build_main_rm_slot(cfg: PlayBoosterConfig) -> Slot:
             (p_m, QueryPool(f"{sc}_main_mythic", q_m,
              unique="prints", price_field="usd")),
         ]
-
     return Slot(name="Main R/M", outcomes=outcomes, strict_probs=True)
 
 
@@ -505,11 +450,10 @@ def build_wildcard_slot(cfg: PlayBoosterConfig) -> Slot:
     """Wildcard slot with fixed rates or C/U rates derived from card counts."""
     sc = cfg.set_code
     s = cfg.wc_slots_per_pack
-
     if cfg.wc_rm_rate is not None:
         c = rarity_counts(sc)
         cu = c.get("common", 0) + c.get("uncommon", 0)
-        p_c = (c.get("common", 0) / cu) if cu else 0.5
+        p_c = (c.get("common",   0) / cu) if cu else 0.5
         p_u = (c.get("uncommon", 0) / cu) if cu else 0.5
         rm = cfg.wc_rm_rate
         rates = RarityRates(
@@ -520,12 +464,10 @@ def build_wildcard_slot(cfg: PlayBoosterConfig) -> Slot:
         )
     else:
         rates = cfg.wc_rates
-
     q_c = _q(f"set:{sc}", "rarity:common",   "is:booster", "game:paper")
     q_u = _q(f"set:{sc}", "rarity:uncommon", "is:booster", "game:paper")
     q_r = _q(f"set:{sc}", "rarity:rare",     "is:booster", "game:paper")
     q_m = _q(f"set:{sc}", "rarity:mythic",   "is:booster", "game:paper")
-
     return Slot(
         name=f"Wildcard ({s} slot{'s' if s > 1 else ''})",
         outcomes=[
@@ -546,7 +488,6 @@ def build_wildcard_slot(cfg: PlayBoosterConfig) -> Slot:
 def build_foil_slot(cfg: PlayBoosterConfig) -> Slot:
     """Foil slot with explicit rarity weights or card-count-derived weights."""
     sc = cfg.set_code
-
     if cfg.foil_rates is None:
         c = rarity_counts(sc)
         total = sum(c.get(r, 0)
@@ -564,8 +505,7 @@ def build_foil_slot(cfg: PlayBoosterConfig) -> Slot:
         q = _q(f"set:{sc}", f"rarity:{rarity}",
                "is:booster", "game:paper", "finish:foil")
         q_fb = _q(f"set:{sc}", f"rarity:{rarity}", "is:booster", "game:paper")
-        return QueryPool(f"{sc}_foil_{label}", q, fallback=q_fb,
-                         unique="cards", price_field="usd_foil")
+        return QueryPool(f"{sc}_foil_{label}", q, fallback=q_fb, unique="cards", price_field="usd_foil")
 
     return Slot(
         name="Traditional foil (rarity-weighted)",
@@ -581,18 +521,13 @@ def build_foil_slot(cfg: PlayBoosterConfig) -> Slot:
 
 
 def build_land_slot(cfg: PlayBoosterConfig) -> Slot:
-    """
-    Land slot built from a list of LandTypeConfig entries.
-    Each entry contributes nonfoil and/or foil outcomes at its stated rates.
-    """
+    """Land slot built from a list of LandTypeConfig entries."""
     sc = cfg.set_code
     outcomes: list[tuple[float, OutcomeValue]] = []
-
     for lt in cfg.land_types:
         booster_filter = ["is:booster"] if lt.use_booster_filter else []
         q = _q(f"set:{sc}", *lt.query_filters, *booster_filter, "game:paper")
         q_fb = _q(f"set:{sc}", *lt.query_filters, "game:paper")
-
         if lt.foil_rate < 1.0:
             outcomes.append((
                 lt.rate * (1 - lt.foil_rate),
@@ -605,7 +540,6 @@ def build_land_slot(cfg: PlayBoosterConfig) -> Slot:
                 QueryPool(f"{sc}_land_{lt.label}_f", q, fallback=q_fb,
                           unique=lt.unique, price_field="usd_foil"),
             ))
-
     return Slot(name="Land slot", outcomes=outcomes, strict_probs=True)
 
 
@@ -615,9 +549,8 @@ def model_from_config(
 ) -> ProductModel:
     """
     Assemble a ProductModel from a PlayBoosterConfig.
-
     Builds main R/M, wildcard, foil, and land slots generically.
-    Pass extra_slots for anything set-specific (bonus set, The List variant, etc.).
+    Pass extra_slots for anything set-specific.
     """
     slots: list[Slot] = [
         build_main_rm_slot(cfg),
@@ -628,7 +561,6 @@ def model_from_config(
         slots.append(build_land_slot(cfg))
     if extra_slots:
         slots.extend(extra_slots)
-
     return ProductModel(set_code=cfg.set_code, packs_per_box=cfg.packs_per_box, slots=slots)
 
 
@@ -638,180 +570,84 @@ def model_from_config(
 
 @dataclass
 class TreatmentPlayConfig:
-    """
-    Config for Play Booster sets that split their main/wildcard/foil slots
-    into regular and treatment (high-CN) rare/mythic tiers, and replace
-    one common per pack with a bonus sheet at a fixed rate.
-
-    All p_* values are raw weights derived from the sheet; slots use
-    renormalize=True so they need not sum to 1.0 exactly.
-    """
     set_code:      str
     packs_per_box: int
-
-    # Main R/M slot — total pool weight for each of the 4 tiers
-    main_p_r:  float   # regular rare pool   (CN ≤ reg_rare_cn_max)
-    main_p_m:  float   # regular mythic pool (CN ≤ reg_mythic_cn_max)
-    main_p_tr: float   # treatment rare pool (CN ≥ treat_rare_cn_min)
-    main_p_tm: float   # treatment mythic pool (CN ≥ treat_mythic_cn_min)
-
-    # CN boundaries that separate regular from treatment printings
-    reg_rare_cn_max:    int
-    reg_mythic_cn_max:  int
-    treat_rare_cn_min:  int
+    main_p_r:   float
+    main_p_m:  float
+    main_p_tr: float
+    main_p_tm: float
+    reg_rare_cn_max: int
+    reg_mythic_cn_max: int
+    treat_rare_cn_min: int
     treat_mythic_cn_min: int
-
-    # Wildcard slot — total pool weights for 7 tiers
-    wc_p_c:   float   # common
-    wc_p_u:   float   # regular uncommon    (CN ≤ reg_uncommon_cn_max)
-    wc_p_su:  float   # special uncommon    (CN ≥ special_u_cn_min)
-    wc_p_r:   float   # regular rare
-    wc_p_m:   float   # regular mythic
-    wc_p_tr:  float   # treatment rare
-    wc_p_tm:  float   # treatment mythic
-
-    # CN boundary that separates regular from special uncommons
+    wc_p_c: float
+    wc_p_u: float
+    wc_p_su: float
+    wc_p_r: float
+    wc_p_m: float
+    wc_p_tr: float
+    wc_p_tm: float
     reg_uncommon_cn_max: int
-    special_u_cn_min:    int
-
-    # Foil slot — same 7-tier structure as wildcard
-    foil_p_c:  float
-    foil_p_u:  float
+    special_u_cn_min: int
+    foil_p_c: float
+    foil_p_u: float
     foil_p_su: float
-    foil_p_r:  float
-    foil_p_m:  float
+    foil_p_r: float
+    foil_p_m: float
     foil_p_tr: float
     foil_p_tm: float
-
-    # Land slot — foil_rate fraction of the basic land draw is foil
     land_foil_rate: float = 0.20
+    bonus_rate:      float = 0.0
+    bonus_set:       str = ""
+    bonus_cn_min:    int = 0
+    bonus_cn_max:    int = 0
+    bonus_label:     str = ""
+    bonus_slot_name: str = ""
 
-    # Bonus slot (Special Guest / Source Material) replaces a common
-    bonus_rate:       float = 0.0     # fraction of packs that get the bonus
-    bonus_set:        str = ""      # Scryfall set code
-    bonus_cn_min:     int = 0
-    bonus_cn_max:     int = 0
-    bonus_label:      str = ""
-    bonus_slot_name:  str = ""
-
-
-# ============================================================
-# ECL config values
-# ============================================================
-# All weights computed directly from mtg.wtf sheet odds:
-#   main/wildcard/foil tiers use (card_count × per-card-rate)
 
 ECL_CONFIG = TreatmentPlayConfig(
-    set_code="ecl",
-    packs_per_box=36,
-
-    # Main R/M (from rare_mythic_boosterfun sheet)
-    main_p_r=70 * (459 / 38000),   # ≈ 0.8456
-    main_p_m=24 * (459 / 76000),   # ≈ 0.1449
-    main_p_tr=41 * (41 / 23500),   # ≈ 0.0716
-    main_p_tm=24 * (41 / 47000),   # ≈ 0.0209
-
-    reg_rare_cn_max=268,
-    reg_mythic_cn_max=253,
-    treat_rare_cn_min=297,
-    treat_mythic_cn_min=284,
-
-    # Wildcard (from wildcard sheet)
-    wc_p_c=81 * (1 / 450),    # ≈ 0.1800
-    wc_p_u=100 * (29 / 5000),    # ≈ 0.5800
-    wc_p_su=10 * (9 / 7700),    # ≈ 0.0117  (fable uncommons)
-    wc_p_r=70 * (19 / 6500),    # ≈ 0.2046
-    wc_p_m=24 * (1 / 1100),    # ≈ 0.0218
-    wc_p_tr=41 * (3 / 7700),    # ≈ 0.0160
-    wc_p_tm=24 * (3 / 15400),    # ≈ 0.0047
-
-    reg_uncommon_cn_max=263,
-    special_u_cn_min=331,         # fable uncommons: CN 331-345
-
-    # Foil (from foil sheet)
-    foil_p_c=81 * (151 / 20250),   # ≈ 0.6044
-    foil_p_u=100 * (149 / 50000),   # ≈ 0.2980
-    foil_p_su=10 * (3 / 3500),   # ≈ 0.0086
-    foil_p_r=70 * (1 / 1000),   # ≈ 0.0700
-    foil_p_m=24 * (1 / 2000),   # ≈ 0.0120
-    foil_p_tr=41 * (1 / 3500),   # ≈ 0.0117
-    foil_p_tm=24 * (1 / 7000),   # ≈ 0.0034
-
-    land_foil_rate=1 / 5,  # 55/275 packs get foil land
-
-    bonus_rate=5 / 275,
-    bonus_set="spg",
-    bonus_cn_min=129,
-    bonus_cn_max=148,
-    bonus_label="ecl_spg",
-    bonus_slot_name="Special Guests (SPG 129-148, replaces common)",
+    set_code="ecl", packs_per_box=36,
+    main_p_r=70*(459/38000), main_p_m=24*(459/76000),
+    main_p_tr=41*(41/23500), main_p_tm=24*(41/47000),
+    reg_rare_cn_max=268, reg_mythic_cn_max=253,
+    treat_rare_cn_min=297, treat_mythic_cn_min=284,
+    wc_p_c=81*(1/450), wc_p_u=100*(29/5000), wc_p_su=10*(9/7700),
+    wc_p_r=70*(19/6500), wc_p_m=24*(1/1100), wc_p_tr=41*(3/7700), wc_p_tm=24*(3/15400),
+    reg_uncommon_cn_max=263, special_u_cn_min=331,
+    foil_p_c=81*(151/20250), foil_p_u=100*(149/50000), foil_p_su=10*(3/3500),
+    foil_p_r=70*(1/1000), foil_p_m=24*(1/2000), foil_p_tr=41*(1/3500), foil_p_tm=24*(1/7000),
+    land_foil_rate=1/5,
+    bonus_rate=5/275, bonus_set="spg", bonus_cn_min=129, bonus_cn_max=148,
+    bonus_label="ecl_spg", bonus_slot_name="Special Guests (SPG 129-148, replaces common)",
 )
-
-# ============================================================
-# TLA config values
-# ============================================================
 
 TLA_CONFIG = TreatmentPlayConfig(
-    set_code="tla",
-    packs_per_box=36,
-
-    # Main R/M (from rare_mythic_boosterfun sheet)
-    main_p_r=62 * (463 / 35000),   # ≈ 0.8194
-    main_p_m=26 * (463 / 70000),   # ≈ 0.1718
-    main_p_tr=40 * (37 / 23500),   # ≈ 0.0630
-    main_p_tm=28 * (37 / 47000),   # ≈ 0.0221
-
-    reg_rare_cn_max=278,
-    reg_mythic_cn_max=262,
-    treat_rare_cn_min=302,
-    treat_mythic_cn_min=297,
-
-    # Wildcard (from wildcard sheet)
-    wc_p_c=81 * (7 / 13500),    # ≈ 0.0420
-    wc_p_u=110 * (741 / 110000),   # ≈ 0.7410
-    wc_p_su=4 * (9 / 7375),    # ≈ 0.0049  (scene uncommons)
-    wc_p_r=62 * (193 / 70000),    # ≈ 0.1710
-    wc_p_m=26 * (193 / 140000),   # ≈ 0.0358
-    wc_p_tr=40 * (3 / 7375),    # ≈ 0.0163
-    wc_p_tm=28 * (3 / 14750),    # ≈ 0.0057
-
-    reg_uncommon_cn_max=281,
-    special_u_cn_min=299,         # scene uncommons: CN 299-306
-
-    # Foil (from foil sheet)
-    foil_p_c=81 * (539 / 80757),  # ≈ 0.5405
-    foil_p_u=110 * (367 / 109670),  # ≈ 0.3680
-    foil_p_su=4 * (36 / 58823),  # ≈ 0.0024
-    foil_p_r=62 * (79 / 69790),  # ≈ 0.0702
-    foil_p_m=26 * (79 / 139580),  # ≈ 0.0147
-    foil_p_tr=40 * (12 / 58823),  # ≈ 0.0082
-    foil_p_tm=28 * (6 / 58823),  # ≈ 0.0029
-
-    land_foil_rate=1 / 5,  # 26/130 packs get foil land
-
-    bonus_rate=5 / 130,
-    bonus_set="tle",
-    bonus_cn_min=1,
-    bonus_cn_max=61,
-    bonus_label="tla_source_material",
-    bonus_slot_name="Source Material (TLE, replaces common)",
+    set_code="tla", packs_per_box=36,
+    main_p_r=62*(463/35000), main_p_m=26*(463/70000),
+    main_p_tr=40*(37/23500), main_p_tm=28*(37/47000),
+    reg_rare_cn_max=278, reg_mythic_cn_max=262,
+    treat_rare_cn_min=302, treat_mythic_cn_min=297,
+    wc_p_c=81*(7/13500), wc_p_u=110*(741/110000), wc_p_su=4*(9/7375),
+    wc_p_r=62*(193/70000), wc_p_m=26*(193/140000), wc_p_tr=40*(3/7375), wc_p_tm=28*(3/14750),
+    reg_uncommon_cn_max=281, special_u_cn_min=299,
+    foil_p_c=81*(539/80757), foil_p_u=110*(367/109670), foil_p_su=4*(36/58823),
+    foil_p_r=62*(79/69790), foil_p_m=26*(79/139580), foil_p_tr=40*(12/58823), foil_p_tm=28*(6/58823),
+    land_foil_rate=1/5,
+    bonus_rate=5/130, bonus_set="tle", bonus_cn_min=1, bonus_cn_max=61,
+    bonus_label="tla_source_material", bonus_slot_name="Source Material (TLE, replaces common)",
 )
-
-# ============================================================
-# Generic slot builders for TreatmentPlayConfig
-# ============================================================
 
 
 def build_treatment_main_rm_slot(cfg: TreatmentPlayConfig) -> Slot:
     sc = cfg.set_code
-    q_r = _q(f"set:{sc}", "rarity:rare",   f"cn<={cfg.reg_rare_cn_max}",
-             "is:booster", "game:paper")
-    q_m = _q(f"set:{sc}", "rarity:mythic", f"cn<={cfg.reg_mythic_cn_max}",
-             "is:booster", "game:paper")
+    q_r = _q(f"set:{sc}", "rarity:rare",
+             f"cn<={cfg.reg_rare_cn_max}",   "is:booster", "game:paper")
+    q_m = _q(f"set:{sc}", "rarity:mythic",
+             f"cn<={cfg.reg_mythic_cn_max}", "is:booster", "game:paper")
     q_tr = _q(f"set:{sc}", "rarity:rare",
-              f"cn>={cfg.treat_rare_cn_min}",    "game:paper")
+              f"cn>={cfg.treat_rare_cn_min}",   "game:paper")
     q_tm = _q(f"set:{sc}", "rarity:mythic",
-              f"cn>={cfg.treat_mythic_cn_min}",  "game:paper")
+              f"cn>={cfg.treat_mythic_cn_min}", "game:paper")
     return Slot(
         name="Main R/M (regular + treatment)",
         outcomes=[
@@ -824,8 +660,7 @@ def build_treatment_main_rm_slot(cfg: TreatmentPlayConfig) -> Slot:
             (cfg.main_p_tm, QueryPool(
                 f"{sc}_main_tm", q_tm, unique="prints", price_field="usd")),
         ],
-        strict_probs=True,
-        renormalize=True,
+        strict_probs=True, renormalize=True,
     )
 
 
@@ -862,8 +697,7 @@ def build_treatment_wildcard_slot(cfg: TreatmentPlayConfig) -> Slot:
             (cfg.wc_p_tm, QueryPool(
                 f"{sc}_wc_tm", q_tm, unique="prints", price_field="usd")),
         ],
-        strict_probs=True,
-        renormalize=True,
+        strict_probs=True, renormalize=True,
     )
 
 
@@ -879,8 +713,7 @@ def build_treatment_foil_slot(cfg: TreatmentPlayConfig) -> Slot:
         parts.append("game:paper")
         q = _q(*parts, "finish:foil")
         q_fb = _q(*parts)
-        return QueryPool(f"{sc}_foil_{label}", q, fallback=q_fb,
-                         unique="cards", price_field="usd_foil")
+        return QueryPool(f"{sc}_foil_{label}", q, fallback=q_fb, unique="cards", price_field="usd_foil")
 
     return Slot(
         name="Traditional foil",
@@ -890,8 +723,7 @@ def build_treatment_foil_slot(cfg: TreatmentPlayConfig) -> Slot:
              f"cn<={cfg.reg_uncommon_cn_max}", booster=False)),
             (cfg.foil_p_su, _fp("su", "uncommon",
              f"cn>={cfg.special_u_cn_min}",   booster=False)),
-            (cfg.foil_p_r,  _fp("r",  "rare",
-             f"cn<={cfg.reg_rare_cn_max}")),
+            (cfg.foil_p_r,  _fp("r",  "rare",   f"cn<={cfg.reg_rare_cn_max}")),
             (cfg.foil_p_m,  _fp("m",  "mythic",
              f"cn<={cfg.reg_mythic_cn_max}")),
             (cfg.foil_p_tr, _fp("tr", "rare",
@@ -899,8 +731,7 @@ def build_treatment_foil_slot(cfg: TreatmentPlayConfig) -> Slot:
             (cfg.foil_p_tm, _fp("tm", "mythic",
              f"cn>={cfg.treat_mythic_cn_min}", booster=False)),
         ],
-        strict_probs=True,
-        renormalize=True,
+        strict_probs=True, renormalize=True,
     )
 
 
@@ -913,23 +744,22 @@ def build_treatment_land_slot(cfg: TreatmentPlayConfig) -> Slot:
         outcomes=[
             (1.0 - cfg.land_foil_rate,
              QueryPool(f"{sc}_land_nf", q, fallback=q_fb, unique="prints", price_field="usd")),
-            (cfg.land_foil_rate,
-             QueryPool(f"{sc}_land_f",  q, fallback=q_fb, unique="prints", price_field="usd_foil")),
+            (cfg.land_foil_rate,        QueryPool(
+                f"{sc}_land_f",  q, fallback=q_fb, unique="prints", price_field="usd_foil")),
         ],
         strict_probs=True,
     )
 
 
 def build_treatment_bonus_slot(cfg: TreatmentPlayConfig) -> Slot:
-    """Bonus sheet that replaces one common at cfg.bonus_rate."""
-    q = _q(f"set:{cfg.bonus_set}",
-           f"cn>={cfg.bonus_cn_min}", f"cn<={cfg.bonus_cn_max}", "game:paper")
+    q = _q(f"set:{cfg.bonus_set}", f"cn>={cfg.bonus_cn_min}",
+           f"cn<={cfg.bonus_cn_max}", "game:paper")
     return Slot(
         name=cfg.bonus_slot_name,
         outcomes=[
             (1.0 - cfg.bonus_rate, 0.0),
-            (cfg.bonus_rate, QueryPool(cfg.bonus_label, q, fallback=q,
-                                       unique="prints", price_field="usd")),
+            (cfg.bonus_rate, QueryPool(cfg.bonus_label, q,
+             fallback=q, unique="prints", price_field="usd")),
         ],
         strict_probs=True,
     )
@@ -958,18 +788,12 @@ def model_tla_play_box() -> ProductModel:
 
 
 # ============================================================
-# WOE Draft Booster — uses PlayBoosterConfig + extra_slots
+# WOE Draft Booster
 # ============================================================
-# Pack variants: 2/3 have no foil; 1/3 replace a common with foil_with_showcase.
-# WOT (Enchanting Tales) is always present as a dedicated slot.
-# No wildcard slot; no land slot (basic folded into 9 commons).
 
-_WOT_DRAFT_P_U = 18 * (4 / 147) + 25 * (2 / 147)  # ≈ 0.8299  (all uncommons)
-# ≈ 0.1276  (regular rares, CN≤63)
+_WOT_DRAFT_P_U = 18 * (4 / 147) + 25 * (2 / 147)
 _WOT_DRAFT_P_R = 5 * (1 / 98) + 15 * (1 / 196)
-# ≈ 0.0170  (anime rares, CN≥64)
 _WOT_DRAFT_P_AR = 5 * (1 / 294)
-# ≈ 0.0255  (anime mythics)
 _WOT_DRAFT_P_AM = 15 * (1 / 588)
 
 
@@ -995,16 +819,6 @@ def slot_woe_draft_enchanting_tales() -> Slot:
 
 
 def slot_woe_draft_foil() -> Slot:
-    """
-    foil_with_showcase replaces a common in 1/3 packs.
-    Foil commons/basics (≈60% of the foil sheet) have EV≈$0 and are
-    folded into the zero outcome alongside the 2/3 no-foil packs.
-    From the foil_with_showcase sheet:
-      uncommon : 25.0%  (98 cards at 1/392)
-      rare     : 12.1%
-      mythic   :  2.97%
-      common   : 60.0%  → folded to zero
-    """
     p_foil = 1 / 3
     _p_fu = 0.2500
     _p_fr = 0.1210
@@ -1014,8 +828,7 @@ def slot_woe_draft_foil() -> Slot:
         q = _q("(set:woe or set:wot)",
                f"rarity:{rarity}", "finish:foil", "game:paper")
         q_fb = _q("(set:woe or set:wot)", f"rarity:{rarity}", "game:paper")
-        return QueryPool(f"woe_draft_foil_{label}", q, fallback=q_fb,
-                         unique="cards", price_field="usd_foil")
+        return QueryPool(f"woe_draft_foil_{label}", q, fallback=q_fb, unique="cards", price_field="usd_foil")
 
     return Slot(
         name="Foil (replaces common, 1/3 packs)",
@@ -1025,49 +838,38 @@ def slot_woe_draft_foil() -> Slot:
             (p_foil * _p_fr, _fp("r", "rare")),
             (p_foil * _p_fm, _fp("m", "mythic")),
         ],
-        strict_probs=True,
-        renormalize=True,
+        strict_probs=True, renormalize=True,
     )
 
 
 WOE_DRAFT_CONFIG = PlayBoosterConfig(
-    set_code="woe",
-    packs_per_box=36,
-    # Draft boosters have no wildcard, no dedicated land slot, no main foil slot —
-    # all handled by the extra_slots below; the generic builders are unused.
-    # We set mythic_rate only so build_main_rm_slot has a value; it's never called.
+    set_code="woe", packs_per_box=36,
     mythic_rate=20 / 138,
-    wc_rates=RarityRates(),  # zeroed — no wildcard slot in draft boosters
-    wc_slots_per_pack=0,     # suppresses wildcard slot in model_from_config
+    wc_rates=RarityRates(), wc_slots_per_pack=0,
 )
 
 
 def model_woe_draft_box() -> ProductModel:
-    # Draft boosters don't have a generic wildcard or foil slot;
-    # build them explicitly and bypass the generic builders entirely.
-    slots = [
-        build_main_rm_slot(WOE_DRAFT_CONFIG),
-        slot_woe_draft_enchanting_tales(),
-        slot_woe_draft_foil(),
-    ]
     return ProductModel(
         set_code=WOE_DRAFT_CONFIG.set_code,
         packs_per_box=WOE_DRAFT_CONFIG.packs_per_box,
-        slots=slots,
+        slots=[
+            build_main_rm_slot(WOE_DRAFT_CONFIG),
+            slot_woe_draft_enchanting_tales(),
+            slot_woe_draft_foil(),
+        ],
     )
+
 
 # ============================================================
 # OTJ
 # ============================================================
 
-
 OTJ_CONFIG = PlayBoosterConfig(
-    set_code="otj",
-    packs_per_box=36,
+    set_code="otj", packs_per_box=36,
     mythic_rate=DEFAULT_MYTHIC_RATE,
-    borderless_fraction=0.40,      # regular 60% / borderless 40%
-    wc_rm_rate=1 / 12,      # C/U split derived from card counts
-    # Foil: None → computed from card counts
+    borderless_fraction=0.40,
+    wc_rm_rate=1 / 12,
     land_types=[
         LandTypeConfig("dual",  ["type:land", "rarity:common",
                        "-type:basic"], rate=1/2, foil_rate=1/5),
@@ -1078,20 +880,14 @@ OTJ_CONFIG = PlayBoosterConfig(
     ],
 )
 
-# Breaking News and The List are kept as custom functions because each
-# involves multiple pools at different rates that don't fit a single template.
-
 
 def slot_otj_breaking_news() -> Slot:
-    # OTP sheet: 80 uncommons, 60 rares, 15 mythics out of 155 total
     p_u = 80 / 155
     p_r = 60 / 155
     p_m = 15 / 155
-
     q_u = _q("set:otp", "rarity:uncommon", "is:booster", "game:paper")
     q_r = _q("set:otp", "rarity:rare",     "is:booster", "game:paper")
     q_m = _q("set:otp", "rarity:mythic",   "is:booster", "game:paper")
-
     return Slot(
         name="OTP (Breaking News) dedicated slot",
         outcomes=[
@@ -1110,39 +906,32 @@ def slot_otj_the_list() -> Slot:
     p_list = 1 / 5
     p_spg = 1 / 64
     p_big = max(0.0, p_list - p_spg)
-
     q_big = _q("set:big", "game:paper")
     q_spg = _q("set:spg", "cn>=29", "cn<=38", "game:paper")
-
     return Slot(
         name="The List (BIG/SPG) replaces a common",
         outcomes=[
             (1.0 - p_list, 0.0),
-            (p_big, QueryPool("otj_list_big", q_big, fallback=q_big,
-             unique="cards",  price_field="usd")),
+            (p_big, QueryPool("otj_list_big", q_big,
+             fallback=q_big, unique="cards",  price_field="usd")),
             (p_spg, QueryPool("otj_list_spg", q_spg, fallback=_q(
-                "set:spg", "game:paper"),    unique="prints", price_field="usd")),
+                "set:spg", "game:paper"), unique="prints", price_field="usd")),
         ],
         strict_probs=True,
     )
 
 
 def model_otj_play_box() -> ProductModel:
-    return model_from_config(
-        OTJ_CONFIG,
-        extra_slots=[slot_otj_breaking_news(), slot_otj_the_list()],
-    )
+    return model_from_config(OTJ_CONFIG, extra_slots=[slot_otj_breaking_news(), slot_otj_the_list()])
 
 
 # ============================================================
-# WOE
+# WOE (Set Booster / Play Booster)
 # ============================================================
 
 WOE_CONFIG = PlayBoosterConfig(
-    set_code="woe",
-    packs_per_box=30,
+    set_code="woe", packs_per_box=30,
     mythic_rate=20 / 138,
-    # No borderless in main slot
     wc_rates=RarityRates(common=0.700, uncommon=0.168,
                          rare=0.095, mythic=0.025),
     wc_slots_per_pack=2,
@@ -1156,12 +945,9 @@ WOE_CONFIG = PlayBoosterConfig(
     ],
 )
 
-# Enchanting Tales rates — kept at module level for documentation clarity
 _WOT_ANIME_RARE_RATE = 5 / 249
 _WOT_ANIME_MYTHIC_RATE = 15 / 588
-_WOT_RARITY_WEIGHTS = {"uncommon": 72 / 147,
-                       "rare": 60 / 147, "mythic": 15 / 147}
-
+_WOT_RARITY_WEIGHTS = {"uncommon": 72/147, "rare": 60/147, "mythic": 15/147}
 _WOT_ANIME_RARES = [
     "Aggravated Assault", "Land Tax", "Necropotence", "Primal Vigor", "Rhystic Study",
 ]
@@ -1178,16 +964,13 @@ def slot_woe_enchanting_tales() -> Slot:
     p_anime_m = _WOT_ANIME_MYTHIC_RATE
     p_normal = max(0.0, 1.0 - p_anime_r - p_anime_m)
     w = _WOT_RARITY_WEIGHTS
-
     q_u = _q("set:wot", "rarity:uncommon", "finish:nonfoil", "game:paper")
     q_r = _q("set:wot", "rarity:rare",     "finish:nonfoil", "game:paper")
     q_m = _q("set:wot", "rarity:mythic",   "finish:nonfoil", "game:paper")
-
     q_anime_r = _q(f"({name_or_clause(_WOT_ANIME_RARES)})",
                    "set:wot", "finish:nonfoil", "game:paper")
     q_anime_m = _q(f"({name_or_clause(_WOT_ANIME_MYTHICS)})",
                    "set:wot", "finish:nonfoil", "game:paper")
-
     return Slot(
         name="Enchanting Tales (dedicated)",
         outcomes=[
@@ -1213,8 +996,7 @@ def slot_woe_the_list() -> Slot:
         name="The List (approx via PLST)",
         outcomes=[
             (1.0 - p_list, 0.0),
-            (p_list, QueryPool("woe_list_plst", q_plst,
-                               fallback=_q("set:plst", "game:paper"),
+            (p_list, QueryPool("woe_list_plst", q_plst, fallback=_q("set:plst", "game:paper"),
                                unique="prints", price_field="usd")),
         ],
         strict_probs=True,
@@ -1222,10 +1004,7 @@ def slot_woe_the_list() -> Slot:
 
 
 def model_woe_set_box() -> ProductModel:
-    return model_from_config(
-        WOE_CONFIG,
-        extra_slots=[slot_woe_enchanting_tales(), slot_woe_the_list()],
-    )
+    return model_from_config(WOE_CONFIG, extra_slots=[slot_woe_enchanting_tales(), slot_woe_the_list()])
 
 
 # ============================================================
@@ -1236,25 +1015,19 @@ def model_woe_set_box() -> ProductModel:
 class MH3Config:
     set_code:      str = "mh3"
     packs_per_box: int = 36
-
-    # Main R/M slot — WotC published totals
     main_p_r:               float = 0.798
     main_p_m:               float = 0.130
-    main_p_retro_total:     float = 0.021   # 24R : 8M = 3:1
+    main_p_retro_total:     float = 0.021
     main_p_borderless_total: float = 0.051
-    main_retro_r_count:     int = 24      # used to split retro R vs M
+    main_retro_r_count:     int = 24
     main_retro_m_count:     int = 8
-
-    # New-to-Modern slot — WotC published totals
     ntm_p_u:                     float = 0.750
     ntm_p_r:                     float = 0.213
     ntm_p_m:                     float = 0.023
-    ntm_p_framebreak_total:      float = 0.008   # 6R + 1M
-    ntm_p_profile_total:         float = 0.003   # 2R + 2M
-    ntm_p_retro_total:           float = 0.002   # 2R + 1M
+    ntm_p_framebreak_total:      float = 0.008
+    ntm_p_profile_total:         float = 0.003
+    ntm_p_retro_total:           float = 0.002
     ntm_p_extra_borderless_mythic: float = 0.0005
-
-    # Wildcard slot — WotC published totals
     wc_p_c:             float = 0.417
     wc_p_u:             float = 0.334
     wc_p_dfc_u:         float = 0.083
@@ -1264,19 +1037,15 @@ class MH3Config:
     wc_p_retro:         float = 0.042
     wc_p_cmdr_mythic:   float = 0.042
     wc_p_snow_wastes:   float = 0.0005
-
-    # Land/common slot — WotC published totals
     lc_p_common:           float = 0.50
     lc_p_basic_nf:         float = 0.20
     lc_p_basic_f:          float = 0.133
     lc_p_eldrazi_basic_nf: float = 0.10
     lc_p_eldrazi_basic_f:  float = 0.067
-
-    # Special Guest replacement
-    special_guest_rate: float = 1 / 64
+    special_guest_rate:    float = 1 / 64
 
 
-MH3 = MH3Config()   # singleton — import and use this everywhere below
+MH3 = MH3Config()
 
 
 def slot_mh3_main_rm(cfg: MH3Config = MH3) -> Slot:
@@ -1284,7 +1053,6 @@ def slot_mh3_main_rm(cfg: MH3Config = MH3) -> Slot:
     retro_total = cfg.main_retro_r_count + cfg.main_retro_m_count
     p_retro_r = cfg.main_p_retro_total * (cfg.main_retro_r_count / retro_total)
     p_retro_m = cfg.main_p_retro_total * (cfg.main_retro_m_count / retro_total)
-
     q_r_reg = _q(f"set:{sc}", "rarity:rare",   "is:booster",
                  "game:paper", "-frame:1997", "-is:borderless")
     q_m_reg = _q(f"set:{sc}", "rarity:mythic", "is:booster",
@@ -1293,30 +1061,27 @@ def slot_mh3_main_rm(cfg: MH3Config = MH3) -> Slot:
                     "game:paper", "-frame:1997", "-is:borderless")
     q_m_reg_fb = _q(f"set:{sc}", "rarity:mythic",
                     "game:paper", "-frame:1997", "-is:borderless")
-
     q_r_retro = _q(f"set:{sc}", "frame:1997",
                    "rarity:rare",   "is:booster", "game:paper")
     q_m_retro = _q(f"set:{sc}", "frame:1997",
                    "rarity:mythic", "is:booster", "game:paper")
     q_r_retro_fb = _q(f"set:{sc}", "frame:1997", "rarity:rare",   "game:paper")
     q_m_retro_fb = _q(f"set:{sc}", "frame:1997", "rarity:mythic", "game:paper")
-
     q_bl = _q(f"set:{sc}", "is:borderless",
               "(rarity:rare or rarity:mythic)", "game:paper")
-
     return Slot(
         name="Main R/M (incl. retro + borderless)",
         outcomes=[
-            (cfg.main_p_r,                  QueryPool("mh3_main_regular_r",
-             q_r_reg,  fallback=q_r_reg_fb,  unique="prints", price_field="usd")),
-            (cfg.main_p_m,                  QueryPool("mh3_main_regular_m",
-             q_m_reg,  fallback=q_m_reg_fb,  unique="prints", price_field="usd")),
-            (p_retro_r,                     QueryPool("mh3_main_retro_r",
-             q_r_retro, fallback=q_r_retro_fb, unique="prints", price_field="usd")),
-            (p_retro_m,                     QueryPool("mh3_main_retro_m",
-             q_m_retro, fallback=q_m_retro_fb, unique="prints", price_field="usd")),
-            (cfg.main_p_borderless_total,   QueryPool("mh3_main_borderless",
-             q_bl,     fallback=q_bl,         unique="prints", price_field="usd")),
+            (cfg.main_p_r,               QueryPool("mh3_main_regular_r",  q_r_reg,
+             fallback=q_r_reg_fb,  unique="prints", price_field="usd")),
+            (cfg.main_p_m,               QueryPool("mh3_main_regular_m",  q_m_reg,
+             fallback=q_m_reg_fb,  unique="prints", price_field="usd")),
+            (p_retro_r,                  QueryPool("mh3_main_retro_r",    q_r_retro,
+             fallback=q_r_retro_fb, unique="prints", price_field="usd")),
+            (p_retro_m,                  QueryPool("mh3_main_retro_m",    q_m_retro,
+             fallback=q_m_retro_fb, unique="prints", price_field="usd")),
+            (cfg.main_p_borderless_total, QueryPool("mh3_main_borderless", q_bl,
+             fallback=q_bl,         unique="prints", price_field="usd")),
         ],
         strict_probs=True,
     )
@@ -1324,13 +1089,11 @@ def slot_mh3_main_rm(cfg: MH3Config = MH3) -> Slot:
 
 def slot_mh3_new_to_modern(cfg: MH3Config = MH3) -> Slot:
     sc = cfg.set_code
-
     p_retro_r_m = cfg.ntm_p_retro_total
     p_bl_r = (cfg.ntm_p_framebreak_total * (6/7)) + \
         (cfg.ntm_p_profile_total * 0.5)
     p_bl_m = (cfg.ntm_p_framebreak_total * (1/7)) + \
         (cfg.ntm_p_profile_total * 0.5) + cfg.ntm_p_extra_borderless_mythic
-
     q_u_reg = _q(f"set:{sc}", "-is:reprint", "rarity:uncommon",
                  "is:booster", "game:paper", "-frame:1997", "-is:borderless")
     q_r_reg = _q(f"set:{sc}", "-is:reprint", "rarity:rare",
@@ -1343,7 +1106,6 @@ def slot_mh3_new_to_modern(cfg: MH3Config = MH3) -> Slot:
                     "game:paper", "-frame:1997", "-is:borderless")
     q_m_reg_fb = _q(f"set:{sc}", "-is:reprint", "rarity:mythic",
                     "game:paper", "-frame:1997", "-is:borderless")
-
     q_retro_any = _q(f"set:{sc}", "-is:reprint", "frame:1997",
                      "(rarity:rare or rarity:mythic)", "is:booster", "game:paper")
     q_retro_any_fb = _q(f"set:{sc}", "-is:reprint", "frame:1997",
@@ -1352,25 +1114,23 @@ def slot_mh3_new_to_modern(cfg: MH3Config = MH3) -> Slot:
                   "(rarity:rare or rarity:mythic)", "game:paper")
     q_bl_m = _q(f"set:{sc}", "-is:reprint", "is:borderless",
                 "rarity:mythic",                  "game:paper")
-
     return Slot(
         name="New-to-Modern slot (approx via -is:reprint)",
         outcomes=[
-            (cfg.ntm_p_u, QueryPool("mh3_ntm_u_reg",        q_u_reg,
+            (cfg.ntm_p_u, QueryPool("mh3_ntm_u_reg",         q_u_reg,
              fallback=q_u_reg_fb,     unique="prints", price_field="usd")),
-            (cfg.ntm_p_r, QueryPool("mh3_ntm_r_reg",        q_r_reg,
+            (cfg.ntm_p_r, QueryPool("mh3_ntm_r_reg",         q_r_reg,
              fallback=q_r_reg_fb,     unique="prints", price_field="usd")),
-            (cfg.ntm_p_m, QueryPool("mh3_ntm_m_reg",        q_m_reg,
+            (cfg.ntm_p_m, QueryPool("mh3_ntm_m_reg",         q_m_reg,
              fallback=q_m_reg_fb,     unique="prints", price_field="usd")),
-            (p_retro_r_m, QueryPool("mh3_ntm_retro_any",    q_retro_any,
+            (p_retro_r_m, QueryPool("mh3_ntm_retro_any",     q_retro_any,
              fallback=q_retro_any_fb, unique="prints", price_field="usd")),
             (p_bl_r,      QueryPool("mh3_ntm_borderless_any", q_bl_any,
              fallback=q_bl_any,       unique="prints", price_field="usd")),
             (p_bl_m,      QueryPool("mh3_ntm_borderless_m",   q_bl_m,
-             fallback=q_bl_m,         unique="prints", price_field="usd")),
+             fallback=q_bl_m,          unique="prints", price_field="usd")),
         ],
-        strict_probs=True,
-        renormalize=True,
+        strict_probs=True, renormalize=True,
     )
 
 
@@ -1383,13 +1143,11 @@ def slot_mh3_wildcard(cfg: MH3Config = MH3) -> Slot:
                "is:booster", "game:paper", *extra),
             _q(f"set:{sc}", f"rarity:{rarity}", "game:paper", *extra),
         )
-
-    q_c,    q_c_fb = _q_pair("common")
-    q_u,    q_u_fb = _q_pair("uncommon")
-    q_dfc,  q_dfc_fb = _q_pair("uncommon", "is:dfc")
-    q_r,    q_r_fb = _q_pair("rare")
-    q_m,    q_m_fb = _q_pair("mythic")
-
+    q_c,   q_c_fb = _q_pair("common")
+    q_u,   q_u_fb = _q_pair("uncommon")
+    q_dfc, q_dfc_fb = _q_pair("uncommon", "is:dfc")
+    q_r,   q_r_fb = _q_pair("rare")
+    q_m,   q_m_fb = _q_pair("mythic")
     q_bl_rm = _q(f"set:{sc}", "is:borderless",
                  "(rarity:rare or rarity:mythic)", "is:booster", "game:paper")
     q_bl_rm_fb = _q(f"set:{sc}", "is:borderless",
@@ -1398,7 +1156,6 @@ def slot_mh3_wildcard(cfg: MH3Config = MH3) -> Slot:
     q_retro_fb = _q(f"set:{sc}", "frame:1997", "game:paper")
     q_cmdr = _q("set:m3c", "rarity:mythic", "game:paper")
     q_snow = _q(f"set:{sc}", 'name:"Snow-Covered Wastes"', "game:paper")
-
     return Slot(
         name="Wildcard (any rarity)",
         outcomes=[
@@ -1421,8 +1178,7 @@ def slot_mh3_wildcard(cfg: MH3Config = MH3) -> Slot:
             (cfg.wc_p_snow_wastes,   QueryPool("mh3_wc_snow_wastes",  q_snow,
              fallback=q_snow,    unique="prints", price_field="usd")),
         ],
-        strict_probs=True,
-        renormalize=True,
+        strict_probs=True, renormalize=True,
     )
 
 
@@ -1435,13 +1191,11 @@ def slot_mh3_traditional_foil(cfg: MH3Config = MH3) -> Slot:
         q_fb = _q(f"set:{sc}", f"rarity:{rarity}",
                   "is:booster", "game:paper", *extra)
         return q, q_fb
-
     q_c,   q_c_fb = _pair("common")
     q_u,   q_u_fb = _pair("uncommon")
     q_dfc, q_dfc_fb = _pair("uncommon", "is:dfc")
     q_r,   q_r_fb = _pair("rare")
     q_m,   q_m_fb = _pair("mythic")
-
     q_bl = _q(f"set:{sc}", "is:borderless", "(rarity:rare or rarity:mythic)",
               "is:booster", "game:paper", "finish:foil")
     q_bl_fb = _q(f"set:{sc}", "is:borderless",
@@ -1454,31 +1208,29 @@ def slot_mh3_traditional_foil(cfg: MH3Config = MH3) -> Slot:
     q_snow = _q(f"set:{sc}", 'name:"Snow-Covered Wastes"',
                 "game:paper", "finish:foil")
     q_snow_fb = _q(f"set:{sc}", 'name:"Snow-Covered Wastes"', "game:paper")
-
     return Slot(
         name="Traditional foil (wildcard breakdown; finish:foil; unique=cards)",
         outcomes=[
-            (cfg.wc_p_c,             QueryPool("mh3_foil_c",            q_c,
+            (cfg.wc_p_c,             QueryPool("mh3_foil_c",           q_c,
              fallback=q_c_fb,    unique="cards", price_field="usd_foil")),
-            (cfg.wc_p_u,             QueryPool("mh3_foil_u",            q_u,
+            (cfg.wc_p_u,             QueryPool("mh3_foil_u",           q_u,
              fallback=q_u_fb,    unique="cards", price_field="usd_foil")),
-            (cfg.wc_p_dfc_u,         QueryPool("mh3_foil_dfc_u",        q_dfc,
+            (cfg.wc_p_dfc_u,         QueryPool("mh3_foil_dfc_u",       q_dfc,
              fallback=q_dfc_fb,  unique="cards", price_field="usd_foil")),
-            (cfg.wc_p_r,             QueryPool("mh3_foil_r",            q_r,
+            (cfg.wc_p_r,             QueryPool("mh3_foil_r",           q_r,
              fallback=q_r_fb,    unique="cards", price_field="usd_foil")),
-            (cfg.wc_p_m,             QueryPool("mh3_foil_m",            q_m,
+            (cfg.wc_p_m,             QueryPool("mh3_foil_m",           q_m,
              fallback=q_m_fb,    unique="cards", price_field="usd_foil")),
-            (cfg.wc_p_borderless_rm, QueryPool("mh3_foil_borderless",   q_bl,
+            (cfg.wc_p_borderless_rm, QueryPool("mh3_foil_borderless",  q_bl,
              fallback=q_bl_fb,   unique="cards", price_field="usd_foil")),
-            (cfg.wc_p_retro,         QueryPool("mh3_foil_retro",        q_retro,
+            (cfg.wc_p_retro,         QueryPool("mh3_foil_retro",       q_retro,
              fallback=q_retro_fb, unique="cards", price_field="usd_foil")),
-            (cfg.wc_p_cmdr_mythic,   QueryPool("mh3_foil_cmdr_mythic",  q_cmdr,
+            (cfg.wc_p_cmdr_mythic,   QueryPool("mh3_foil_cmdr_mythic", q_cmdr,
              fallback=q_cmdr_fb,  unique="cards", price_field="usd_foil")),
-            (cfg.wc_p_snow_wastes,   QueryPool("mh3_foil_snow_wastes",  q_snow,
+            (cfg.wc_p_snow_wastes,   QueryPool("mh3_foil_snow_wastes", q_snow,
              fallback=q_snow_fb,  unique="cards", price_field="usd_foil")),
         ],
-        strict_probs=True,
-        renormalize=True,
+        strict_probs=True, renormalize=True,
     )
 
 
@@ -1490,25 +1242,23 @@ def slot_mh3_land_or_common(cfg: MH3Config = MH3) -> Slot:
                  "is:booster", "game:paper")
     q_basic_fb = _q(f"set:{sc}", "type:basic", "-is:fullart", "game:paper")
     q_eldrazi = _q(f"set:{sc}", "type:basic",
-                   "is:fullart", "is:booster", "game:paper")
-    q_eldrazi_fb = _q(f"set:{sc}", "type:basic",  "is:fullart", "game:paper")
-
+                   "is:fullart",  "is:booster", "game:paper")
+    q_eldrazi_fb = _q(f"set:{sc}", "type:basic", "is:fullart", "game:paper")
     return Slot(
         name="Land card or common",
         outcomes=[
-            (cfg.lc_p_common,           QueryPool("mh3_lc_common",      q_common,
-             fallback=q_common_fb,  unique="prints", price_field="usd")),
-            (cfg.lc_p_basic_nf,         QueryPool("mh3_basic_nf",       q_basic,
-             fallback=q_basic_fb,   unique="prints", price_field="usd")),
-            (cfg.lc_p_basic_f,          QueryPool("mh3_basic_f",        q_basic,
-             fallback=q_basic_fb,   unique="prints", price_field="usd_foil")),
-            (cfg.lc_p_eldrazi_basic_nf, QueryPool("mh3_eldrazi_nf",     q_eldrazi,
-             fallback=q_eldrazi_fb, unique="prints", price_field="usd")),
-            (cfg.lc_p_eldrazi_basic_f,  QueryPool("mh3_eldrazi_f",      q_eldrazi,
-             fallback=q_eldrazi_fb, unique="prints", price_field="usd_foil")),
+            (cfg.lc_p_common,           QueryPool("mh3_lc_common",  q_common,
+             fallback=q_common_fb,   unique="prints", price_field="usd")),
+            (cfg.lc_p_basic_nf,         QueryPool("mh3_basic_nf",   q_basic,
+             fallback=q_basic_fb,    unique="prints", price_field="usd")),
+            (cfg.lc_p_basic_f,          QueryPool("mh3_basic_f",    q_basic,
+             fallback=q_basic_fb,    unique="prints", price_field="usd_foil")),
+            (cfg.lc_p_eldrazi_basic_nf, QueryPool("mh3_eldrazi_nf", q_eldrazi,
+             fallback=q_eldrazi_fb,  unique="prints", price_field="usd")),
+            (cfg.lc_p_eldrazi_basic_f,  QueryPool("mh3_eldrazi_f",  q_eldrazi,
+             fallback=q_eldrazi_fb,  unique="prints", price_field="usd_foil")),
         ],
-        strict_probs=True,
-        renormalize=True,
+        strict_probs=True, renormalize=True,
     )
 
 
@@ -1527,59 +1277,21 @@ def slot_mh3_special_guests(cfg: MH3Config = MH3) -> Slot:
 
 def model_mh3_play_box() -> ProductModel:
     return ProductModel(
-        set_code=MH3.set_code,
-        packs_per_box=MH3.packs_per_box,
+        set_code=MH3.set_code, packs_per_box=MH3.packs_per_box,
         slots=[
-            slot_mh3_main_rm(),
-            slot_mh3_new_to_modern(),
-            slot_mh3_wildcard(),
-            slot_mh3_traditional_foil(),
-            slot_mh3_land_or_common(),
-            slot_mh3_special_guests(),
+            slot_mh3_main_rm(), slot_mh3_new_to_modern(), slot_mh3_wildcard(),
+            slot_mh3_traditional_foil(), slot_mh3_land_or_common(), slot_mh3_special_guests(),
         ],
     )
 
 
-# ----------------------------
-# Printing in the format you want
-# ----------------------------
-def print_report(r: EVReport) -> None:
-    print(f"{r.set_name} ({r.set_code})")
-    print(f"Pack EV: ${r.pack_ev:,.2f}")
-    print(f"Box EV:  ${r.box_ev:,.2f}   (packs: {r.packs_per_box})")
-
-    print("\nCounts:")
-    for k in sorted(r.counts):
-        print(f"  {k:<22} {r.counts[k]}")
-
-    print("\nSlot breakdown:")
-    for se in r.slot_evals:
-        print(f"  {se.name:<34} ${se.ev:,.4f}")
-        for pe in se.pool_evals:
-            print(f"    - {pe.label:<18} n={pe.count:<4} ev=${pe.ev:,.4f}")
-
-    print("\nWarnings:")
-    if not r.warnings:
-        print("  (none)")
-    else:
-        for w in r.warnings:
-            print(f"  - {w}")
-
-
 # ============================================================
-# New sets appended (2026-03-01)
+# Shared helpers for newer sets
 # ============================================================
 
-# Notes:
-# - These Play Booster models keep the existing config structure (PlayBoosterConfig + model_from_config).
-# - Pack-per-box counts are taken from the provided Ebay.docx listings and/or current product listings.
-# - Where a set has a bonus sheet that *replaces a common* (e.g. Special Guests / Source Material),
-#   we model that explicitly using the sheet's set code + collector-number range extracted from the
-#   provided mtg.wtf HTML files.
-# - Wildcard and foil rarity mixes are left on the existing generic assumptions (wc_rm_rate=1/12,
-#   foil derived from card counts) until you provide the XML pull-rate file you mentioned.
-
-def slot_replaces_common_with_pool(*, slot_name: str, replace_rate: float, pool_label: str, query: str) -> Slot:
+def slot_replaces_common_with_pool(
+    *, slot_name: str, replace_rate: float, pool_label: str, query: str
+) -> Slot:
     """Generic 'replaces a common' bonus slot."""
     return Slot(
         name=slot_name,
@@ -1593,7 +1305,6 @@ def slot_replaces_common_with_pool(*, slot_name: str, replace_rate: float, pool_
 
 
 def _std_land_types_any_land(*, foil_rate: float = 0.20) -> list[LandTypeConfig]:
-    # "type:land" is broad (basics + nonbasics) and works even when we don't know the exact land breakdown yet.
     return [LandTypeConfig("any", ["type:land"], rate=1.0, foil_rate=foil_rate)]
 
 
@@ -1601,16 +1312,14 @@ def _std_land_types_basic_only(*, foil_rate: float = 0.20) -> list[LandTypeConfi
     return [LandTypeConfig("basic", ["type:basic"], rate=1.0, foil_rate=foil_rate)]
 
 
-# ----------------------------
+# ============================================================
 # BLB — Bloomburrow (36 packs/box)
-# Special Guests: SPG 54–63, replaces a common in 15/1000 packs (= 3/200)
-# (788+12 non-foil-land variants = 800/1000; 12+3 have the_list = 15/1000)
-# ----------------------------
+# SPG 54–63, replaces a common in 15/1000 packs
+# ============================================================
+
 BLB_CONFIG = PlayBoosterConfig(
-    set_code="blb",
-    packs_per_box=36,
-    mythic_rate=DEFAULT_MYTHIC_RATE,
-    wc_rm_rate=1 / 12,
+    set_code="blb", packs_per_box=36,
+    mythic_rate=DEFAULT_MYTHIC_RATE, wc_rm_rate=1/12,
     land_types=_std_land_types_any_land(foil_rate=0.20),
 )
 
@@ -1618,8 +1327,7 @@ BLB_CONFIG = PlayBoosterConfig(
 def slot_blb_special_guests() -> Slot:
     return slot_replaces_common_with_pool(
         slot_name="Special Guests replacement (15 in 1000)",
-        replace_rate=15 / 1000,
-        pool_label="blb_spg",
+        replace_rate=15/1000, pool_label="blb_spg",
         query=_q("set:spg", "cn>=54", "cn<=63", "game:paper"),
     )
 
@@ -1628,15 +1336,14 @@ def model_blb_play_box() -> ProductModel:
     return model_from_config(BLB_CONFIG, extra_slots=[slot_blb_special_guests()])
 
 
-# ----------------------------
-# DSK — Duskmourn: House of Horror (36 packs/box) + Special Guests
-# Special Guests: SPG 64–73, replaces a common in 1/64 packs
-# ----------------------------
+# ============================================================
+# DSK — Duskmourn: House of Horror (36 packs/box)
+# SPG 64–73, replaces a common in 1/64 packs
+# ============================================================
+
 DSK_CONFIG = PlayBoosterConfig(
-    set_code="dsk",
-    packs_per_box=36,
-    mythic_rate=DEFAULT_MYTHIC_RATE,
-    wc_rm_rate=1 / 12,
+    set_code="dsk", packs_per_box=36,
+    mythic_rate=DEFAULT_MYTHIC_RATE, wc_rm_rate=1/12,
     land_types=_std_land_types_basic_only(foil_rate=0.20),
 )
 
@@ -1644,8 +1351,7 @@ DSK_CONFIG = PlayBoosterConfig(
 def slot_dsk_special_guests() -> Slot:
     return slot_replaces_common_with_pool(
         slot_name="Special Guests replacement (1 in 64)",
-        replace_rate=1 / 64,
-        pool_label="dsk_spg",
+        replace_rate=1/64, pool_label="dsk_spg",
         query=_q("set:spg", "cn>=64", "cn<=73", "game:paper"),
     )
 
@@ -1654,15 +1360,14 @@ def model_dsk_play_box() -> ProductModel:
     return model_from_config(DSK_CONFIG, extra_slots=[slot_dsk_special_guests()])
 
 
-# ----------------------------
-# DFT — Aetherdrift (30 packs/box) + Special Guests
-# Special Guests: SPG 84–93, replaces a common in 1/64 packs
-# ----------------------------
+# ============================================================
+# DFT — Aetherdrift (30 packs/box)
+# SPG 84–93, replaces a common in 1/64 packs
+# ============================================================
+
 DFT_CONFIG = PlayBoosterConfig(
-    set_code="dft",
-    packs_per_box=30,
-    mythic_rate=DEFAULT_MYTHIC_RATE,
-    wc_rm_rate=1 / 12,
+    set_code="dft", packs_per_box=30,
+    mythic_rate=DEFAULT_MYTHIC_RATE, wc_rm_rate=1/12,
     land_types=_std_land_types_any_land(foil_rate=0.20),
 )
 
@@ -1670,8 +1375,7 @@ DFT_CONFIG = PlayBoosterConfig(
 def slot_dft_special_guests() -> Slot:
     return slot_replaces_common_with_pool(
         slot_name="Special Guests replacement (1 in 64)",
-        replace_rate=1 / 64,
-        pool_label="dft_spg",
+        replace_rate=1/64, pool_label="dft_spg",
         query=_q("set:spg", "cn>=84", "cn<=93", "game:paper"),
     )
 
@@ -1680,15 +1384,14 @@ def model_dft_play_box() -> ProductModel:
     return model_from_config(DFT_CONFIG, extra_slots=[slot_dft_special_guests()])
 
 
-# ----------------------------
-# FDN — Foundations (36 packs/box) + Special Guests
-# Special Guests: SPG 74–83, replaces a common in 3/200 packs (0.015)
-# ----------------------------
+# ============================================================
+# FDN — Foundations (36 packs/box)
+# SPG 74–83, replaces a common in 3/200 packs
+# ============================================================
+
 FDN_CONFIG = PlayBoosterConfig(
-    set_code="fdn",
-    packs_per_box=36,
-    mythic_rate=DEFAULT_MYTHIC_RATE,
-    wc_rm_rate=1 / 12,
+    set_code="fdn", packs_per_box=36,
+    mythic_rate=DEFAULT_MYTHIC_RATE, wc_rm_rate=1/12,
     land_types=_std_land_types_any_land(foil_rate=0.20),
 )
 
@@ -1696,8 +1399,7 @@ FDN_CONFIG = PlayBoosterConfig(
 def slot_fdn_special_guests() -> Slot:
     return slot_replaces_common_with_pool(
         slot_name="Special Guests replacement (3 in 200)",
-        replace_rate=3 / 200,
-        pool_label="fdn_spg",
+        replace_rate=3/200, pool_label="fdn_spg",
         query=_q("set:spg", "cn>=74", "cn<=83", "game:paper"),
     )
 
@@ -1706,16 +1408,14 @@ def model_fdn_play_box() -> ProductModel:
     return model_from_config(FDN_CONFIG, extra_slots=[slot_fdn_special_guests()])
 
 
-# ----------------------------
+# ============================================================
 # FIN — Final Fantasy (30 packs/box)
-# Through the Ages: FCA set, replaces a common in 5/15 packs (= 1/3)
-# (4/15 + 1/15 variants contain Sheet through_the_ages instead of 1 common)
-# ----------------------------
+# Through the Ages (FCA), replaces a common in 1/3 packs
+# ============================================================
+
 FIN_CONFIG = PlayBoosterConfig(
-    set_code="fin",
-    packs_per_box=30,
-    mythic_rate=DEFAULT_MYTHIC_RATE,
-    wc_rm_rate=1 / 12,
+    set_code="fin", packs_per_box=30,
+    mythic_rate=DEFAULT_MYTHIC_RATE, wc_rm_rate=1/12,
     land_types=_std_land_types_basic_only(foil_rate=0.20),
 )
 
@@ -1723,8 +1423,7 @@ FIN_CONFIG = PlayBoosterConfig(
 def slot_fin_through_the_ages() -> Slot:
     return slot_replaces_common_with_pool(
         slot_name="Through the Ages replacement (1 in 3)",
-        replace_rate=1 / 3,
-        pool_label="fin_fca",
+        replace_rate=1/3, pool_label="fin_fca",
         query=_q("set:fca", "game:paper"),
     )
 
@@ -1733,15 +1432,14 @@ def model_fin_play_box() -> ProductModel:
     return model_from_config(FIN_CONFIG, extra_slots=[slot_fin_through_the_ages()])
 
 
-# ----------------------------
-# EOE — Edge of Eternities (30 packs/box) + Special Guests
-# Special Guests: SPG 119–128, replaces a common in 9/500 packs (0.018)
-# ----------------------------
+# ============================================================
+# EOE — Edge of Eternities (30 packs/box)
+# SPG 119–128, replaces a common in 9/500 packs
+# ============================================================
+
 EOE_CONFIG = PlayBoosterConfig(
-    set_code="eoe",
-    packs_per_box=30,
-    mythic_rate=DEFAULT_MYTHIC_RATE,
-    wc_rm_rate=1 / 12,
+    set_code="eoe", packs_per_box=30,
+    mythic_rate=DEFAULT_MYTHIC_RATE, wc_rm_rate=1/12,
     land_types=_std_land_types_basic_only(foil_rate=0.20),
 )
 
@@ -1749,8 +1447,7 @@ EOE_CONFIG = PlayBoosterConfig(
 def slot_eoe_special_guests() -> Slot:
     return slot_replaces_common_with_pool(
         slot_name="Special Guests replacement (9 in 500)",
-        replace_rate=9 / 500,
-        pool_label="eoe_spg",
+        replace_rate=9/500, pool_label="eoe_spg",
         query=_q("set:spg", "cn>=119", "cn<=128", "game:paper"),
     )
 
@@ -1759,15 +1456,14 @@ def model_eoe_play_box() -> ProductModel:
     return model_from_config(EOE_CONFIG, extra_slots=[slot_eoe_special_guests()])
 
 
-# ----------------------------
-# TDM — Tarkir: Dragonstorm (30 packs/box) + Special Guests
-# Special Guests: SPG 104–113, replaces a common in 1/64 packs
-# ----------------------------
+# ============================================================
+# TDM — Tarkir: Dragonstorm (30 packs/box)
+# SPG 104–113, replaces a common in 1/64 packs
+# ============================================================
+
 TDM_CONFIG = PlayBoosterConfig(
-    set_code="tdm",
-    packs_per_box=30,
-    mythic_rate=DEFAULT_MYTHIC_RATE,
-    wc_rm_rate=1 / 12,
+    set_code="tdm", packs_per_box=30,
+    mythic_rate=DEFAULT_MYTHIC_RATE, wc_rm_rate=1/12,
     land_types=_std_land_types_any_land(foil_rate=0.20),
 )
 
@@ -1775,8 +1471,7 @@ TDM_CONFIG = PlayBoosterConfig(
 def slot_tdm_special_guests() -> Slot:
     return slot_replaces_common_with_pool(
         slot_name="Special Guests replacement (1 in 64)",
-        replace_rate=1 / 64,
-        pool_label="tdm_spg",
+        replace_rate=1/64, pool_label="tdm_spg",
         query=_q("set:spg", "cn>=104", "cn<=113", "game:paper"),
     )
 
@@ -1785,15 +1480,14 @@ def model_tdm_play_box() -> ProductModel:
     return model_from_config(TDM_CONFIG, extra_slots=[slot_tdm_special_guests()])
 
 
-# ----------------------------
-# INR — Innistrad Remastered (36 packs/box) + Retro slot
-# Retro slot: INR 329–480 appears once per pack in the provided mtg.wtf pack breakdown.
-# ----------------------------
+# ============================================================
+# INR — Innistrad Remastered (36 packs/box)
+# Retro slot cn 329–480 appears once per pack
+# ============================================================
+
 INR_CONFIG = PlayBoosterConfig(
-    set_code="inr",
-    packs_per_box=36,
-    mythic_rate=DEFAULT_MYTHIC_RATE,
-    wc_rm_rate=1 / 12,
+    set_code="inr", packs_per_box=36,
+    mythic_rate=DEFAULT_MYTHIC_RATE, wc_rm_rate=1/12,
     land_types=_std_land_types_basic_only(foil_rate=0.20),
 )
 
@@ -1812,15 +1506,14 @@ def model_inr_play_box() -> ProductModel:
     return model_from_config(INR_CONFIG, extra_slots=[slot_inr_retro()])
 
 
-# ----------------------------
-# SPM — Marvel's Spider-Man (30 packs/box) + Source Material slot
-# Source Material: MAR 1–40 replaces a common in 1/24 packs (from mtg.wtf variants)
-# ----------------------------
+# ============================================================
+# SPM — Marvel's Spider-Man (30 packs/box)
+# Source Material MAR 1–40, replaces a common in 1/24 packs
+# ============================================================
+
 SPM_CONFIG = PlayBoosterConfig(
-    set_code="spm",
-    packs_per_box=30,
-    mythic_rate=DEFAULT_MYTHIC_RATE,
-    wc_rm_rate=1 / 12,
+    set_code="spm", packs_per_box=30,
+    mythic_rate=DEFAULT_MYTHIC_RATE, wc_rm_rate=1/12,
     land_types=_std_land_types_any_land(foil_rate=0.20),
 )
 
@@ -1828,8 +1521,7 @@ SPM_CONFIG = PlayBoosterConfig(
 def slot_spm_source_material() -> Slot:
     return slot_replaces_common_with_pool(
         slot_name="Source Material replacement (1 in 24)",
-        replace_rate=1 / 24,
-        pool_label="spm_mar",
+        replace_rate=1/24, pool_label="spm_mar",
         query=_q("set:mar", "cn>=1", "cn<=40", "game:paper"),
     )
 
@@ -1838,11 +1530,326 @@ def model_spm_play_box() -> ProductModel:
     return model_from_config(SPM_CONFIG, extra_slots=[slot_spm_source_material()])
 
 
-# ---------------------------------------------------------------------------
-# Registry: maps (SET_CODE, kind) -> factory function
-# To add a new set: write a model_xxx() function above, then add one line here.
-# No other file needs to change for EV support.
-# ---------------------------------------------------------------------------
+# ============================================================
+# ACR — Magic: The Gathering–Assassin's Creed (24 packs/box)
+# Product type: Beyond Booster — unique slot structure.
+#
+# Sources: mtg.wtf/pack/acr + magic.wizards.com collecting article.
+#
+# Slots verified from mtg.wtf sheet rates:
+#   3 non-foil uncommons per pack (Sheet uncommon, 1/54 per card × 54 cards)
+#   1 land/scene slot: 96.6% full-art basic (omitted), 3.09% rare scene dual,
+#                      0.31% mythic scene Ezio (cn 111–116)
+#   1 non-foil R/M: 17.95% mythic (32 rares at 1/39 + 14 mythics at 1/78)
+#   1 traditional foil: 83.34% unc / 13.67% rare / 2.99% mythic
+#   1 Booster Fun card: non-foil (83.4%) or foil (16.6%) showcase/borderless
+#     — rare/mythic rates from Wizards article; showcase uncommons omitted
+# ============================================================
+
+def model_acr_beyond_box() -> ProductModel:
+    sc = "acr"
+    q_unc = _q(f"set:{sc}", "rarity:uncommon",  "is:booster", "game:paper")
+    q_rare = _q(f"set:{sc}", "rarity:rare",       "is:booster", "game:paper")
+    q_myth = _q(f"set:{sc}", "rarity:mythic",     "is:booster", "game:paper")
+    # Rome Vista scene: 5 rare duals + 1 mythic Ezio, all cn 111–116
+    q_scene_r = _q(f"set:{sc}", "cn>=111", "cn<=116",
+                   "rarity:rare",   "game:paper")
+    q_scene_m = _q(f"set:{sc}", "cn>=111", "cn<=116",
+                   "rarity:mythic", "game:paper")
+    # Booster Fun treatments
+    q_sc_r = _q(f"set:{sc}", "rarity:rare",   "is:showcase",   "game:paper")
+    q_sc_m = _q(f"set:{sc}", "rarity:mythic", "is:showcase",   "game:paper")
+    q_bl_r = _q(f"set:{sc}", "rarity:rare",   "is:borderless", "game:paper")
+    q_bl_m = _q(f"set:{sc}", "rarity:mythic", "is:borderless", "game:paper")
+    return ProductModel(
+        set_code=sc, packs_per_box=24,
+        slots=[
+            # 3 non-foil uncommons — probability 3.0 with strict_probs=False
+            Slot(
+                name="3 uncommons",
+                outcomes=[
+                    (3.0, QueryPool(f"{sc}_unc3", q_unc, unique="cards", price_field="usd"))],
+                strict_probs=False,
+            ),
+            # Land / scene slot (96.6% basic omitted as 0.0 EV)
+            Slot(
+                name="Land or scene card (rare 3.09% / mythic 0.31%)",
+                outcomes=[
+                    (0.0309, QueryPool(
+                        f"{sc}_scene_r", q_scene_r, fallback=q_rare, unique="cards", price_field="usd")),
+                    (0.0031, QueryPool(
+                        f"{sc}_scene_m", q_scene_m, fallback=q_myth, unique="cards", price_field="usd")),
+                ],
+                strict_probs=False,
+            ),
+            # Main R/M — 17.95% mythic rate from sheet weights
+            Slot(
+                name="Main R/M (mythic 17.95%)",
+                outcomes=[
+                    (1 - 0.1795, QueryPool(f"{sc}_main_r",
+                     q_rare, unique="prints", price_field="usd")),
+                    (0.1795, QueryPool(f"{sc}_main_m", q_myth,
+                     unique="prints", price_field="usd")),
+                ],
+                strict_probs=True,
+            ),
+            # Traditional foil — rates from Wizards collecting article
+            Slot(
+                name="Traditional foil (unc 83.34% / rare 13.67% / mythic 2.99%)",
+                outcomes=[
+                    (0.8334, QueryPool(f"{sc}_foil_u", q_unc,
+                     unique="cards", price_field="usd_foil")),
+                    (0.1367, QueryPool(f"{sc}_foil_r", q_rare,
+                     unique="cards", price_field="usd_foil")),
+                    (0.0299, QueryPool(f"{sc}_foil_m", q_myth,
+                     unique="cards", price_field="usd_foil")),
+                ],
+                strict_probs=True,
+            ),
+            # Booster Fun rare/mythic (showcase uncommons ~69% omitted)
+            Slot(
+                name="Booster Fun rare/mythic (showcase + borderless, non-foil + foil)",
+                outcomes=[
+                    (0.0864, QueryPool(
+                        f"{sc}_bf_sc_r",   q_sc_r, fallback=q_rare, unique="prints", price_field="usd")),
+                    (0.0154, QueryPool(
+                        f"{sc}_bf_sc_m",   q_sc_m, fallback=q_myth, unique="prints", price_field="usd")),
+                    (0.0123, QueryPool(
+                        f"{sc}_bf_bl_r",   q_bl_r, fallback=q_rare, unique="prints", price_field="usd")),
+                    (0.0247, QueryPool(
+                        f"{sc}_bf_bl_m",   q_bl_m, fallback=q_myth, unique="prints", price_field="usd")),
+                    (0.0173, QueryPool(
+                        f"{sc}_bf_sc_r_f", q_sc_r, fallback=q_rare, unique="prints", price_field="usd_foil")),
+                    (0.0031, QueryPool(
+                        f"{sc}_bf_sc_m_f", q_sc_m, fallback=q_myth, unique="prints", price_field="usd_foil")),
+                    (0.0025, QueryPool(
+                        f"{sc}_bf_bl_r_f", q_bl_r, fallback=q_rare, unique="prints", price_field="usd_foil")),
+                    (0.0049, QueryPool(
+                        f"{sc}_bf_bl_m_f", q_bl_m, fallback=q_myth, unique="prints", price_field="usd_foil")),
+                ],
+                strict_probs=False,
+            ),
+        ],
+    )
+
+
+# ============================================================
+# MKM — Murders at Karlov Manor (36 packs/box) — Play Booster
+#
+# Sources: mtg.wtf/pack/mkm-play + Wizards collecting article.
+#
+# Wildcard dual-land guarantee verified from mtg.wtf wildcard sheet:
+#   10 regular-frame rare duals at 7/480 per card = 14.58% combined
+#   10 borderless rare duals at 1/480 per card    =  2.08% combined
+#   Total = 16.67% (~1 in 6 packs), matching Wizards article exactly.
+#
+# SPG collector numbers verified from mtg.wtf the_list sheet: cn 19–28
+# (not cn 11–20 as initially estimated). The_list fires in 10% of packs;
+# SPG is ~20% of that pool, giving ~2% per-pack rate. We use 1/64 (~1.56%)
+# to match the Wizards-stated rate.
+# ============================================================
+
+MKM_CONFIG = PlayBoosterConfig(
+    set_code="mkm", packs_per_box=36,
+    mythic_rate=DEFAULT_MYTHIC_RATE, wc_rm_rate=1/12,
+    land_types=_std_land_types_any_land(foil_rate=0.20),
+)
+
+
+def slot_mkm_dual_land_wc() -> Slot:
+    """
+    WC dual-land guarantee: rates verified directly from mtg.wtf wildcard sheet.
+    Regular frame: 7/480 × 10 cards = 14.58%.
+    Borderless:    1/480 × 10 cards =  2.08%.
+    Remaining 83.33% EV covered by MKM_CONFIG wc_rm_rate=1/12.
+    """
+    q_dual = _q("set:mkm", "rarity:rare", "type:land",
+                "-is:borderless", "game:paper")
+    q_dual_bl = _q("set:mkm", "rarity:rare", "type:land",
+                   "is:borderless",  "game:paper")
+    return Slot(
+        name="WC dual land guarantee (regular 14.58% / borderless 2.08%)",
+        outcomes=[
+            (0.1458, QueryPool("mkm_dual_reg", q_dual,
+             fallback=q_dual, unique="cards", price_field="usd")),
+            (0.0208, QueryPool("mkm_dual_bl",  q_dual_bl,
+             fallback=q_dual, unique="cards", price_field="usd")),
+            (1 - 0.1458 - 0.0208, 0.0),
+        ],
+        strict_probs=True,
+    )
+
+
+def slot_mkm_special_guests() -> Slot:
+    """
+    SPG cn 19–28 (10 cards) verified from mtg.wtf the_list sheet.
+    Rate: ~1.56% per Wizards article (modeled as 1/64).
+    """
+    return slot_replaces_common_with_pool(
+        slot_name="Special Guests (MKM, cn 19-28, ~1.56% per pack)",
+        replace_rate=1/64, pool_label="mkm_spg",
+        query=_q("set:spg", "cn>=19", "cn<=28", "game:paper"),
+    )
+
+
+def model_mkm_play_box() -> ProductModel:
+    return model_from_config(MKM_CONFIG, extra_slots=[slot_mkm_dual_land_wc(), slot_mkm_special_guests()])
+
+
+# ============================================================
+# RVR — Ravnica Remastered (36 packs/box) — Draft Booster
+#
+# Sources: mtg.wtf/pack/rvr-draft + Wizards collecting article.
+#
+# Pack variants (verified from mtg.wtf):
+#   60% (18/30): mana_slot + retro_common_uncommon + rare_mythic_with_showcase
+#   30%  (9/30): same + traditional foil
+#   6.67%(2/30): mana_slot + retro_RARE_MYTHIC (no showcase rare slot)
+#   3.33%(1/30): same + traditional foil
+#
+# Key facts derived from sheet analysis:
+#   Mana slot: exactly 58% guildgate / 33% signet / 9% shock+Lantern (verified)
+#   Main rare slot fires in 90% of packs; mythic rate = 19.6% (not 12.5%)
+#   Retro rare slot fires in 10% of packs; cn 302–407, mythic rate = 11.3%
+#   Foil fires in 33.3% of packs — foil_rates scaled by 0.333 to correct
+#   No basic lands (suppressed via land_types=[])
+#   Retro cards queried by cn range (more reliable than frame:1997)
+# ============================================================
+
+# RVR foil rates: card-count-proportional weights scaled by 0.333 foil frequency
+# (292 total booster cards: 111 common, 90 uncommon, 71 rare, 20 mythic)
+RVR_CONFIG = PlayBoosterConfig(
+    set_code="rvr", packs_per_box=36,
+    mythic_rate=DEFAULT_MYTHIC_RATE,  # placeholder only; main R/M built manually below
+    wc_rm_rate=1/12,
+    land_types=[],  # no basic lands in RVR; mana slot handled separately
+    foil_rates=RarityRates(
+        common=(111/292) * 0.333,
+        uncommon=(90/292) * 0.333,
+        rare=(71/292) * 0.333,
+        mythic=(20/292) * 0.333,
+    ),
+)
+
+
+def slot_rvr_mana_slot() -> Slot:
+    """
+    Replaces the basic land slot in every RVR pack.
+    Rates verified from mtg.wtf mana_slot sheet:
+      9/1100 per card × 11 cards (10 shocks + Chromatic Lantern) = 9%
+      33/1000 per card × 10 signets                              = 33%
+      29/500  per card × 10 guildgates                           = 58%
+    """
+    q_shock = _q("set:rvr", "rarity:rare",    "type:land", "game:paper")
+    q_signet = _q("set:rvr", "rarity:uncommon", "signet",   "game:paper")
+    return Slot(
+        name="Mana slot (shock/lantern 9% / signet 33% / guildgate 58%)",
+        outcomes=[
+            (0.09, QueryPool("rvr_mana_shock",  q_shock,
+             fallback=q_shock,  unique="cards", price_field="usd")),
+            (0.33, QueryPool("rvr_mana_signet", q_signet,
+             fallback=q_signet, unique="cards", price_field="usd")),
+            (0.58, 0.0),
+        ],
+        strict_probs=True,
+    )
+
+
+def slot_rvr_main_rare() -> Slot:
+    """
+    Showcase rare/mythic slot — fires in 90% of packs (variants 1 and 2).
+    Mythic rate = 19.6%, verified from mtg.wtf rare_mythic_with_showcase sheet
+    rate groups (rare groups sum 0.690, mythic groups sum 0.168, total 0.858).
+    Probabilities scaled by 0.90 so per-pack EV contribution is correct;
+    strict_probs=False because the 10% retro-slot packs are handled separately.
+    """
+    q_r = _q("set:rvr", "rarity:rare",   "is:booster", "game:paper")
+    q_m = _q("set:rvr", "rarity:mythic", "is:booster", "game:paper")
+    return Slot(
+        name="Main R/M showcase (fires 90% of packs, mythic 19.6%)",
+        outcomes=[
+            (0.90 * (1 - 0.196), QueryPool("rvr_main_r",
+             q_r, unique="prints", price_field="usd")),
+            (0.90 * 0.196, QueryPool("rvr_main_m",
+             q_m, unique="prints", price_field="usd")),
+        ],
+        strict_probs=False,
+    )
+
+
+def slot_rvr_retro_rare() -> Slot:
+    """
+    Retro frame rare/mythic slot — fires in 10% of packs (variants 3 and 4),
+    mutually exclusive with slot_rvr_main_rare.
+    Cards: cn 302–407 (51 rares at 2/115 each, 13 mythics at 1/115 each).
+    Mythic rate = 11.3% within this slot, verified from mtg.wtf sheet.
+    Queried by cn range rather than frame:1997 for reliability.
+    Excludes Collector-Booster-exclusive retro cards (different cn range).
+    """
+    q_retro_r = _q("set:rvr", "cn>=302", "cn<=407",
+                   "rarity:rare",   "game:paper")
+    q_retro_m = _q("set:rvr", "cn>=302", "cn<=407",
+                   "rarity:mythic", "game:paper")
+    return Slot(
+        name="Retro R/M (fires 10% of packs, cn 302-407, mythic 11.3%)",
+        outcomes=[
+            (0.10 * (1 - 0.113), QueryPool("rvr_retro_r", q_retro_r,
+             fallback=q_retro_r, unique="prints", price_field="usd")),
+            (0.10 * 0.113, QueryPool("rvr_retro_m", q_retro_m,
+             fallback=q_retro_m, unique="prints", price_field="usd")),
+        ],
+        strict_probs=False,
+    )
+
+
+def model_rvr_draft_box() -> ProductModel:
+    """
+    Built as a raw ProductModel rather than via model_from_config to avoid
+    generating a third, incorrect main R/M slot from build_main_rm_slot().
+    The wildcard and foil slots are reused from RVR_CONFIG via their builders.
+    """
+    return ProductModel(
+        set_code="rvr", packs_per_box=36,
+        slots=[
+            build_wildcard_slot(RVR_CONFIG),
+            # foil_rates already scaled to 33.3% frequency
+            build_foil_slot(RVR_CONFIG),
+            slot_rvr_mana_slot(),
+            slot_rvr_main_rare(),
+            slot_rvr_retro_rare(),
+        ],
+    )
+
+
+# ============================================================
+# Reporting helper
+# ============================================================
+
+def print_report(r: EVReport) -> None:
+    print(f"{r.set_name} ({r.set_code})")
+    print(f"Pack EV: ${r.pack_ev:,.2f}")
+    print(f"Box EV:  ${r.box_ev:,.2f}   (packs: {r.packs_per_box})")
+    print("\nCounts:")
+    for k in sorted(r.counts):
+        print(f"  {k:<22} {r.counts[k]}")
+    print("\nSlot breakdown:")
+    for se in r.slot_evals:
+        print(f"  {se.name:<34} ${se.ev:,.4f}")
+        for pe in se.pool_evals:
+            print(f"    - {pe.label:<18} n={pe.count:<4} ev=${pe.ev:,.4f}")
+    print("\nWarnings:")
+    if not r.warnings:
+        print("  (none)")
+    else:
+        for w in r.warnings:
+            print(f"  - {w}")
+
+
+# ============================================================
+# Registry — maps (SET_CODE, kind) -> factory function
+# To add a new set: write a model_xxx() above, add one line here.
+# ============================================================
+
 MODEL_REGISTRY: dict[tuple[str, str], Callable[[], "ProductModel"]] = {
     ("OTJ", "box"):       model_otj_play_box,
     ("WOE", "box"):       model_woe_set_box,
@@ -1859,6 +1866,10 @@ MODEL_REGISTRY: dict[tuple[str, str], Callable[[], "ProductModel"]] = {
     ("TDM", "box"):       model_tdm_play_box,
     ("INR", "box"):       model_inr_play_box,
     ("SPM", "box"):       model_spm_play_box,
+    # New sets
+    ("ACR", "box"):       model_acr_beyond_box,
+    ("MKM", "box"):       model_mkm_play_box,
+    ("RVR", "draft_box"): model_rvr_draft_box,
 }
 
 
