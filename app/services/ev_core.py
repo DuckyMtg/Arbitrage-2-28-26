@@ -468,6 +468,10 @@ def build_wildcard_slot(cfg: PlayBoosterConfig) -> Slot:
     q_u = _q(f"set:{sc}", "rarity:uncommon", "is:booster", "game:paper")
     q_r = _q(f"set:{sc}", "rarity:rare",     "is:booster", "game:paper")
     q_m = _q(f"set:{sc}", "rarity:mythic",   "is:booster", "game:paper")
+    # When s > 1 (e.g. WOE set box has 2 wildcard slots per pack), renormalize=True
+    # would cancel the s multiplier by dividing each weight by total_p = s × sum_rates.
+    # strict_probs=False with renormalize=False preserves the s factor so the slot
+    # correctly contributes s × per-slot-EV to the pack total.
     return Slot(
         name=f"Wildcard ({s} slot{'s' if s > 1 else ''})",
         outcomes=[
@@ -480,8 +484,9 @@ def build_wildcard_slot(cfg: PlayBoosterConfig) -> Slot:
             (s * rates.mythic,
              QueryPool(f"{sc}_wc_mythic",   q_m, unique="prints", price_field="usd")),
         ],
-        strict_probs=True,
-        renormalize=True,
+        # only enforce prob-sum=1 for single-slot wildcards
+        strict_probs=(s == 1),
+        renormalize=False,       # never renormalize: s multiplier must be preserved
     )
 
 
@@ -1649,34 +1654,56 @@ def model_acr_beyond_box() -> ProductModel:
 # to match the Wizards-stated rate.
 # ============================================================
 
+# MKM_CONFIG has no wc_rm_rate — the wildcard slot is built entirely by
+# slot_mkm_wildcard() below to avoid double-counting the dual-land guarantee.
 MKM_CONFIG = PlayBoosterConfig(
     set_code="mkm", packs_per_box=36,
-    mythic_rate=DEFAULT_MYTHIC_RATE, wc_rm_rate=1/12,
+    mythic_rate=DEFAULT_MYTHIC_RATE,
     land_types=_std_land_types_any_land(foil_rate=0.20),
 )
 
 
-def slot_mkm_dual_land_wc() -> Slot:
+def slot_mkm_wildcard() -> Slot:
     """
-    WC dual-land guarantee: rates verified directly from mtg.wtf wildcard sheet.
-    Regular frame: 7/480 × 10 cards = 14.58%.
-    Borderless:    1/480 × 10 cards =  2.08%.
-    Remaining 83.33% EV covered by MKM_CONFIG wc_rm_rate=1/12.
+    Unified MKM wildcard slot — dual lands and R/M wildcards are mutually
+    exclusive outcomes of the same physical slot.
+
+    Rates verified from mtg.wtf wildcard sheet:
+      Regular-frame rare duals: 7/480 × 10 cards = 14.58%
+      Borderless rare duals:    1/480 × 10 cards =  2.08%
+      Remaining 83.33% → standard wildcard at wc_rm_rate=1/12:
+        R/M share of 83.33% = 83.33% × 1/12 = 6.94%
+        C/U share of 83.33% = 83.33% × 11/12 = 76.39% (omitted, near-zero EV)
+
+    The old implementation used model_from_config (which adds a full
+    build_wildcard_slot at prob-sum=1.0) plus slot_mkm_dual_land_wc as a
+    separate extra slot — treating them as additive when they are exclusive.
+    That overestimated box EV by ~$18–54 depending on dual land prices.
     """
     q_dual = _q("set:mkm", "rarity:rare", "type:land",
                 "-is:borderless", "game:paper")
     q_dual_bl = _q("set:mkm", "rarity:rare", "type:land",
                    "is:borderless",  "game:paper")
+    q_r = _q("set:mkm", "rarity:rare",   "is:booster", "game:paper")
+    q_m = _q("set:mkm", "rarity:mythic", "is:booster", "game:paper")
+    p_dual_total = 0.1458 + 0.0208          # 16.67%
+    p_wc_rm = (1 - p_dual_total) / 12  # 83.33% × 1/12 ≈ 6.94%
+    p_wc_r = p_wc_rm * (1 - DEFAULT_MYTHIC_RATE)
+    p_wc_m = p_wc_rm * DEFAULT_MYTHIC_RATE
     return Slot(
-        name="WC dual land guarantee (regular 14.58% / borderless 2.08%)",
+        name="Wildcard (dual 16.67% / R/M 6.94% / C+U remainder omitted)",
         outcomes=[
             (0.1458, QueryPool("mkm_dual_reg", q_dual,
-             fallback=q_dual, unique="cards", price_field="usd")),
+             fallback=q_dual,    unique="cards",  price_field="usd")),
             (0.0208, QueryPool("mkm_dual_bl",  q_dual_bl,
-             fallback=q_dual, unique="cards", price_field="usd")),
-            (1 - 0.1458 - 0.0208, 0.0),
+             fallback=q_dual_bl, unique="cards",  price_field="usd")),
+            (p_wc_r, QueryPool("mkm_wc_r",     q_r,
+             unique="prints", price_field="usd")),
+            (p_wc_m, QueryPool("mkm_wc_m",     q_m,
+             unique="prints", price_field="usd")),
+            # C/U wildcard: ~76% of packs, but avg price ≈ $0 — omitted cleanly
         ],
-        strict_probs=True,
+        strict_probs=False,
     )
 
 
@@ -1693,7 +1720,22 @@ def slot_mkm_special_guests() -> Slot:
 
 
 def model_mkm_play_box() -> ProductModel:
-    return model_from_config(MKM_CONFIG, extra_slots=[slot_mkm_dual_land_wc(), slot_mkm_special_guests()])
+    """
+    Built as a raw ProductModel rather than via model_from_config so that
+    the wildcard slot is slot_mkm_wildcard() only — model_from_config would
+    call build_wildcard_slot() unconditionally, creating a second independent
+    wildcard slot that double-counts the dual-land guarantee.
+    """
+    return ProductModel(
+        set_code="mkm", packs_per_box=36,
+        slots=[
+            build_main_rm_slot(MKM_CONFIG),
+            slot_mkm_wildcard(),
+            build_foil_slot(MKM_CONFIG),
+            build_land_slot(MKM_CONFIG),
+            slot_mkm_special_guests(),
+        ],
+    )
 
 
 # ============================================================
