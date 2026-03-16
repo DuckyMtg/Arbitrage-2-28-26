@@ -1864,6 +1864,505 @@ def model_rvr_draft_box() -> ProductModel:
 
 
 # ============================================================
+# LCI — The Lost Caverns of Ixalan
+#
+# Sources: mtg.wtf/pack/lci-set, lci-draft + Wizards collecting article.
+#
+# Set Booster (30/box):
+#   1x cave_fullart_land (basic full-art, non-foil 80% / foil 20%)
+#   3x common + 3x uncommon + 1x showcase_dfc_c_u  (≈$0, not modeled)
+#   2x wildcard (any rarity; derived sheet rates: 7/1010 per rare, 7/3680 per mythic)
+#      → wc_rm_rate ≈ 0.26 per slot (~70 rares × 7/1010 / 2 ≈ 24.3% + ~1.9% mythic)
+#   1x rare_mythic (1/75 per rare, 1/150 per mythic; DEFAULT_MYTHIC_RATE approximates)
+#   1x foil (rarity-weighted from card counts)
+#   25% chance: 1x The List (SPG cn 1-10 at ~1/64, PLST remainder)
+#
+# Draft Booster (36/box):
+#   1x cave_fullart_land (always non-foil in draft)
+#   9-10x common + 1x dfc_common_uncommon + 3x uncommon (≈$0, not modeled)
+#   1x rare_mythic (same sheet rates as set booster)
+#   1/3 packs: traditional foil replaces 1 common
+# ============================================================
+
+LCI_SET_CONFIG = PlayBoosterConfig(
+    set_code="lci", packs_per_box=30,
+    mythic_rate=DEFAULT_MYTHIC_RATE,
+    wc_rm_rate=0.26,        # per-slot RM rate; 2 WC slots give ~52% total RM across both
+    wc_slots_per_pack=2,
+    land_types=[LandTypeConfig(
+        "cave_fullart", ["type:basic", "is:fullart"],
+        rate=1.0, foil_rate=0.20, use_booster_filter=False,
+    )],
+)
+
+
+def slot_lci_the_list() -> Slot:
+    """
+    The List fires in 25% of LCI Set Booster packs (4/20 + 1/20 variants).
+    SPG cn 1-10 are LCI's Special Guests at ~1/64 per pack per the Wizards article.
+    The remaining ~23.4% of packs draw from PLST.
+    """
+    q_spg = _q("set:spg", "cn>=1", "cn<=10", "game:paper")
+    q_plst = _q("set:plst", "is:booster", "game:paper")
+    p_spg = 1 / 64
+    p_plst = 0.25 - p_spg
+    return Slot(
+        name="The List (LCI 25%: SPG 1-10 at 1/64, PLST remainder)",
+        outcomes=[
+            (0.75, 0.0),
+            (p_spg,  QueryPool("lci_spg",       q_spg,  fallback=q_spg,
+                               unique="prints", price_field="usd")),
+            (p_plst, QueryPool("lci_list_plst",  q_plst, fallback=_q("set:plst", "game:paper"),
+                               unique="prints", price_field="usd")),
+        ],
+        strict_probs=True,
+    )
+
+
+def model_lci_set_box() -> ProductModel:
+    return model_from_config(LCI_SET_CONFIG, extra_slots=[slot_lci_the_list()])
+
+
+def _draft_foil_slot(sc: str, p_foil: float,
+                     p_fu: float, p_fr: float, p_fm: float) -> Slot:
+    """Generic helper: foil replaces a common at rate p_foil; rarity split p_fu/p_fr/p_fm."""
+    def _fp(label: str, rarity: str) -> QueryPool:
+        q = _q(f"set:{sc}", f"rarity:{rarity}",
+               "is:booster", "game:paper", "finish:foil")
+        q_fb = _q(f"set:{sc}", f"rarity:{rarity}", "is:booster", "game:paper")
+        return QueryPool(f"{sc}_draft_foil_{label}", q, fallback=q_fb,
+                         unique="cards", price_field="usd_foil")
+    return Slot(
+        name=f"Foil (replaces common, {int(p_foil*100)}% of packs)",
+        outcomes=[
+            (1 - p_foil, 0.0),
+            (p_foil * p_fu, _fp("u", "uncommon")),
+            (p_foil * p_fr, _fp("r", "rare")),
+            (p_foil * p_fm, _fp("m", "mythic")),
+        ],
+        strict_probs=True, renormalize=True,
+    )
+
+
+def model_lci_draft_box() -> ProductModel:
+    """
+    LCI Draft Booster (36/box).
+    Every pack: 1 cave full-art land, 1 RM slot.
+    1/3 packs: traditional foil (replaces a common).
+    Foil rarity split approximated from foil_with_showcase sheet.
+    """
+    cfg = PlayBoosterConfig(
+        set_code="lci", packs_per_box=36,
+        mythic_rate=DEFAULT_MYTHIC_RATE,
+        wc_rates=RarityRates(), wc_slots_per_pack=0,
+        land_types=[LandTypeConfig(
+            "cave_fullart", ["type:basic", "is:fullart"],
+            rate=1.0, foil_rate=0.0, use_booster_filter=False,
+        )],
+    )
+    return ProductModel(
+        set_code="lci", packs_per_box=36,
+        slots=[
+            build_main_rm_slot(cfg),
+            build_land_slot(cfg),
+            _draft_foil_slot("lci", 1/3, p_fu=0.25, p_fr=0.09, p_fm=0.03),
+        ],
+    )
+
+
+# ============================================================
+# LTR — The Lord of the Rings: Tales of Middle-earth
+#
+# Sources: mtg.wtf/pack/ltr-set, ltr-draft + Wizards collecting article.
+#
+# Set Booster (30/box):
+#   1x basic land (retro-style art, 15% foil — variants 3+4 = 15/20)
+#   3x common + 3x uncommon + 1x common_uncommon_showcase  (≈$0, not modeled)
+#   2x wildcard (7/1055 per rare, 7/2110 per mythic)
+#      → wc_rm_rate ≈ 0.37 per slot (~101 rares × 7/1055 / 2 ≈ 33.5% + ~3.3% mythic)
+#   1x rare_mythic (1/70 per rare, 1/140 per mythic → DEFAULT_MYTHIC_RATE approximates)
+#   1x foil (rarity-weighted from card counts)
+#   25% chance: 1x The List (PLST, ~75 cards at 1/300 each)
+#
+# Draft Booster (36/box):
+#   1x basic land + 10 common + 3 uncommon + 1 RM
+#   1/3 packs: traditional foil replaces 1 common
+# ============================================================
+
+LTR_SET_CONFIG = PlayBoosterConfig(
+    set_code="ltr", packs_per_box=30,
+    mythic_rate=DEFAULT_MYTHIC_RATE,
+    wc_rm_rate=0.37,        # per-slot RM rate; ~101 rares × 7/1055 / 2 ≈ 33.5% + ~3.3% mythic
+    wc_slots_per_pack=2,
+    land_types=[LandTypeConfig(
+        "basic", ["type:basic"],
+        rate=1.0, foil_rate=0.15, use_booster_filter=False,
+    )],
+)
+
+
+def _plst_the_list_slot(label: str, p_list: float) -> Slot:
+    """Generic 'The List from PLST' slot at probability p_list."""
+    q_plst = _q("set:plst", "is:booster", "game:paper")
+    return Slot(
+        name=f"The List (PLST, {int(p_list*100)}%)",
+        outcomes=[
+            (1.0 - p_list, 0.0),
+            (p_list, QueryPool(f"{label}_list_plst", q_plst,
+                               fallback=_q("set:plst", "game:paper"),
+                               unique="prints", price_field="usd")),
+        ],
+        strict_probs=True,
+    )
+
+
+def model_ltr_set_box() -> ProductModel:
+    return model_from_config(LTR_SET_CONFIG, extra_slots=[_plst_the_list_slot("ltr", 0.25)])
+
+
+def model_ltr_draft_box() -> ProductModel:
+    """
+    LTR Draft Booster (36/box).
+    Every pack: 1 basic land, 1 RM slot.
+    1/3 packs: traditional foil replaces 1 common.
+    """
+    cfg = PlayBoosterConfig(
+        set_code="ltr", packs_per_box=36,
+        mythic_rate=DEFAULT_MYTHIC_RATE,
+        wc_rates=RarityRates(), wc_slots_per_pack=0,
+        land_types=[LandTypeConfig(
+            "basic", ["type:basic"],
+            rate=1.0, foil_rate=0.0, use_booster_filter=False,
+        )],
+    )
+    return ProductModel(
+        set_code="ltr", packs_per_box=36,
+        slots=[
+            build_main_rm_slot(cfg),
+            build_land_slot(cfg),
+            _draft_foil_slot("ltr", 1/3, p_fu=0.25, p_fr=0.08, p_fm=0.02),
+        ],
+    )
+
+
+# ============================================================
+# MOM — March of the Machine
+#
+# Sources: mtg.wtf/pack/mom-set, mom-draft + Wizards collecting article.
+# MUL = March of the Machine Multiverse Legends (65 cards: 20U / 30R / 15M).
+# MUL slot rates verified from mom-set sheet: 4/155 per U, 2/155 per R, 1/155 per M.
+#   → P(U)=80/155 ≈ 51.6%, P(R)=60/155 ≈ 38.7%, P(M)=15/155 ≈ 9.7%
+#
+# Set Booster (30/box):
+#   2x sfc_common + 2x sfc_uncommon + 1x dfc_c_u + 1x uncommon_battle (≈$0, not modeled)
+#   2x wildcard (7/1160 per rare, 7/4000 per mythic)
+#      → wc_rm_rate ≈ 0.23 per slot (~70 rares × 7/1160 / 2 ≈ 21.1% + ~1.75% mythic)
+#   1x Multiverse Legend (MUL, always)
+#   1x rare_mythic (1/70 per rare, 1/140 per mythic; DEFAULT_MYTHIC_RATE approximates)
+#   1x foil: 96% traditional foil (rarity-weighted), 4% foil-etched MUL (Wizards article)
+#   25% chance: 1x The List (PLST, 1/300 per card)
+#   No basic land slot.
+#
+# Draft Booster (36/box):
+#   1x basic_or_gainland + 7-8 sfc_common + DFC_c_u + uncommon_battle (≈$0, not modeled)
+#   1x Multiverse Legend (MUL, always)
+#   1x RM: 70% SFC | 19.29% battle | 10.71% DFC  (verified from variant weights in sheet)
+#   1/3 packs: traditional foil (includes MUL; approximated as MOM rarity-weighted)
+# ============================================================
+
+MOM_SET_CONFIG = PlayBoosterConfig(
+    set_code="mom", packs_per_box=30,
+    mythic_rate=DEFAULT_MYTHIC_RATE,
+    wc_rm_rate=0.23,        # per-slot RM rate; ~70 rares × 7/1160 / 2 ≈ 21.1% + ~1.75% mythic
+    wc_slots_per_pack=2,
+    land_types=[],          # no basic land slot in MOM set boosters
+)
+
+# MUL rarity probabilities (verified from mtg.wtf mom-set sheet)
+_MUL_P_U = 80 / 155   # 20 uncommons × 4/155 each
+_MUL_P_R = 60 / 155   # 30 rares     × 2/155 each
+_MUL_P_M = 15 / 155   # 15 mythics   × 1/155 each
+
+
+def slot_mul_legend(label_prefix: str) -> Slot:
+    """
+    Multiverse Legends dedicated slot (1 per pack, MOM set and draft).
+    65 cards: 20U/30R/15M with unequal weights giving P(U)≈51.6%, P(R)≈38.7%, P(M)≈9.7%.
+    """
+    q_u = _q("set:mul", "rarity:uncommon", "game:paper")
+    q_r = _q("set:mul", "rarity:rare",     "game:paper")
+    q_m = _q("set:mul", "rarity:mythic",   "game:paper")
+    return Slot(
+        name="Multiverse Legends (MUL, 1 per pack)",
+        outcomes=[
+            (_MUL_P_U, QueryPool(f"{label_prefix}_mul_u",
+             q_u, unique="prints", price_field="usd")),
+            (_MUL_P_R, QueryPool(f"{label_prefix}_mul_r",
+             q_r, unique="prints", price_field="usd")),
+            (_MUL_P_M, QueryPool(f"{label_prefix}_mul_m",
+             q_m, unique="prints", price_field="usd")),
+        ],
+        strict_probs=True,
+    )
+
+
+def slot_mom_set_foil() -> Slot:
+    """
+    MOM Set Booster foil slot: 96% traditional foil (any rarity, MOM), 4% foil-etched MUL.
+    The 4% foil-etched rate is stated in the Wizards collecting article.
+    """
+    def _mom_foil(label: str, rarity: str) -> QueryPool:
+        q = _q("set:mom", f"rarity:{rarity}",
+               "is:booster", "game:paper", "finish:foil")
+        q_fb = _q("set:mom", f"rarity:{rarity}", "is:booster", "game:paper")
+        return QueryPool(f"mom_set_foil_{label}", q, fallback=q_fb,
+                         unique="cards", price_field="usd_foil")
+    # Rarity weights for the 96% regular foil (card-count-proportional, approx from MOM counts)
+    # MOM: ~111c, 50u, 70r, 20m in SFC + battles + DFCs
+    _p_fc, _p_fu, _p_fr, _p_fm = 0.55, 0.24, 0.17, 0.04
+    q_mul_foil = _q("set:mul", "game:paper")
+    return Slot(
+        name="Foil (96% trad MOM rarity-weighted / 4% foil-etched MUL)",
+        outcomes=[
+            (0.96 * _p_fc, _mom_foil("c", "common")),
+            (0.96 * _p_fu, _mom_foil("u", "uncommon")),
+            (0.96 * _p_fr, _mom_foil("r", "rare")),
+            (0.96 * _p_fm, _mom_foil("m", "mythic")),
+            (0.04, QueryPool("mom_set_foil_etched_mul", q_mul_foil,
+                             fallback=q_mul_foil, unique="prints", price_field="usd_foil")),
+        ],
+        strict_probs=True, renormalize=True,
+    )
+
+
+def model_mom_set_box() -> ProductModel:
+    """
+    Built as a raw ProductModel so we can use a custom composite foil slot
+    (96% trad / 4% foil-etched MUL) instead of the generic build_foil_slot.
+    """
+    return ProductModel(
+        set_code="mom", packs_per_box=30,
+        slots=[
+            build_main_rm_slot(MOM_SET_CONFIG),
+            build_wildcard_slot(MOM_SET_CONFIG),
+            slot_mom_set_foil(),
+            slot_mul_legend("mom_set"),
+            _plst_the_list_slot("mom", 0.25),
+        ],
+    )
+
+
+def slot_mom_draft_rm() -> Slot:
+    """
+    MOM Draft rare/mythic slot: three mutually exclusive outcomes determined by
+    pack variant (verified from mtg.wtf mom-draft sheet variant weights).
+      70.00% — SFC rare/mythic (non-battle, non-DFC); DEFAULT_MYTHIC_RATE
+      19.29% — Battle rare/mythic; mythic rate = 7/27 ≈ 25.9%
+                (sheet: 2/27 per rare, 1/27 per mythic → N_r=10, N_m=7 sums to 27/27)
+      10.71% — DFC rare/mythic; DEFAULT_MYTHIC_RATE
+    """
+    q_sfc_r = _q("set:mom", "rarity:rare",   "is:booster",
+                 "-type:battle", "game:paper")
+    q_sfc_m = _q("set:mom", "rarity:mythic", "is:booster",
+                 "-type:battle", "game:paper")
+    q_bat_r = _q("set:mom", "rarity:rare",   "type:battle", "game:paper")
+    q_bat_m = _q("set:mom", "rarity:mythic", "type:battle", "game:paper")
+    q_dfc_r = _q("set:mom", "rarity:rare",   "is:dfc",
+                 "-type:battle", "game:paper")
+    q_dfc_m = _q("set:mom", "rarity:mythic", "is:dfc",
+                 "-type:battle", "game:paper")
+    p_sfc, p_bat, p_dfc = 0.7000, 0.1929, 0.1071
+    p_bat_m = 7 / 27   # derived from sheet rates 2/27 per rare, 1/27 per mythic
+    return Slot(
+        name="Main RM (70% SFC / 19.3% Battle / 10.7% DFC)",
+        outcomes=[
+            (p_sfc * (1 - DEFAULT_MYTHIC_RATE), QueryPool("mom_draft_sfc_r", q_sfc_r,
+             unique="prints", price_field="usd")),
+            (p_sfc * DEFAULT_MYTHIC_RATE,        QueryPool("mom_draft_sfc_m", q_sfc_m,
+             unique="prints", price_field="usd")),
+            (p_bat * (1 - p_bat_m),              QueryPool("mom_draft_bat_r", q_bat_r,
+             unique="prints", price_field="usd")),
+            (p_bat * p_bat_m,                    QueryPool("mom_draft_bat_m", q_bat_m,
+             unique="prints", price_field="usd")),
+            (p_dfc * (1 - DEFAULT_MYTHIC_RATE),  QueryPool("mom_draft_dfc_r", q_dfc_r,
+             unique="prints", price_field="usd")),
+            (p_dfc * DEFAULT_MYTHIC_RATE,         QueryPool("mom_draft_dfc_m", q_dfc_m,
+             unique="prints", price_field="usd")),
+        ],
+        strict_probs=True,
+    )
+
+
+def model_mom_draft_box() -> ProductModel:
+    """
+    MOM Draft Booster (36/box).
+    Every pack: 1 Multiverse Legend (MUL) + 1 RM (SFC/battle/DFC per variant).
+    1/3 packs: traditional foil replaces 1 common (MOM rarity-weighted; MUL foils omitted).
+    basic_or_gainland, DFC C/U, uncommon battle commons omitted (≈$0 EV).
+    """
+    return ProductModel(
+        set_code="mom", packs_per_box=36,
+        slots=[
+            slot_mom_draft_rm(),
+            slot_mul_legend("mom_draft"),
+            _draft_foil_slot("mom", 1/3, p_fu=0.24, p_fr=0.09, p_fm=0.02),
+        ],
+    )
+
+
+# ============================================================
+# CMM — Commander Masters
+#
+# Sources: mtg.wtf/pack/cmm-draft, cmm-set + Wizards collecting article.
+# Set composition: 130c / 135u / 135r (53 legendary, 82 nonlegendary) / 35m (15 leg, 20 nonleg).
+# All rare/mythic includes borderless profile, frame-break, and borderless treatments.
+#
+# Legendary RM mythic rate = 15/(53+15) ≈ 22.1% (unweighted by treatment).
+# Nonlegendary RM mythic rate = 20/(82+20) ≈ 19.6%.
+#
+# Draft Booster (24/box):
+#   11-12x commons (with showcase) + 3-4x uncommons + 2x legendary uncommon (≈$0, not modeled)
+#   1x legendary RM (always)
+#   E[4/3] nonlegendary RM per pack:
+#     10/18 and 2/18 variants → 1 nonleg_RM
+#     5/18 and 1/18 variants  → 2 nonleg_RM
+#     E = 1 + (5+1)/18 = 4/3 ≈ 1.333 per pack
+#   1x traditional foil (always; rarity-weighted)
+#   11.1% chance: Prismatic Piper (special slot) — $0 EV, not modeled
+#
+# Set Booster (24/box):
+#   1x retro-frame basic land (20% foil, verified from foil_basic / 4-variants)
+#   4x common + 1x common_uncommon_showcase + 2x nonleg_unc (≈$0, not modeled)
+#   1x legendary uncommon (always) + 50%: extra leg_unc OR 50%: extra nonleg_RM
+#   2x wildcard (7/1300 per rare, 7/3900 per mythic)
+#      → wc_rm_rate ≈ 0.40 per slot (~135 rares × 7/1300 / 2 ≈ 36.3% + ~3.1% mythic)
+#   1x legendary RM (always)
+#   E[1.5] nonlegendary RM: 1 certain + 50% extra → E = 1.5
+#   1x foil (rarity-weighted)
+#   25% chance: The List (PLST, 1/300 per card)
+# ============================================================
+
+_CMM_LEG_MYTHIC_RATE = 15 / (53 + 15)   # ≈ 22.1%
+_CMM_NONLEG_MYTHIC_RATE = 20 / (82 + 20)  # ≈ 19.6%
+
+
+def slot_cmm_leg_rm() -> Slot:
+    """Legendary rare/mythic: always fires once per pack in CMM Draft and Set."""
+    q_r = _q("set:cmm", "rarity:rare",   "is:legendary",
+             "is:booster", "game:paper")
+    q_m = _q("set:cmm", "rarity:mythic",
+             "is:legendary", "is:booster", "game:paper")
+    return Slot(
+        name="Legendary RM (1 per pack, mythic≈22.1%)",
+        outcomes=[
+            (1 - _CMM_LEG_MYTHIC_RATE, QueryPool("cmm_leg_r", q_r,
+             unique="prints", price_field="usd")),
+            (_CMM_LEG_MYTHIC_RATE,     QueryPool("cmm_leg_m", q_m,
+             unique="prints", price_field="usd")),
+        ],
+        strict_probs=True,
+    )
+
+
+def slot_cmm_nonleg_rm(weight: float) -> Slot:
+    """
+    Nonlegendary rare/mythic. Weight encodes the expected count per pack:
+      Draft: weight=4/3 (E[nonleg RM] from variant distribution)
+      Set:   weight=1.5 (1 certain + 0.5 expected extra from 50%-variant)
+    strict_probs=False because weight != 1 by design.
+    """
+    q_r = _q("set:cmm", "rarity:rare",   "-is:legendary",
+             "is:booster", "game:paper")
+    q_m = _q("set:cmm", "rarity:mythic",
+             "-is:legendary", "is:booster", "game:paper")
+    return Slot(
+        name=f"Non-legendary RM (expected {weight:.3f}/pack, mythic≈19.6%)",
+        outcomes=[
+            (weight * (1 - _CMM_NONLEG_MYTHIC_RATE),
+             QueryPool("cmm_nonleg_r", q_r, unique="prints", price_field="usd")),
+            (weight * _CMM_NONLEG_MYTHIC_RATE,
+             QueryPool("cmm_nonleg_m", q_m, unique="prints", price_field="usd")),
+        ],
+        strict_probs=False,
+    )
+
+
+def slot_cmm_draft_foil() -> Slot:
+    """
+    CMM Draft always has 1 traditional foil.
+    Rarity probabilities approximated from foil sheet rates:
+      3/730 per common × ~130 cards  ≈ 53.4%
+      1/540 per uncommon × ~135      ≈ 25.0%
+      1/700 per rare × ~135          ≈ 19.3%
+      1/2100 per mythic × ~35        ≈  1.7%  (rest goes to special borderless)
+    Fallback queries used since finish:foil filter may miss some borderless versions.
+    """
+    def _cf(label: str, rarity: str) -> QueryPool:
+        q = _q("set:cmm", f"rarity:{rarity}",
+               "is:booster", "game:paper", "finish:foil")
+        q_fb = _q("set:cmm", f"rarity:{rarity}", "is:booster", "game:paper")
+        return QueryPool(f"cmm_draft_foil_{label}", q, fallback=q_fb,
+                         unique="cards", price_field="usd_foil")
+    return Slot(
+        name="Traditional foil (1 per CMM Draft pack)",
+        outcomes=[
+            (0.534, _cf("c", "common")),
+            (0.250, _cf("u", "uncommon")),
+            (0.193, _cf("r", "rare")),
+            (0.017, _cf("m", "mythic")),
+        ],
+        strict_probs=True, renormalize=True,
+    )
+
+
+def model_cmm_draft_box() -> ProductModel:
+    """
+    CMM Draft Booster (24/box).
+    Every pack: 1 legendary RM + E[4/3] nonlegendary RM + 1 foil.
+    Commons/uncommons and Prismatic Piper (≈$0) not modeled.
+    """
+    return ProductModel(
+        set_code="cmm", packs_per_box=24,
+        slots=[
+            slot_cmm_leg_rm(),
+            slot_cmm_nonleg_rm(weight=4/3),
+            slot_cmm_draft_foil(),
+        ],
+    )
+
+
+CMM_SET_CONFIG = PlayBoosterConfig(
+    set_code="cmm", packs_per_box=24,
+    mythic_rate=DEFAULT_MYTHIC_RATE,   # used only for WC mythic split
+    wc_rm_rate=0.40,                   # ~135 rares × 7/1300 / 2 ≈ 36.3% + ~3.1% mythic
+    wc_slots_per_pack=2,
+    land_types=[LandTypeConfig(
+        "retro_basic", ["type:basic", "frame:1997"],
+        rate=1.0, foil_rate=0.20, use_booster_filter=False,
+    )],
+)
+
+
+def model_cmm_set_box() -> ProductModel:
+    """
+    CMM Set Booster (24/box).
+    Built as a raw ProductModel to attach separate leg_RM, E[1.5] nonleg_RM,
+    wildcard, foil, retro basic land, and The List slots.
+    """
+    return ProductModel(
+        set_code="cmm", packs_per_box=24,
+        slots=[
+            build_wildcard_slot(CMM_SET_CONFIG),
+            build_foil_slot(CMM_SET_CONFIG),
+            build_land_slot(CMM_SET_CONFIG),
+            slot_cmm_leg_rm(),
+            slot_cmm_nonleg_rm(weight=1.5),
+            _plst_the_list_slot("cmm", 0.25),
+        ],
+    )
+
+
+# ============================================================
 # Reporting helper
 # ============================================================
 
@@ -1908,10 +2407,19 @@ MODEL_REGISTRY: dict[tuple[str, str], Callable[[], "ProductModel"]] = {
     ("TDM", "box"):       model_tdm_play_box,
     ("INR", "box"):       model_inr_play_box,
     ("SPM", "box"):       model_spm_play_box,
-    # New sets
-    ("ACR", "box"):       model_acr_beyond_box,
-    ("MKM", "box"):       model_mkm_play_box,
-    ("RVR", "draft_box"): model_rvr_draft_box,
+    # New sets (Play Booster era)
+    ("ACR", "box"):        model_acr_beyond_box,
+    ("MKM", "box"):        model_mkm_play_box,
+    ("RVR", "draft_box"):  model_rvr_draft_box,
+    # Pre-Play-Booster sets
+    ("LCI", "box"):        model_lci_set_box,
+    ("LCI", "draft_box"):  model_lci_draft_box,
+    ("LTR", "box"):        model_ltr_set_box,
+    ("LTR", "draft_box"):  model_ltr_draft_box,
+    ("MOM", "box"):        model_mom_set_box,
+    ("MOM", "draft_box"):  model_mom_draft_box,
+    ("CMM", "box"):        model_cmm_set_box,
+    ("CMM", "draft_box"):  model_cmm_draft_box,
 }
 
 
