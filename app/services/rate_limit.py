@@ -1,12 +1,15 @@
 # app/services/rate_limit.py
 from __future__ import annotations
 
+import logging
 import os
 import time
 
 from fastapi import Header, HTTPException, status
 
 from app.services import ev_cache
+
+logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
 # Configuration via environment variables
@@ -53,5 +56,5 @@ def require_rate_limit(x_api_key: str | None = Header(default=None)) -> None:
             )
     except HTTPException:
         raise  # re-raise 429s — don't swallow them
-    except Exception:
-        pass  # fail open if Redis is down
+    except Exception as exc:
+        logger.warning("Rate limit check failed (failing open): %s", exc)
