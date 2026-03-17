@@ -260,3 +260,12 @@ LCI:
     ev_kind: draft_box
     product_kind: draft_box
     default_sort: price
+
+ONE:
+  - key: draft_box
+    label: Draft Booster Box
+    ebay_query: "Phyrexia All Will Be One draft booster box MTG"
+    ev_set_code: ONE
+    ev_kind: draft_box
+    product_kind: draft_box
+    default_sort: price
