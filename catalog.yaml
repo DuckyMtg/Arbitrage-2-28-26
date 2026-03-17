@@ -169,3 +169,94 @@ MB2:
   - key: display
     label: Mystery Booster 2 Display (24 packs)
     ebay_query: "Mystery Booster 2 display 24 packs"
+
+ACR:
+  - key: play_box
+    label: Beyond Booster Box
+    ebay_query: "Assassin's Creed Beyond booster box MTG"
+    ev_set_code: ACR
+    ev_kind: box
+    product_kind: play_box
+    default_sort: price
+
+MKM:
+  - key: play_box
+    label: Play Booster Box
+    ebay_query: "Murders at Karlov Manor play booster box"
+    ev_set_code: MKM
+    ev_kind: box
+    product_kind: play_box
+    default_sort: price
+
+RVR:
+  - key: draft_box
+    label: Draft Booster Box
+    ebay_query: "Ravnica Remastered draft booster box"
+    ev_set_code: RVR
+    ev_kind: draft_box
+    product_kind: draft_box
+    default_sort: price
+
+MOM:
+  - key: set_box
+    label: Set Booster Box
+    ebay_query: "March of the Machine set booster box MTG"
+    ev_set_code: MOM
+    ev_kind: box
+    product_kind: set_box
+    default_sort: price
+  - key: draft_box
+    label: Draft Booster Box
+    ebay_query: "March of the Machine draft booster box MTG"
+    ev_set_code: MOM
+    ev_kind: draft_box
+    product_kind: draft_box
+    default_sort: price
+
+LTR:
+  - key: set_box
+    label: Set Booster Box
+    ebay_query: "Lord of the Rings Tales of Middle-earth set booster box MTG"
+    ev_set_code: LTR
+    ev_kind: box
+    product_kind: set_box
+    default_sort: price
+  - key: draft_box
+    label: Draft Booster Box
+    ebay_query: "Lord of the Rings Tales of Middle-earth draft booster box MTG"
+    ev_set_code: LTR
+    ev_kind: draft_box
+    product_kind: draft_box
+    default_sort: price
+
+CMM:
+  - key: set_box
+    label: Set Booster Box
+    ebay_query: "Commander Masters set booster box MTG"
+    ev_set_code: CMM
+    ev_kind: box
+    product_kind: set_box
+    default_sort: price
+  - key: draft_box
+    label: Draft Booster Box
+    ebay_query: "Commander Masters draft booster box MTG"
+    ev_set_code: CMM
+    ev_kind: draft_box
+    product_kind: draft_box
+    default_sort: price
+
+LCI:
+  - key: set_box
+    label: Set Booster Box
+    ebay_query: "Lost Caverns of Ixalan set booster box MTG"
+    ev_set_code: LCI
+    ev_kind: box
+    product_kind: set_box
+    default_sort: price
+  - key: draft_box
+    label: Draft Booster Box
+    ebay_query: "Lost Caverns of Ixalan draft booster box MTG"
+    ev_set_code: LCI
+    ev_kind: draft_box
+    product_kind: draft_box
+    default_sort: price

@@ -41,16 +41,16 @@ _BOX_HINTS = (
 )
 
 # Phrases that are almost always garbage for sealed box sniping
-# FIX: added "pre order" (with space) alongside "preorder" and "pre-order"
 _ALWAYS_REJECT = (
     "digital",
     "code",
     "preorder",
     "pre-order",
-    "pre order",       # <-- was missing; caught "pre order" variant listings
+    "pre order",
     "prerelease",
     "empty",
     "wrapper",
+    "jumpstart",       # Jumpstart packs/products are never sealed booster boxes
 )
 
 # Phrases that indicate "packs only" / loose packs / pack lots (not a box)
@@ -63,6 +63,29 @@ _PACK_ONLY_HINTS = (
     "6 pack",
     "pack lot",
     "packs lot",
+    "single booster",  # e.g. "single booster pack"
+    "1x booster",      # e.g. "1x booster pack"
+    "loose booster",   # e.g. "loose booster pack"
+)
+
+# Non-English language signals — reject any listing containing these tokens.
+# MTG arbitrage targets US English listings; foreign language editions have
+# different print runs, EV profiles, and may be grey-market imports.
+_LANGUAGE_REJECTS = (
+    "japanese",
+    "japan",
+    "french",
+    "francais",
+    "german",
+    "deutsch",
+    "spanish",
+    "espanol",
+    "italian",
+    "italiano",
+    "korean",
+    "chinese",
+    "portuguese",
+    "russian",
 )
 
 class ProductKind(str, Enum):
@@ -99,6 +122,9 @@ def _is_box_intent(title: str, product_kind: str | None = None) -> bool:
     t = _norm(title)
 
     if _has_any(t, _ALWAYS_REJECT):
+        return False
+
+    if _has_any(t, _LANGUAGE_REJECTS):
         return False
 
     if _has_any(t, _PACK_ONLY_HINTS):
