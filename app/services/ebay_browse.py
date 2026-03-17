@@ -86,12 +86,17 @@ _LANGUAGE_REJECTS = (
     "chinese",
     "portuguese",
     "russian",
+    "ITA"
+    "ita"
+    "JAP"
+    "jap"
 )
 
+
 class ProductKind(str, Enum):
-    PLAY_BOX      = "play_box"
-    SET_BOX       = "set_box"
-    DRAFT_BOX     = "draft_box"
+    PLAY_BOX = "play_box"
+    SET_BOX = "set_box"
+    DRAFT_BOX = "draft_box"
     COLLECTOR_BOX = "collector_box"
 
 
