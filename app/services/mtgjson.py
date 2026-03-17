@@ -12,7 +12,7 @@ import requests
 from app.services import ev_cache
 
 MTGJSON_SET_URL = "https://mtgjson.com/api/v5/{code}.json"
-_TTL = 7 * 24 * 3600  # 7 days, matches TTL_CARDS
+_TTL = 24 * 3600  # 1 day — refresh rarity data daily
 
 # Maps MTGJSON rarity strings → canonical rarity keys used in ev_core.
 # "bonus" / "special" are intentionally excluded — they represent bonus-sheet
@@ -29,7 +29,7 @@ _RARITY_MAP: dict[str, str] = {
 
 def fetch_set_data(set_code: str) -> dict | None:
     """
-    Return the MTGJSON set data dict for *set_code*, Redis-cached for 7 days.
+    Return the MTGJSON set data dict for *set_code*, Redis-cached for 1 day.
     Returns None if the set is not found or the request fails.
     Cache key: ``mtgjson:set:{SET_CODE}``
     """

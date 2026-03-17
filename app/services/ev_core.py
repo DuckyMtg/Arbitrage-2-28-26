@@ -2390,6 +2390,34 @@ def print_report(r: EVReport) -> None:
             print(f"  - {w}")
 
 
+def model_one_draft_box() -> ProductModel:
+    """
+    ONE (Phyrexia: All Will Be One) Draft Booster (36/box).
+    Every pack: 1 R/M slot + 1 full-art panorama basic land slot.
+    1/3 packs: traditional foil replaces 1 common.
+    Card counts: 101C / 80U / 60R / 20M → foil split p_fu=0.31, p_fr=0.23, p_fm=0.08.
+    Prices from Scryfall; MTGJSON rarity counts fall back to Scryfall automatically
+    (ONE predates Play Boosters; its boosterTypes are "draft", not "play").
+    """
+    cfg = PlayBoosterConfig(
+        set_code="one", packs_per_box=36,
+        mythic_rate=DEFAULT_MYTHIC_RATE,
+        wc_rates=RarityRates(), wc_slots_per_pack=0,
+        land_types=[LandTypeConfig(
+            "panorama_fullart", ["type:basic", "is:fullart"],
+            rate=1.0, foil_rate=0.0, use_booster_filter=False,
+        )],
+    )
+    return ProductModel(
+        set_code="one", packs_per_box=36,
+        slots=[
+            build_main_rm_slot(cfg),
+            build_land_slot(cfg),
+            _draft_foil_slot("one", 1/3, p_fu=0.31, p_fr=0.23, p_fm=0.08),
+        ],
+    )
+
+
 # ============================================================
 # Registry — maps (SET_CODE, kind) -> factory function
 # To add a new set: write a model_xxx() above, add one line here.
@@ -2424,6 +2452,7 @@ MODEL_REGISTRY: dict[tuple[str, str], Callable[[], "ProductModel"]] = {
     ("MOM", "draft_box"):  model_mom_draft_box,
     ("CMM", "box"):        model_cmm_set_box,
     ("CMM", "draft_box"):  model_cmm_draft_box,
+    ("ONE", "draft_box"):  model_one_draft_box,
 }
 
 
