@@ -296,10 +296,17 @@ def rarity_counts(set_code: str) -> dict[str, int]:
         data, expires_at = entry
         if time.time() < expires_at:
             return data
-    counts: dict[str, int] = {}
-    for r in ["common", "uncommon", "rare", "mythic"]:
-        q = _q(f"set:{key}", f"rarity:{r}", "is:booster", "game:paper")
-        counts[r] = len(fetch_all_cards(q, unique="cards"))
+
+    # Try MTGJSON first — one HTTP call vs. four Scryfall queries.
+    from app.services.mtgjson import rarity_counts_mtgjson
+    counts = rarity_counts_mtgjson(key)
+    if not any(counts.values()):
+        # Fall back to Scryfall if MTGJSON returned nothing or failed.
+        counts = {}
+        for r in ["common", "uncommon", "rare", "mythic"]:
+            q = _q(f"set:{key}", f"rarity:{r}", "is:booster", "game:paper")
+            counts[r] = len(fetch_all_cards(q, unique="cards"))
+
     _rarity_counts_cache[key] = (counts, time.time() + _RARITY_COUNTS_TTL)
     return counts
 
