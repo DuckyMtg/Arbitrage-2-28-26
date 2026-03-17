@@ -5,6 +5,7 @@ import json
 import os
 import re
 from dataclasses import dataclass
+from enum import Enum
 from typing import Any, Dict, Optional
 
 import requests
@@ -64,11 +65,18 @@ _PACK_ONLY_HINTS = (
     "packs lot",
 )
 
+class ProductKind(str, Enum):
+    PLAY_BOX      = "play_box"
+    SET_BOX       = "set_box"
+    DRAFT_BOX     = "draft_box"
+    COLLECTOR_BOX = "collector_box"
+
+
 # Set boosters aren't returned when you call draft boosters and vice versa
 _CROSS_TYPE_REJECTS: dict[str, tuple[str, ...]] = {
-    "draft_box": ("set booster",),
-    "set_box":   ("draft booster",),
-    "play_box":  ("draft booster", "set booster"),
+    ProductKind.DRAFT_BOX: ("set booster",),
+    ProductKind.SET_BOX:   ("draft booster",),
+    ProductKind.PLAY_BOX:  ("draft booster", "set booster"),
 }
 
 # "lot/bundle/bulk" tends to be non-box; treat as reject unless "box" intent is present
@@ -265,10 +273,7 @@ def _stable_cache_key(
         sort_keys=True,
         separators=(",", ":"),
     )
-    return (
-        f"ebay:search:{EBAY_ENV}:{marketplace_id}:"
-        f"{product_kind or 'none'}:{ev_cache._sha1(blob)}"
-    )
+    return f"ebay:search:{EBAY_ENV}:{ev_cache._sha1(blob)}"
 
 
 def search_items_simplified(
@@ -337,7 +342,7 @@ def search_items_simplified(
                       for it in items if isinstance(it, dict)]
 
         # Box-only mode: keep ONLY box/case/multi-box listings
-        if product_kind in {"play_box", "set_box", "draft_box", "collector_box"}:
+        if product_kind in {pk.value for pk in ProductKind}:
             simplified = [
                 it for it in simplified
                 if _is_box_intent(it.get("title") or "", product_kind)

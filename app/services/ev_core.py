@@ -234,13 +234,10 @@ class Slot:
             warnings.append(
                 f"[{self.name}] probability sum <= 0; slot EV forced to 0.")
             return SlotEval(self.name, 0.0, [])
-        if self.strict_probs and abs(total_p - 1.0) > self.tol and not self.renormalize:
+        if self.strict_probs and abs(total_p - 1.0) > self.tol:
             warnings.append(
-                f"[{self.name}] prob sum != 1.0 (got {total_p:.6f}). Using implicit renorm.")
-            denom = total_p
-        else:
-            denom = total_p if (self.renormalize and abs(
-                total_p - 1.0) > self.tol) else 1.0
+                f"[{self.name}] prob sum != 1.0 (got {total_p:.6f}).")
+        denom = total_p if (self.renormalize and abs(total_p - 1.0) > self.tol) else 1.0
         ev: float = 0.0
         pool_evals: list[PoolEval] = []
         for p, v in self.outcomes:

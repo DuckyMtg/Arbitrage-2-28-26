@@ -1,6 +1,7 @@
 # app/api/deals_opinionated.py
 from __future__ import annotations
 
+import logging
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, Query
@@ -9,6 +10,8 @@ from pydantic import BaseModel, Field
 from app.auth import require_api_key
 from app.services.rate_limit import require_rate_limit
 from app.services.deals import resolve_deals_context
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["deals"])
 
@@ -92,10 +95,12 @@ def deals(
         if np_per_box is None:
             np_total = it.get("normalized_price")
             if np_total is None:
+                logger.warning("Skipping item with no price: itemId=%s title=%r", it.get("itemId"), it.get("title"))
                 continue
             try:
                 np_per_box = float(np_total)
             except (TypeError, ValueError):
+                logger.warning("Skipping item with non-numeric price %r: itemId=%s", np_total, it.get("itemId"))
                 continue
             it = dict(it)
             it.setdefault("boxes", 1)
@@ -104,6 +109,7 @@ def deals(
         try:
             npb_f = float(np_per_box)
         except (TypeError, ValueError):
+            logger.warning("Skipping item with non-numeric per-box price %r: itemId=%s", np_per_box, it.get("itemId"))
             continue
 
         spread = ctx.ev_box - npb_f

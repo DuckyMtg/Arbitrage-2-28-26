@@ -15,10 +15,10 @@ logger = logging.getLogger(__name__)
 # Bump this when EV logic/probabilities/queries change
 MODEL_VERSION = os.getenv("EV_MODEL_VERSION", "2026-02-08.1")
 
-# TTLs (seconds)
-TTL_EV = 65 * 60           # 65 minutes
-TTL_AVG = 65 * 60           # 65 minutes
-TTL_CARDS = 7 * 24 * 3600   # 7 days
+# TTLs (seconds) — configurable via env vars
+TTL_EV = int(os.getenv("EV_CACHE_TTL", str(65 * 60)))
+TTL_AVG = int(os.getenv("EV_AVG_CACHE_TTL", str(65 * 60)))
+TTL_CARDS = int(os.getenv("EV_CARDS_CACHE_TTL", str(7 * 24 * 3600)))
 
 LOCK_TTL = 300              # seconds (how long we hold the compute lock)
 LOCK_WAIT = 2.0              # seconds (how long other callers wait)
@@ -79,6 +79,10 @@ def cache_get_json(k: str) -> Optional[Any]:
         return json.loads(val)
     except json.JSONDecodeError as exc:
         logger.warning("Redis value for key=%r is not valid JSON: %s", k, exc)
+        try:
+            r.delete(k)
+        except Exception:
+            pass
         return None
 
 
@@ -133,11 +137,13 @@ class RedisLock:
 
 def wait_for_key(k: str, wait_s: float = LOCK_WAIT) -> Optional[Any]:
     deadline = time.time() + wait_s
+    sleep_s = 0.05
     while time.time() < deadline:
         v = cache_get_json(k)
         if v is not None:
             return v
-        time.sleep(0.05)
+        time.sleep(min(sleep_s, deadline - time.time()))
+        sleep_s = min(sleep_s * 2, 0.5)
     return None
 
 

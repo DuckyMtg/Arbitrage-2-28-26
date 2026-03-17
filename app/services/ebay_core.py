@@ -259,7 +259,7 @@ def looks_like_box_listing(tn: str, toks: set[str], *, packs_per_box: int) -> bo
         return True
 
     # Multi-box wording
-    if "boxes" in toks or "box" in toks and ("qty" in toks or "quantity" in toks):
+    if ("boxes" in toks or "box" in toks) and ("qty" in toks or "quantity" in toks):
         return True
 
     return False
@@ -269,6 +269,8 @@ def match_product_by_title(title: str, product: ProductConfig) -> Tuple[bool, st
     """
     Returns: (matched, reason)
     """
+    if not title or len(title) > 1000:
+        return (False, "invalid_title")
     tn = normalize_title(title)
     toks = tokens(tn)
 
@@ -585,24 +587,20 @@ def _extract_shipping(it: dict) -> Optional[float]:
     return _safe_float(sc.get("value"))
 
 
-_QTY_PATTERNS: List[Tuple[re.Pattern, int]] = [
-    (re.compile(r"\blot of\s*(\d+)\b", re.I), 1),
-    (re.compile(r"\b(\d+)\s*[x×]\b", re.I), 1),          # 2x, 3×
-    (re.compile(r"\b(\d+)\s*boxes?\b", re.I), 1),        # 2 boxes
-    (re.compile(r"\bqty\s*[:=]\s*(\d+)\b", re.I), 1),    # qty: 2
+_QTY_PATTERNS: List[re.Pattern] = [
+    re.compile(r"\blot of\s*(\d+)\b", re.I),
+    re.compile(r"\b(\d+)\s*[x×]\b", re.I),          # 2x, 3×
+    re.compile(r"\b(\d+)\s*boxes?\b", re.I),        # 2 boxes
+    re.compile(r"\bqty\s*[:=]\s*(\d+)\b", re.I),    # qty: 2
 ]
 
 
 def parse_quantity_from_title(title: str) -> int:
     t = title or ""
-    for pat, _default in _QTY_PATTERNS:
+    for pat in _QTY_PATTERNS:
         m = pat.search(t)
         if m:
-            try:
-                q = int(m.group(1))
-                return max(1, min(q, 99))
-            except ValueError:
-                pass
+            return max(1, min(int(m.group(1)), 99))
     return 1
 
 
@@ -802,7 +800,7 @@ def upsert_listings(
 
         if write_history_on_price_change:
             prev = existing.get(r.listing_id)
-            if r.all_in_price is not None and (prev is None or float(prev) != float(r.all_in_price)):
+            if r.all_in_price is not None and (prev is None or abs(float(prev) - float(r.all_in_price)) > 0.01):
                 cur.execute(
                     """
                     INSERT OR IGNORE INTO listings_price_history

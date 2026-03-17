@@ -11,6 +11,7 @@ from app.services.ebay_core import (
     match_product_by_title,
     looks_like_box_listing,
     normalize_title,
+    parse_quantity_from_title,
     tokens,
     PRODUCTS,
 )
@@ -187,3 +188,67 @@ class TestNormalizeTitle:
         # Smart quote should normalize to plain apostrophe
         result = normalize_title("Wilds\u2019 of Eldraine")
         assert "\u2019" not in result
+
+
+# ============================================================
+# parse_quantity_from_title — unit tests
+# ============================================================
+
+class TestParseQuantityFromTitle:
+
+    def test_single_box_default(self):
+        assert parse_quantity_from_title("Wilds of Eldraine Set Booster Box") == 1
+
+    def test_lot_of_two(self):
+        assert parse_quantity_from_title("lot of 2 booster boxes") == 2
+
+    def test_multiplier_notation(self):
+        assert parse_quantity_from_title("3x booster box") == 3
+
+    def test_boxes_plural(self):
+        assert parse_quantity_from_title("2 boxes booster") == 2
+
+    def test_qty_colon(self):
+        assert parse_quantity_from_title("Booster Box qty: 4") == 4
+
+    def test_clamps_to_max_99(self):
+        # Absurdly large quantities should be clamped to 99
+        assert parse_quantity_from_title("100 boxes lot") == 99
+
+    def test_clamps_to_min_1(self):
+        assert parse_quantity_from_title("0 boxes lot") == 1
+
+    def test_empty_title(self):
+        assert parse_quantity_from_title("") == 1
+
+    def test_none_like_empty(self):
+        assert parse_quantity_from_title(None) == 1  # type: ignore[arg-type]
+
+
+# ============================================================
+# match_product_by_title — edge case tests
+# ============================================================
+
+class TestMatchProductByTitleEdgeCases:
+
+    def test_null_title_rejected(self):
+        matched, reason = match_product_by_title(None, WOE)  # type: ignore[arg-type]
+        assert not matched
+        assert reason == "invalid_title"
+
+    def test_empty_title_rejected(self):
+        matched, reason = match_product_by_title("", WOE)
+        assert not matched
+        assert reason == "invalid_title"
+
+    def test_too_long_title_rejected(self):
+        matched, reason = match_product_by_title("a" * 1001, WOE)
+        assert not matched
+        assert reason == "invalid_title"
+
+    def test_24_packs_does_not_match_30_pack_box(self):
+        # "24 packs" should NOT match a 30-packs-per-box product
+        matched, reason = match_product_by_title(
+            "Wilds of Eldraine Set Booster 24 Packs", WOE
+        )
+        assert not matched
