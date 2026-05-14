@@ -288,7 +288,6 @@ class ProductModel:
 DEFAULT_MYTHIC_RATE = 1 / 8
 
 
-@lru_cache(maxsize=256)
 def rarity_counts(set_code: str) -> dict[str, int]:
     key = set_code.strip().upper()
     entry = _rarity_counts_cache.get(key)

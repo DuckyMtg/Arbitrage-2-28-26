@@ -86,10 +86,10 @@ _LANGUAGE_REJECTS = (
     "chinese",
     "portuguese",
     "russian",
-    "ITA"
-    "ita"
-    "JAP"
-    "jap"
+    "ITA",
+    "ita",
+    "JAP",
+    "jap",
 )
 
 
