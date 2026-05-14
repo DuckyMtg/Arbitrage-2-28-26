@@ -285,7 +285,8 @@ class ProductModel:
 # Shared helpers
 # ----------------------------
 
-DEFAULT_MYTHIC_RATE = 1 / 8
+DEFAULT_MYTHIC_RATE = 1 / 8   # Draft Booster era (pre-2024)
+PLAY_MYTHIC_RATE   = 1 / 7   # Play Booster era (MKM onward) — official Wizards rate
 
 
 def rarity_counts(set_code: str) -> dict[str, int]:
@@ -1318,6 +1319,70 @@ def _std_land_types_any_land(*, foil_rate: float = 0.20) -> list[LandTypeConfig]
 
 def _std_land_types_basic_only(*, foil_rate: float = 0.20) -> list[LandTypeConfig]:
     return [LandTypeConfig("basic", ["type:basic"], rate=1.0, foil_rate=foil_rate)]
+
+
+# ============================================================
+# Auto-generation from set_registry definitions
+# ============================================================
+
+def model_from_setdef(sd: "SetDef") -> "ProductModel":
+    """Build a ProductModel from a SetDef (standard Play Booster sets)."""
+    land_types = (
+        _std_land_types_any_land(foil_rate=0.20) if sd.land_kind == "any"
+        else _std_land_types_basic_only(foil_rate=0.20)
+    )
+    cfg = PlayBoosterConfig(
+        set_code=sd.set_code.lower(),
+        packs_per_box=sd.packs_per_box,
+        mythic_rate=sd.mythic_rate,
+        wc_rm_rate=1 / 12,
+        land_types=land_types,
+    )
+    extra_slots: list[Slot] = []
+    if sd.bonus:
+        b = sd.bonus
+        q = _q(f"set:{b.bonus_set}", f"cn>={b.cn_min}", f"cn<={b.cn_max}", "game:paper")
+        extra_slots.append(slot_replaces_common_with_pool(
+            slot_name=b.slot_name, replace_rate=b.rate,
+            pool_label=b.label, query=q,
+        ))
+    return model_from_config(cfg, extra_slots=extra_slots)
+
+
+def model_from_draft_def(dd: "DraftBoosterDef") -> "ProductModel":
+    """Build a ProductModel from a DraftBoosterDef (standard Draft Booster sets)."""
+    sc = dd.set_code.lower()
+    if dd.land_kind == "none":
+        land_types: list[LandTypeConfig] = []
+    elif dd.land_kind == "fullart_basic":
+        land_types = [LandTypeConfig("fullart", ["type:basic", "is:fullart"],
+                                     rate=1.0, foil_rate=0.0, use_booster_filter=False)]
+    elif dd.land_kind == "any":
+        land_types = [LandTypeConfig("any", ["type:land"], rate=1.0, foil_rate=0.0)]
+    else:
+        land_types = [LandTypeConfig("basic", ["type:basic"], rate=1.0, foil_rate=0.0)]
+
+    cfg = PlayBoosterConfig(
+        set_code=sc, packs_per_box=dd.packs_per_box,
+        mythic_rate=dd.mythic_rate,
+        wc_rates=RarityRates(), wc_slots_per_pack=0,
+        land_types=land_types,
+    )
+    extra_slots: list[Slot] = []
+    if dd.bonus:
+        b = dd.bonus
+        q = _q(f"set:{b.bonus_set}", f"cn>={b.cn_min}", f"cn<={b.cn_max}", "game:paper")
+        extra_slots.append(slot_replaces_common_with_pool(
+            slot_name=b.slot_name, replace_rate=b.rate,
+            pool_label=b.label, query=q,
+        ))
+    slots: list[Slot] = [build_main_rm_slot(cfg)]
+    if land_types:
+        slots.append(build_land_slot(cfg))
+    slots.append(_draft_foil_slot(sc, dd.foil_rate,
+                                  p_fu=dd.foil_p_u, p_fr=dd.foil_p_r, p_fm=dd.foil_p_m))
+    slots.extend(extra_slots)
+    return ProductModel(set_code=sc, packs_per_box=dd.packs_per_box, slots=slots)
 
 
 # ============================================================
@@ -2418,8 +2483,238 @@ def model_one_draft_box() -> ProductModel:
 
 
 # ============================================================
+# STX — Strixhaven: School of Mages (36 packs/box) — Draft Booster
+#
+# Every draft pack has 1 guaranteed Mystical Archive (STA) card in a dedicated
+# bonus slot (does not replace a main-set card slot).
+# STA: 63 cards (18U / 30R / 15M). Print sheet: ~8 copies per U, 2 per R, 1 per M.
+#   → weights 144 : 60 : 15 = P(U)≈65.8%, P(R)≈27.4%, P(M)≈6.8%
+#   (Wizards article cites ~67%/26%/7% — minor rounding; sheet weights used here)
+# Japanese alternate-art versions (STA CN 64–126) are Collector Booster only.
+# Source: https://magic.wizards.com/en/news/feature/collecting-strixhaven-school-mages
+# ============================================================
+
+_STA_TOTAL = 144 + 60 + 15
+_STA_P_U   = 144 / _STA_TOTAL
+_STA_P_R   = 60  / _STA_TOTAL
+_STA_P_M   = 15  / _STA_TOTAL
+
+
+def slot_stx_mystical_archive() -> Slot:
+    q_u = _q("set:sta", "rarity:uncommon", "cn<=63", "game:paper")
+    q_r = _q("set:sta", "rarity:rare",     "cn<=63", "game:paper")
+    q_m = _q("set:sta", "rarity:mythic",   "cn<=63", "game:paper")
+    return Slot(
+        name="Mystical Archive (STA, always present)",
+        outcomes=[
+            (_STA_P_U, QueryPool("stx_sta_u", q_u, unique="prints", price_field="usd")),
+            (_STA_P_R, QueryPool("stx_sta_r", q_r, unique="prints", price_field="usd")),
+            (_STA_P_M, QueryPool("stx_sta_m", q_m, unique="prints", price_field="usd")),
+        ],
+        strict_probs=True,
+    )
+
+
+def model_stx_draft_box() -> ProductModel:
+    """
+    STX Draft Booster (36/box).
+    Every pack: 1 main RM + 1 Mystical Archive (STA, dedicated bonus slot).
+    1/3 packs: traditional foil.  Basic lands included in land slot.
+    Foil rarity split: ~27% U, 10% R, 3% M (remainder are 0-EV common foils).
+    """
+    cfg = PlayBoosterConfig(
+        set_code="stx", packs_per_box=36,
+        mythic_rate=DEFAULT_MYTHIC_RATE,
+        wc_rates=RarityRates(), wc_slots_per_pack=0,
+        land_types=[LandTypeConfig("basic", ["type:basic"], rate=1.0, foil_rate=0.0)],
+    )
+    return ProductModel(
+        set_code="stx", packs_per_box=36,
+        slots=[
+            build_main_rm_slot(cfg),
+            build_land_slot(cfg),
+            slot_stx_mystical_archive(),
+            _draft_foil_slot("stx", 1/3, p_fu=0.27, p_fr=0.10, p_fm=0.03),
+        ],
+    )
+
+
+# ============================================================
+# BRO — The Brothers' War (36 packs/box) — Draft Booster
+#
+# Every draft pack has 1 guaranteed Retro Artifact (BRR) in a dedicated bonus slot.
+# BRR: 63 regular (CN 1–63) + 63 schematic (CN 64–126).
+# 5/6 packs draw from regular retro; 1/6 from schematic (higher avg value).
+# Rarity split within slot: P(U)≈66%, P(R)≈27%, P(M)≈7% (same sheet pattern as STA).
+# Serialized schematics (500 copies each) are Collector Booster only.
+# Source: https://magic.wizards.com/en/news/feature/whats-inside-the-brothers-war-boosters
+# ============================================================
+
+_BRR_P_U = 0.66
+_BRR_P_R = 0.27
+_BRR_P_M = 0.07
+
+
+def slot_bro_retro_artifact() -> Slot:
+    def _rpool(label: str, rarity: str, cn_max: int) -> QueryPool:
+        q = _q("set:brr", f"rarity:{rarity}", f"cn<={cn_max}", "game:paper")
+        return QueryPool(f"bro_brr_{label}", q, fallback=q, unique="prints", price_field="usd")
+
+    def _spool(label: str, rarity: str) -> QueryPool:
+        q = _q("set:brr", f"rarity:{rarity}", "cn>=64", "game:paper")
+        return QueryPool(f"bro_brr_sch_{label}", q, fallback=q, unique="prints", price_field="usd")
+
+    p_reg, p_sch = 5/6, 1/6
+    return Slot(
+        name="Retro Artifact (BRR, always present; 1-in-6 schematic)",
+        outcomes=[
+            (p_reg * _BRR_P_U, _rpool("u", "uncommon", 63)),
+            (p_reg * _BRR_P_R, _rpool("r", "rare",     63)),
+            (p_reg * _BRR_P_M, _rpool("m", "mythic",   63)),
+            (p_sch * _BRR_P_U, _spool("u", "uncommon")),
+            (p_sch * _BRR_P_R, _spool("r", "rare")),
+            (p_sch * _BRR_P_M, _spool("m", "mythic")),
+        ],
+        strict_probs=True,
+    )
+
+
+def model_bro_draft_box() -> ProductModel:
+    """
+    BRO Draft Booster (36/box).
+    Every pack: 1 main RM + 1 Retro Artifact (BRR, dedicated bonus slot).
+    1/3 packs: traditional foil.  Basic land slot included.
+    """
+    cfg = PlayBoosterConfig(
+        set_code="bro", packs_per_box=36,
+        mythic_rate=DEFAULT_MYTHIC_RATE,
+        wc_rates=RarityRates(), wc_slots_per_pack=0,
+        land_types=[LandTypeConfig("basic", ["type:basic"], rate=1.0, foil_rate=0.0)],
+    )
+    return ProductModel(
+        set_code="bro", packs_per_box=36,
+        slots=[
+            build_main_rm_slot(cfg),
+            build_land_slot(cfg),
+            slot_bro_retro_artifact(),
+            _draft_foil_slot("bro", 1/3, p_fu=0.27, p_fr=0.10, p_fm=0.03),
+        ],
+    )
+
+
+# ============================================================
+# MH2 — Modern Horizons 2 (36 packs/box) — Draft Booster
+#
+# Every pack: 1 regular rare/mythic (CN 1–261) + 1 New-to-Modern reprint
+# (CN 262–303, 42 cards; a dedicated EXTRA slot, not replacing any other slot).
+# 1/3 packs: traditional foil (replaces a common).
+# CN 262–303 includes all-rarity reprints; queried as a flat pool.
+# Sketch (CN 327–380) and retro-frame (CN 381–441) cards are Collector Booster only.
+# Source: https://magic.wizards.com/en/news/feature/collecting-modern-horizons-2
+# ============================================================
+
+def slot_mh2_new_to_modern() -> Slot:
+    """42 new-to-Modern reprints (CN 262–303), one guaranteed per pack."""
+    q = _q("set:mh2", "cn>=262", "cn<=303", "game:paper")
+    return Slot(
+        name="New-to-Modern reprint (CN 262-303, always present)",
+        outcomes=[(1.0, QueryPool("mh2_reprint", q, fallback=q, unique="cards", price_field="usd"))],
+        strict_probs=True,
+    )
+
+
+def model_mh2_draft_box() -> ProductModel:
+    """
+    MH2 Draft Booster (36/box).
+    Every pack: 1 main RM (CN 1–261) + 1 new-to-Modern reprint (CN 262–303).
+    1/3 packs: traditional foil.  No basic land slot (no basics in MH2 draft).
+    Foil rarity split approx from Masters foil sheet: ~20% U, 15% R, 5% M.
+    """
+    cfg = PlayBoosterConfig(
+        set_code="mh2", packs_per_box=36,
+        mythic_rate=DEFAULT_MYTHIC_RATE,
+        wc_rates=RarityRates(), wc_slots_per_pack=0,
+        land_types=[],
+    )
+    return ProductModel(
+        set_code="mh2", packs_per_box=36,
+        slots=[
+            build_main_rm_slot(cfg),
+            slot_mh2_new_to_modern(),
+            _draft_foil_slot("mh2", 1/3, p_fu=0.20, p_fr=0.15, p_fm=0.05),
+        ],
+    )
+
+
+# ============================================================
+# 2X2 — Double Masters 2022 (24 packs/box) — Draft Booster
+#
+# Every pack: 2 non-foil rare/mythic + 2 traditional foil cards (any rarity).
+# 16 cards per pack, 24 packs per box.
+# ~11% of packs also contain a non-foil borderless rare/mythic (already within
+# the main R/M pool since is:borderless cards are queried together with regulars).
+# No basic land slot (Cryptic Spires in every pack are ≈$0 EV, not modeled).
+# Source: https://magic.wizards.com/en/news/feature/collecting-double-masters-2022
+# ============================================================
+
+def slot_2x2_foil(label_prefix: str) -> Slot:
+    """One traditional foil slot (always fires); rarity-weighted from full 2X2 set."""
+    def _fp(label: str, rarity: str) -> QueryPool:
+        q = _q("set:2x2", f"rarity:{rarity}", "is:booster", "game:paper", "finish:foil")
+        q_fb = _q("set:2x2", f"rarity:{rarity}", "is:booster", "game:paper")
+        return QueryPool(f"2x2_{label_prefix}_foil_{label}", q, fallback=q_fb,
+                         unique="cards", price_field="usd_foil")
+    # Approximate rarity weights from 2X2 card counts
+    return Slot(
+        name=f"Foil #{label_prefix[-1]} (always present, rarity-weighted)",
+        outcomes=[
+            (0.53, _fp("c", "common")),
+            (0.25, _fp("u", "uncommon")),
+            (0.18, _fp("r", "rare")),
+            (0.04, _fp("m", "mythic")),
+        ],
+        strict_probs=True, renormalize=True,
+    )
+
+
+_2X2_MYTHIC_RATE = DEFAULT_MYTHIC_RATE
+
+
+def slot_2x2_rm(label: str) -> Slot:
+    """One non-foil rare/mythic slot (fires twice per pack via two instances)."""
+    q_r = _q("set:2x2", "rarity:rare",   "is:booster", "game:paper")
+    q_m = _q("set:2x2", "rarity:mythic", "is:booster", "game:paper")
+    return Slot(
+        name=f"R/M slot #{label}",
+        outcomes=[
+            (1 - _2X2_MYTHIC_RATE, QueryPool(f"2x2_rm{label}_r", q_r, unique="prints", price_field="usd")),
+            (_2X2_MYTHIC_RATE,     QueryPool(f"2x2_rm{label}_m", q_m, unique="prints", price_field="usd")),
+        ],
+        strict_probs=True,
+    )
+
+
+def model_2x2_draft_box() -> ProductModel:
+    """
+    2X2 Draft Booster (24/box).
+    Every pack: 2 non-foil RM + 2 traditional foil cards.
+    Cryptic Spires and common foils treated as ≈$0 EV.
+    """
+    return ProductModel(
+        set_code="2x2", packs_per_box=24,
+        slots=[
+            slot_2x2_rm("1"),
+            slot_2x2_rm("2"),
+            slot_2x2_foil("f1"),
+            slot_2x2_foil("f2"),
+        ],
+    )
+
+
+# ============================================================
 # Registry — maps (SET_CODE, kind) -> factory function
-# To add a new set: write a model_xxx() above, add one line here.
+# Standard sets auto-resolve via SET_REGISTRY / DRAFT_REGISTRY in model_for_code().
+# Only add entries here for sets with hand-crafted models that override auto-gen.
 # ============================================================
 
 MODEL_REGISTRY: dict[tuple[str, str], Callable[[], "ProductModel"]] = {
@@ -2452,11 +2747,38 @@ MODEL_REGISTRY: dict[tuple[str, str], Callable[[], "ProductModel"]] = {
     ("CMM", "box"):        model_cmm_set_box,
     ("CMM", "draft_box"):  model_cmm_draft_box,
     ("ONE", "draft_box"):  model_one_draft_box,
+    # 2020-2024 Draft Booster sets with complex bonus sheets
+    ("STX", "draft_box"):  model_stx_draft_box,
+    ("BRO", "draft_box"):  model_bro_draft_box,
+    ("MH2", "draft_box"):  model_mh2_draft_box,
+    ("2X2", "draft_box"):  model_2x2_draft_box,
 }
 
 
 def model_for_code(code: str, kind: str = "box") -> "ProductModel | None":
-    """Return a fresh ProductModel for the given set-code + product kind, or None."""
+    """
+    Return a fresh ProductModel for the given set-code + product kind, or None.
+
+    Resolution order:
+      1. MODEL_REGISTRY — hand-crafted models (highest priority)
+      2. SET_REGISTRY   — auto-generated Play Booster models (via model_from_setdef)
+      3. DRAFT_REGISTRY — auto-generated Draft Booster models (via model_from_draft_def)
+    """
     key = (code.strip().upper(), kind.strip().lower())
     factory = MODEL_REGISTRY.get(key)
-    return factory() if factory else None
+    if factory:
+        return factory()
+
+    from app.services.set_registry import SET_REGISTRY, DRAFT_REGISTRY, EV_CORE_OVERRIDES
+    if key not in EV_CORE_OVERRIDES:
+        upper = code.strip().upper()
+        k = kind.strip().lower()
+        if k == "box":
+            sd = SET_REGISTRY.get(upper)
+            if sd:
+                return model_from_setdef(sd)
+        elif k == "draft_box":
+            dd = DRAFT_REGISTRY.get(upper)
+            if dd:
+                return model_from_draft_def(dd)
+    return None

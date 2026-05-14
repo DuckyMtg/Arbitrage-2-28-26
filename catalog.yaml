@@ -269,3 +269,39 @@ ONE:
     ev_kind: draft_box
     product_kind: draft_box
     default_sort: price
+
+STX:
+  - key: draft_box
+    label: Draft Booster Box
+    ebay_query: "Strixhaven School of Mages draft booster box MTG"
+    ev_set_code: STX
+    ev_kind: draft_box
+    product_kind: draft_box
+    default_sort: price
+
+BRO:
+  - key: draft_box
+    label: Draft Booster Box
+    ebay_query: "The Brothers War draft booster box MTG"
+    ev_set_code: BRO
+    ev_kind: draft_box
+    product_kind: draft_box
+    default_sort: price
+
+MH2:
+  - key: draft_box
+    label: Draft Booster Box
+    ebay_query: "Modern Horizons 2 draft booster box MTG"
+    ev_set_code: MH2
+    ev_kind: draft_box
+    product_kind: draft_box
+    default_sort: price
+
+2X2:
+  - key: draft_box
+    label: Draft Booster Box
+    ebay_query: "Double Masters 2022 draft booster box MTG"
+    ev_set_code: 2X2
+    ev_kind: draft_box
+    product_kind: draft_box
+    default_sort: price

@@ -15,6 +15,9 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Optional
 
+PLAY_MYTHIC_RATE   = 1 / 7   # Play Booster era (MKM onward)
+DRAFT_MYTHIC_RATE  = 1 / 8   # Draft Booster era (pre-2024)
+
 
 # ---------------------------------------------------------------------------
 # BonusSlot — describes a "replaces a common" bonus sheet
@@ -68,7 +71,7 @@ class SetDef:
     packs_per_box: int
     ebay_query:    str
     land_kind:     str = "basic"   # "basic" | "any"
-    mythic_rate:   float = 1 / 8     # DEFAULT_MYTHIC_RATE
+    mythic_rate:   float = PLAY_MYTHIC_RATE   # 1/7 for Play Booster era
     wc_rm_rate:    float = 1 / 12
     bonus:         Optional[BonusSlot] = None
     product_key:   str = "play_box"
@@ -220,6 +223,123 @@ SET_REGISTRY: dict[str, SetDef] = {s.set_code: s for s in [
 
 
 # ---------------------------------------------------------------------------
+# DraftBoosterDef — standard Draft Booster sets (2020–2024)
+# ---------------------------------------------------------------------------
+@dataclass(frozen=True)
+class DraftBoosterDef:
+    """
+    Full definition for a standard Draft Booster set.
+
+    Fields
+    ------
+    set_code        : Upper-case Scryfall set code, e.g. "THB"
+    packs_per_box   : Number of packs in a draft booster box (usually 36)
+    ebay_query      : eBay Browse API search string for this product
+    land_kind       : "basic"         → type:basic in land slot (most sets)
+                      "any"           → type:land (sets with notable nonbasic lands)
+                      "fullart_basic" → type:basic is:fullart (ZNR, etc.)
+                      "none"          → no land slot (e.g. Masters sets)
+    mythic_rate     : Fraction of RM slot that is mythic (default 1/8)
+    foil_rate       : Fraction of packs containing a foil (default 1/3)
+    foil_p_u/r/m    : Conditional foil rarity split (given foil appears)
+    bonus           : Optional BonusSlot for sets with a bonus sheet
+    product_key     : Catalog product key (default "draft_box")
+    product_label   : Catalog display label
+    product_kind    : eBay browse filter kind (default "draft_box")
+    """
+    set_code:      str
+    packs_per_box: int
+    ebay_query:    str
+    land_kind:     str   = "basic"
+    mythic_rate:   float = DRAFT_MYTHIC_RATE
+    foil_rate:     float = 1 / 3
+    foil_p_u:      float = 0.27
+    foil_p_r:      float = 0.10
+    foil_p_m:      float = 0.03
+    bonus:         Optional[BonusSlot] = None
+    product_key:   str = "draft_box"
+    product_label: str = "Draft Booster Box"
+    product_kind:  str = "draft_box"
+
+
+# ---------------------------------------------------------------------------
+# DRAFT_REGISTRY — add standard draft booster sets here
+# ---------------------------------------------------------------------------
+# Sets with complex bonus sheets (STX, BRO, MH2, 2X2) have hand-crafted models
+# in ev_core.py and are registered in MODEL_REGISTRY there instead.
+# ---------------------------------------------------------------------------
+
+DRAFT_REGISTRY: dict[str, DraftBoosterDef] = {s.set_code: s for s in [
+
+    DraftBoosterDef(
+        set_code="THB", packs_per_box=36,
+        ebay_query="Theros Beyond Death draft booster box MTG",
+    ),
+
+    DraftBoosterDef(
+        set_code="IKO", packs_per_box=36,
+        ebay_query="Ikoria Lair of Behemoths draft booster box MTG",
+        # Godzilla Series cards are non-Japanese box toppers only, not in individual packs.
+    ),
+
+    DraftBoosterDef(
+        set_code="M21", packs_per_box=36,
+        ebay_query="Core Set 2021 draft booster box MTG",
+    ),
+
+    DraftBoosterDef(
+        set_code="ZNR", packs_per_box=36,
+        ebay_query="Zendikar Rising draft booster box MTG",
+        # Expeditions are box toppers only (not in individual draft packs).
+        # Full-art basic lands in every pack land slot.
+        land_kind="basic",
+    ),
+
+    DraftBoosterDef(
+        set_code="KHM", packs_per_box=36,
+        ebay_query="Kaldheim draft booster box MTG",
+        # Snow-covered basics are type:basic — captured by default "basic" land query.
+    ),
+
+    DraftBoosterDef(
+        set_code="AFR", packs_per_box=36,
+        ebay_query="Adventures in the Forgotten Realms draft booster box MTG",
+    ),
+
+    DraftBoosterDef(
+        set_code="MID", packs_per_box=36,
+        ebay_query="Innistrad Midnight Hunt draft booster box MTG",
+        # Eternal Night full-art basics are still type:basic — default query captures them.
+    ),
+
+    DraftBoosterDef(
+        set_code="VOW", packs_per_box=36,
+        ebay_query="Innistrad Crimson Vow draft booster box MTG",
+    ),
+
+    DraftBoosterDef(
+        set_code="NEO", packs_per_box=36,
+        ebay_query="Kamigawa Neon Dynasty draft booster box MTG",
+    ),
+
+    DraftBoosterDef(
+        set_code="SNC", packs_per_box=36,
+        ebay_query="Streets of New Capenna draft booster box MTG",
+    ),
+
+    DraftBoosterDef(
+        set_code="DMU", packs_per_box=36,
+        ebay_query="Dominaria United draft booster box MTG",
+        # Stained-glass legends (DMU CN 287-327) are within the main DMU set;
+        # every pack has a legendary creature due to high legend density — no dedicated
+        # slot exists, so standard RM queries already capture the full price pool.
+    ),
+
+    # ── Add new sets below this line ────────────────────────────────────────
+]}
+
+
+# ---------------------------------------------------------------------------
 # EV_CORE_OVERRIDES
 # ---------------------------------------------------------------------------
 # Set codes listed here have hand-crafted model factories in ev_core.py.
@@ -235,7 +355,11 @@ EV_CORE_OVERRIDES: frozenset[tuple[str, str]] = frozenset({
     ("WOE", "draft_box"),
     ("ECL", "box"),
     ("TLA", "box"),
-    ("INR", "box"),   # retro slot needs custom handling
+    ("INR", "box"),       # retro slot needs custom handling
+    ("STX", "draft_box"), # Mystical Archive bonus sheet
+    ("BRO", "draft_box"), # Retro Artifacts with schematic variant
+    ("MH2", "draft_box"), # New-to-Modern reprint slot
+    ("2X2", "draft_box"), # 2 R/M + 2 foils per pack, 24 packs/box
 })
 
 
@@ -251,4 +375,18 @@ def to_catalog_product(s: SetDef) -> dict:
         "ev_set_code":  s.set_code,
         "ev_kind":      "box",
         "product_kind": s.product_kind,
+        "default_sort": "price",
+    }
+
+
+def to_catalog_product_draft(d: DraftBoosterDef) -> dict:
+    """Convert a DraftBoosterDef into the catalog product dict shape."""
+    return {
+        "key":          d.product_key,
+        "label":        d.product_label,
+        "ebay_query":   d.ebay_query,
+        "ev_set_code":  d.set_code,
+        "ev_kind":      "draft_box",
+        "product_kind": d.product_kind,
+        "default_sort": "price",
     }

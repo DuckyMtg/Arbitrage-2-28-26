@@ -34,27 +34,45 @@ _CATALOG_PATH: Path = (
 _catalog_cache: Dict[str, List[ProductType]] | None = None
 
 
+def _auto_gen_catalog() -> Dict[str, List[ProductType]]:
+    """Build catalog entries from SET_REGISTRY and DRAFT_REGISTRY."""
+    from app.services.set_registry import (
+        SET_REGISTRY, DRAFT_REGISTRY, to_catalog_product, to_catalog_product_draft,
+    )
+    catalog: Dict[str, List[ProductType]] = {}
+    for sd in SET_REGISTRY.values():
+        code = sd.set_code.upper()
+        catalog.setdefault(code, []).append(to_catalog_product(sd))  # type: ignore[arg-type]
+    for dd in DRAFT_REGISTRY.values():
+        code = dd.set_code.upper()
+        catalog.setdefault(code, []).append(to_catalog_product_draft(dd))  # type: ignore[arg-type]
+    return catalog
+
+
 def _load_catalog() -> Dict[str, List[ProductType]]:
     global _catalog_cache
     if _catalog_cache is not None:
         return _catalog_cache
 
-    if not _CATALOG_PATH.exists():
-        raise FileNotFoundError(
-            f"Catalog file not found at {_CATALOG_PATH}. "
-            "Set the CATALOG_PATH env var or place catalog.yaml at the project root."
-        )
+    # Start with auto-generated entries from the registries
+    catalog: Dict[str, List[ProductType]] = _auto_gen_catalog()
 
-    with _CATALOG_PATH.open("r", encoding="utf-8") as f:
-        raw: dict = yaml.safe_load(f) or {}
+    # Overlay entries from catalog.yaml — yaml wins on key conflict within a set
+    if _CATALOG_PATH.exists():
+        with _CATALOG_PATH.open("r", encoding="utf-8") as f:
+            raw: dict = yaml.safe_load(f) or {}
 
-    catalog: Dict[str, List[ProductType]] = {}
-    for set_code, products in raw.items():
-        if not isinstance(products, list):
-            continue
-        code = str(set_code).strip().upper()
-        catalog[code] = [p for p in products if isinstance(
-            p, dict) and p.get("key")]
+        for set_code, products in raw.items():
+            if not isinstance(products, list):
+                continue
+            code = str(set_code).strip().upper()
+            yaml_products = [p for p in products if isinstance(p, dict) and p.get("key")]
+            if not yaml_products:
+                continue
+            existing = {p["key"]: p for p in catalog.get(code, [])}
+            for yp in yaml_products:
+                existing[yp["key"]] = yp  # yaml entry overrides auto-gen
+            catalog[code] = list(existing.values())
 
     _catalog_cache = catalog
     return catalog
