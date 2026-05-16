@@ -129,7 +129,7 @@ def deals(
     return DealsResponse(
         set_code=ctx.set_code,
         product_key=ctx.product_key,
-        product_label=ctx.product.get("label", ctx.product_key),
+        product_label=ctx.product.get("label", ctx.product_key) if isinstance(ctx.product, dict) else ctx.product_key,
         ebay_query=ctx.ebay_query,
         product_kind=ctx.product_kind,
         ev_box=ctx.ev_box,

@@ -86,14 +86,13 @@ def deals_box(
 
     # Best spread first; items with no price go last
     enriched.sort(
-        key=lambda x: (x.get("spread") is None, -
-                       (x.get("spread") or -(10**18)))
+        key=lambda x: -(x.get("spread") if x.get("spread") is not None else float("inf")),
     )
 
     return DealsOut(
         set_code=ctx.set_code,
         product_key=ctx.product_key,
-        product_label=ctx.product.get("label", ctx.product_key),
+        product_label=ctx.product.get("label", ctx.product_key) if isinstance(ctx.product, dict) else ctx.product_key,
         ebay_query=ctx.ebay_query,
         ev_box=ctx.ev_box,
         total=ctx.total,
