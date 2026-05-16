@@ -2482,6 +2482,27 @@ def model_one_draft_box() -> ProductModel:
     )
 
 
+ONE_SET_CONFIG = PlayBoosterConfig(
+    set_code="one", packs_per_box=30,
+    mythic_rate=DEFAULT_MYTHIC_RATE,
+    wc_rm_rate=0.25,
+    wc_slots_per_pack=2,
+    land_types=[LandTypeConfig(
+        "panorama_fullart", ["type:basic", "is:fullart"],
+        rate=1.0, foil_rate=0.15, use_booster_filter=False,
+    )],
+)
+
+
+def model_one_set_box() -> ProductModel:
+    """
+    ONE Set Booster (30/box).
+    2 wildcard slots (wc_rm_rate=0.25), 1 R/M, 1 foil, 1 full-art panorama basic (15% foil).
+    25% The List (PLST).
+    """
+    return model_from_config(ONE_SET_CONFIG, extra_slots=[_plst_the_list_slot("one", 0.25)])
+
+
 # ============================================================
 # STX — Strixhaven: School of Mages (36 packs/box) — Draft Booster
 #
@@ -2536,6 +2557,27 @@ def model_stx_draft_box() -> ProductModel:
             slot_stx_mystical_archive(),
             _draft_foil_slot("stx", 1/3, p_fu=0.27, p_fr=0.10, p_fm=0.03),
         ],
+    )
+
+
+STX_SET_CONFIG = PlayBoosterConfig(
+    set_code="stx", packs_per_box=30,
+    mythic_rate=DEFAULT_MYTHIC_RATE,
+    wc_rm_rate=0.25,
+    wc_slots_per_pack=2,
+    land_types=[LandTypeConfig("basic", ["type:basic"], rate=1.0, foil_rate=0.15)],
+)
+
+
+def model_stx_set_box() -> ProductModel:
+    """
+    STX Set Booster (30/box).
+    2 wildcard slots (wc_rm_rate=0.25), 1 R/M, 1 STA Mystical Archive, 1 foil, 1 basic (15% foil).
+    25% The List (PLST).
+    """
+    return model_from_config(
+        STX_SET_CONFIG,
+        extra_slots=[slot_stx_mystical_archive(), _plst_the_list_slot("stx", 0.25)],
     )
 
 
@@ -2599,6 +2641,27 @@ def model_bro_draft_box() -> ProductModel:
             slot_bro_retro_artifact(),
             _draft_foil_slot("bro", 1/3, p_fu=0.27, p_fr=0.10, p_fm=0.03),
         ],
+    )
+
+
+BRO_SET_CONFIG = PlayBoosterConfig(
+    set_code="bro", packs_per_box=30,
+    mythic_rate=DEFAULT_MYTHIC_RATE,
+    wc_rm_rate=0.25,
+    wc_slots_per_pack=2,
+    land_types=[LandTypeConfig("basic", ["type:basic"], rate=1.0, foil_rate=0.15)],
+)
+
+
+def model_bro_set_box() -> ProductModel:
+    """
+    BRO Set Booster (30/box).
+    2 wildcard slots (wc_rm_rate=0.25), 1 R/M, 1 BRR Retro Artifact, 1 foil, 1 basic (15% foil).
+    25% The List (PLST). BRR slot is 5/6 regular / 1/6 schematic (same as draft).
+    """
+    return model_from_config(
+        BRO_SET_CONFIG,
+        extra_slots=[slot_bro_retro_artifact(), _plst_the_list_slot("bro", 0.25)],
     )
 
 
@@ -2746,9 +2809,12 @@ MODEL_REGISTRY: dict[tuple[str, str], Callable[[], "ProductModel"]] = {
     ("MOM", "draft_box"):  model_mom_draft_box,
     ("CMM", "box"):        model_cmm_set_box,
     ("CMM", "draft_box"):  model_cmm_draft_box,
+    ("ONE", "box"):        model_one_set_box,
     ("ONE", "draft_box"):  model_one_draft_box,
     # 2020-2024 Draft Booster sets with complex bonus sheets
+    ("STX", "box"):        model_stx_set_box,
     ("STX", "draft_box"):  model_stx_draft_box,
+    ("BRO", "box"):        model_bro_set_box,
     ("BRO", "draft_box"):  model_bro_draft_box,
     ("MH2", "draft_box"):  model_mh2_draft_box,
     ("2X2", "draft_box"):  model_2x2_draft_box,
