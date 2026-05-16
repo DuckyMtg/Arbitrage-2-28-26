@@ -356,7 +356,10 @@ EV_CORE_OVERRIDES: frozenset[tuple[str, str]] = frozenset({
     ("ECL", "box"),
     ("TLA", "box"),
     ("INR", "box"),       # retro slot needs custom handling
+    ("ONE", "box"),        # Set Booster
+    ("STX", "box"),        # Set Booster (Mystical Archive bonus)
     ("STX", "draft_box"), # Mystical Archive bonus sheet
+    ("BRO", "box"),        # Set Booster (Retro Artifact bonus)
     ("BRO", "draft_box"), # Retro Artifacts with schematic variant
     ("MH2", "draft_box"), # New-to-Modern reprint slot
     ("2X2", "draft_box"), # 2 R/M + 2 foils per pack, 24 packs/box

@@ -262,6 +262,13 @@ LCI:
     default_sort: price
 
 ONE:
+  - key: set_box
+    label: Set Booster Box
+    ebay_query: "Phyrexia All Will Be One set booster box MTG"
+    ev_set_code: ONE
+    ev_kind: box
+    product_kind: set_box
+    default_sort: price
   - key: draft_box
     label: Draft Booster Box
     ebay_query: "Phyrexia All Will Be One draft booster box MTG"
@@ -271,6 +278,13 @@ ONE:
     default_sort: price
 
 STX:
+  - key: set_box
+    label: Set Booster Box
+    ebay_query: "Strixhaven School of Mages set booster box MTG"
+    ev_set_code: STX
+    ev_kind: box
+    product_kind: set_box
+    default_sort: price
   - key: draft_box
     label: Draft Booster Box
     ebay_query: "Strixhaven School of Mages draft booster box MTG"
@@ -280,6 +294,13 @@ STX:
     default_sort: price
 
 BRO:
+  - key: set_box
+    label: Set Booster Box
+    ebay_query: "Brothers War set booster box MTG"
+    ev_set_code: BRO
+    ev_kind: box
+    product_kind: set_box
+    default_sort: price
   - key: draft_box
     label: Draft Booster Box
     ebay_query: "The Brothers War draft booster box MTG"
