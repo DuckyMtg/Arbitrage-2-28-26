@@ -36,7 +36,6 @@ _BOX_HINTS = (
     "play booster box",
     "collector booster box",
     "display box",
-    "sealed box",
     "booster display",
 )
 
@@ -66,6 +65,7 @@ _PACK_ONLY_HINTS = (
     "single booster",  # e.g. "single booster pack"
     "1x booster",      # e.g. "1x booster pack"
     "loose booster",   # e.g. "loose booster pack"
+    "play booster pack",  # single play booster pack (not a box)
 )
 
 # Non-English language signals — reject any listing containing these tokens.
@@ -100,15 +100,35 @@ class ProductKind(str, Enum):
     COLLECTOR_BOX = "collector_box"
 
 
-# Set boosters aren't returned when you call draft boosters and vice versa
+# Set boosters aren't returned when you call draft boosters and vice versa;
+# bundles and theme boosters are never any of these box types.
 _CROSS_TYPE_REJECTS: dict[str, tuple[str, ...]] = {
-    ProductKind.DRAFT_BOX: ("set booster",),
-    ProductKind.SET_BOX:   ("draft booster",),
-    ProductKind.PLAY_BOX:  ("draft booster", "set booster"),
+    ProductKind.DRAFT_BOX:      ("set booster", "bundle", "theme booster"),
+    ProductKind.SET_BOX:        ("draft booster", "bundle", "theme booster"),
+    ProductKind.PLAY_BOX:       ("draft booster", "set booster", "bundle", "theme booster"),
+    ProductKind.COLLECTOR_BOX:  ("draft booster", "set booster", "bundle", "theme booster"),
 }
 
 # "lot/bundle/bulk" tends to be non-box; treat as reject unless "box" intent is present
 _LOT_HINTS = ("lot", "bundle", "bulk")
+
+
+# Generic MTG product terms that don't identify a specific set
+_QUERY_STOPWORDS = frozenset({
+    "mtg", "magic", "the", "gathering", "play", "booster", "box",
+    "draft", "set", "collector", "display", "sealed", "and", "of",
+    "in", "a", "an", "for", "from", "beyond", "new",
+})
+
+
+def _meaningful_query_words(query: str) -> tuple[str, ...]:
+    """
+    Extract set-identifying words from an eBay search query by stripping generic
+    MTG booster terms. Used to reject listings that match product-kind but are
+    for a completely different set (e.g., TMNT showing up in an MH3 search).
+    """
+    words = re.findall(r"[a-z0-9]+", (query or "").lower())
+    return tuple(w for w in words if w not in _QUERY_STOPWORDS)
 
 
 def _base() -> str:
@@ -378,6 +398,16 @@ def search_items_simplified(
                 it for it in simplified
                 if _is_box_intent(it.get("title") or "", product_kind)
             ]
+            # Set-identity guard: require that the title contains at least one
+            # meaningful (set-identifying) word from the search query. This
+            # rejects listings that match product-kind but are for an entirely
+            # different set (e.g., a TMNT box returned by an MH3 search).
+            set_words = _meaningful_query_words(q)
+            if set_words:
+                simplified = [
+                    it for it in simplified
+                    if any(w in _norm(it.get("title") or "") for w in set_words)
+                ]
 
         # Sort by per-box price (best for sniping); fallback to total; None last
         simplified.sort(

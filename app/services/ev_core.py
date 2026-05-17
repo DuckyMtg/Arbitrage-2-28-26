@@ -616,15 +616,15 @@ class TreatmentPlayConfig:
 
 ECL_CONFIG = TreatmentPlayConfig(
     set_code="ecl", packs_per_box=36,
-    main_p_r=70*(459/38000), main_p_m=24*(459/76000),
-    main_p_tr=41*(41/23500), main_p_tm=24*(41/47000),
+    main_p_r=65*(459/38000), main_p_m=22*(459/76000),
+    main_p_tr=36*(41/23500), main_p_tm=22*(41/47000),
     reg_rare_cn_max=268, reg_mythic_cn_max=253,
-    treat_rare_cn_min=297, treat_mythic_cn_min=284,
+    treat_rare_cn_min=285, treat_mythic_cn_min=284,
     wc_p_c=81*(1/450), wc_p_u=100*(29/5000), wc_p_su=10*(9/7700),
-    wc_p_r=70*(19/6500), wc_p_m=24*(1/1100), wc_p_tr=41*(3/7700), wc_p_tm=24*(3/15400),
+    wc_p_r=65*(19/6500), wc_p_m=22*(1/1100), wc_p_tr=36*(3/7700), wc_p_tm=22*(3/15400),
     reg_uncommon_cn_max=263, special_u_cn_min=331,
     foil_p_c=81*(151/20250), foil_p_u=100*(149/50000), foil_p_su=10*(3/3500),
-    foil_p_r=70*(1/1000), foil_p_m=24*(1/2000), foil_p_tr=41*(1/3500), foil_p_tm=24*(1/7000),
+    foil_p_r=65*(1/1000), foil_p_m=22*(1/2000), foil_p_tr=36*(1/3500), foil_p_tm=22*(1/7000),
     land_foil_rate=1/5,
     bonus_rate=5/275, bonus_set="spg", bonus_cn_min=129, bonus_cn_max=148,
     bonus_label="ecl_spg", bonus_slot_name="Special Guests (SPG 129-148, replaces common)",
@@ -876,7 +876,7 @@ def model_woe_draft_box() -> ProductModel:
 
 OTJ_CONFIG = PlayBoosterConfig(
     set_code="otj", packs_per_box=36,
-    mythic_rate=DEFAULT_MYTHIC_RATE,
+    mythic_rate=PLAY_MYTHIC_RATE,
     borderless_fraction=0.40,
     wc_rm_rate=1 / 12,
     land_types=[
@@ -1392,7 +1392,7 @@ def model_from_draft_def(dd: "DraftBoosterDef") -> "ProductModel":
 
 BLB_CONFIG = PlayBoosterConfig(
     set_code="blb", packs_per_box=36,
-    mythic_rate=DEFAULT_MYTHIC_RATE, wc_rm_rate=1/12,
+    mythic_rate=PLAY_MYTHIC_RATE, wc_rm_rate=1/12,
     land_types=_std_land_types_any_land(foil_rate=0.20),
 )
 
@@ -1416,7 +1416,7 @@ def model_blb_play_box() -> ProductModel:
 
 DSK_CONFIG = PlayBoosterConfig(
     set_code="dsk", packs_per_box=36,
-    mythic_rate=DEFAULT_MYTHIC_RATE, wc_rm_rate=1/12,
+    mythic_rate=PLAY_MYTHIC_RATE, wc_rm_rate=1/12,
     land_types=_std_land_types_basic_only(foil_rate=0.20),
 )
 
@@ -1440,8 +1440,8 @@ def model_dsk_play_box() -> ProductModel:
 
 DFT_CONFIG = PlayBoosterConfig(
     set_code="dft", packs_per_box=30,
-    mythic_rate=DEFAULT_MYTHIC_RATE, wc_rm_rate=1/12,
-    land_types=_std_land_types_any_land(foil_rate=0.20),
+    mythic_rate=PLAY_MYTHIC_RATE, wc_rm_rate=1/12,
+    land_types=_std_land_types_basic_only(foil_rate=0.20),
 )
 
 
@@ -1464,8 +1464,8 @@ def model_dft_play_box() -> ProductModel:
 
 FDN_CONFIG = PlayBoosterConfig(
     set_code="fdn", packs_per_box=36,
-    mythic_rate=DEFAULT_MYTHIC_RATE, wc_rm_rate=1/12,
-    land_types=_std_land_types_any_land(foil_rate=0.20),
+    mythic_rate=PLAY_MYTHIC_RATE, wc_rm_rate=1/12,
+    land_types=_std_land_types_basic_only(foil_rate=0.20),
 )
 
 
@@ -1488,7 +1488,7 @@ def model_fdn_play_box() -> ProductModel:
 
 FIN_CONFIG = PlayBoosterConfig(
     set_code="fin", packs_per_box=30,
-    mythic_rate=DEFAULT_MYTHIC_RATE, wc_rm_rate=1/12,
+    mythic_rate=PLAY_MYTHIC_RATE, wc_rm_rate=1/12,
     land_types=_std_land_types_basic_only(foil_rate=0.20),
 )
 
@@ -1512,7 +1512,7 @@ def model_fin_play_box() -> ProductModel:
 
 EOE_CONFIG = PlayBoosterConfig(
     set_code="eoe", packs_per_box=30,
-    mythic_rate=DEFAULT_MYTHIC_RATE, wc_rm_rate=1/12,
+    mythic_rate=PLAY_MYTHIC_RATE, wc_rm_rate=1/12,
     land_types=_std_land_types_basic_only(foil_rate=0.20),
 )
 
@@ -1536,8 +1536,8 @@ def model_eoe_play_box() -> ProductModel:
 
 TDM_CONFIG = PlayBoosterConfig(
     set_code="tdm", packs_per_box=30,
-    mythic_rate=DEFAULT_MYTHIC_RATE, wc_rm_rate=1/12,
-    land_types=_std_land_types_any_land(foil_rate=0.20),
+    mythic_rate=PLAY_MYTHIC_RATE, wc_rm_rate=1/12,
+    land_types=_std_land_types_basic_only(foil_rate=0.20),
 )
 
 
@@ -1560,7 +1560,7 @@ def model_tdm_play_box() -> ProductModel:
 
 INR_CONFIG = PlayBoosterConfig(
     set_code="inr", packs_per_box=36,
-    mythic_rate=DEFAULT_MYTHIC_RATE, wc_rm_rate=1/12,
+    mythic_rate=PLAY_MYTHIC_RATE, wc_rm_rate=1/12,
     land_types=_std_land_types_basic_only(foil_rate=0.20),
 )
 
@@ -1586,7 +1586,7 @@ def model_inr_play_box() -> ProductModel:
 
 SPM_CONFIG = PlayBoosterConfig(
     set_code="spm", packs_per_box=30,
-    mythic_rate=DEFAULT_MYTHIC_RATE, wc_rm_rate=1/12,
+    mythic_rate=PLAY_MYTHIC_RATE, wc_rm_rate=1/12,
     land_types=_std_land_types_any_land(foil_rate=0.20),
 )
 
@@ -1726,7 +1726,7 @@ def model_acr_beyond_box() -> ProductModel:
 # slot_mkm_wildcard() below to avoid double-counting the dual-land guarantee.
 MKM_CONFIG = PlayBoosterConfig(
     set_code="mkm", packs_per_box=36,
-    mythic_rate=DEFAULT_MYTHIC_RATE,
+    mythic_rate=PLAY_MYTHIC_RATE,
     land_types=_std_land_types_any_land(foil_rate=0.20),
 )
 
@@ -1756,8 +1756,8 @@ def slot_mkm_wildcard() -> Slot:
     q_m = _q("set:mkm", "rarity:mythic", "is:booster", "game:paper")
     p_dual_total = 0.1458 + 0.0208          # 16.67%
     p_wc_rm = (1 - p_dual_total) / 12  # 83.33% × 1/12 ≈ 6.94%
-    p_wc_r = p_wc_rm * (1 - DEFAULT_MYTHIC_RATE)
-    p_wc_m = p_wc_rm * DEFAULT_MYTHIC_RATE
+    p_wc_r = p_wc_rm * (1 - PLAY_MYTHIC_RATE)
+    p_wc_m = p_wc_rm * PLAY_MYTHIC_RATE
     return Slot(
         name="Wildcard (dual 16.67% / R/M 6.94% / C+U remainder omitted)",
         outcomes=[
