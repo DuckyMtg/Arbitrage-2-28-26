@@ -1508,13 +1508,43 @@ def model_fin_play_box() -> ProductModel:
 # ============================================================
 # EOE — Edge of Eternities (30 packs/box)
 # SPG 119–128, replaces a common in 9/500 packs
+# EOS bonus set appears in wildcard: 30 cards at 1/300 + 15 cards at 1/600
+# Mythic rate derived from R/M sheet: 20*(71/10000) / (60*(67/5000) + 20*(71/10000)) ≈ 15.01%
 # ============================================================
 
 EOE_CONFIG = PlayBoosterConfig(
     set_code="eoe", packs_per_box=30,
-    mythic_rate=PLAY_MYTHIC_RATE, wc_rm_rate=1/12,
+    mythic_rate=20*(71/10000) / (60*(67/5000) + 20*(71/10000)),  # ~0.15011, was PLAY_MYTHIC_RATE
     land_types=_std_land_types_basic_only(foil_rate=0.20),
 )
+
+
+def slot_eoe_wildcard() -> Slot:
+    # Wildcard sheet has 5 distinct pools (verified from mtg.wtf):
+    #   Common  (81 cards, 1/648 each):           12.50%
+    #   Uncommon (100 cards, 1/160 each):          62.50%
+    #   EOE rare (60+11+12+5+5 cards, varies):     12.22%
+    #   EOS bonus set (30@1/300 + 15@1/600):       12.50%
+    #   Mythic (20+3+4 cards, varies):              0.28%
+    q_c   = _q("set:eoe", "rarity:common",   "is:booster", "game:paper")
+    q_u   = _q("set:eoe", "rarity:uncommon", "is:booster", "game:paper")
+    q_r   = _q("set:eoe", "rarity:rare",     "is:booster", "game:paper")
+    q_m   = _q("set:eoe", "rarity:mythic",   "is:booster", "game:paper")
+    q_eos = _q("set:eos", "game:paper")
+    return Slot(
+        name="Wildcard (1 slot)",
+        outcomes=[
+            (81*(1/648),   QueryPool("eoe_wc_common",   q_c,   unique="prints", price_field="usd")),
+            (100*(1/160),  QueryPool("eoe_wc_uncommon", q_u,   unique="prints", price_field="usd")),
+            (60*(53/30000) + 11*(9/50000) + 12*(9/56000) + 5*(49/30000) + 5*(49/60000),
+             QueryPool("eoe_wc_rare",    q_r,   unique="prints", price_field="usd")),
+            (30*(1/300) + 15*(1/600),
+             QueryPool("eoe_wc_eos",     q_eos, unique="prints", price_field="usd")),
+            (20*(9/80000) + 3*(9/100000) + 4*(9/112000),
+             QueryPool("eoe_wc_mythic",  q_m,   unique="prints", price_field="usd")),
+        ],
+        strict_probs=True,
+    )
 
 
 def slot_eoe_special_guests() -> Slot:
@@ -1526,7 +1556,16 @@ def slot_eoe_special_guests() -> Slot:
 
 
 def model_eoe_play_box() -> ProductModel:
-    return model_from_config(EOE_CONFIG, extra_slots=[slot_eoe_special_guests()])
+    return ProductModel(
+        set_code="eoe", packs_per_box=30,
+        slots=[
+            build_main_rm_slot(EOE_CONFIG),
+            slot_eoe_wildcard(),
+            build_foil_slot(EOE_CONFIG),
+            build_land_slot(EOE_CONFIG),
+            slot_eoe_special_guests(),
+        ],
+    )
 
 
 # ============================================================
