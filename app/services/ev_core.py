@@ -1484,12 +1484,24 @@ def model_fdn_play_box() -> ProductModel:
 # ============================================================
 # FIN — Final Fantasy (30 packs/box)
 # Through the Ages (FCA), replaces a common in 1/3 packs
+# Land slot: 10 non-basic (55%) + 16 basic (45%) — basic-only was wrong
+# Mythic rate: 20*(1/200) / (74*(2/185) + 20*(1/200)) = 1/9 ≈ 11.1%, not 1/7
+# Wildcard: commons 16.7%, not card-count-derived ~39%
 # ============================================================
 
 FIN_CONFIG = PlayBoosterConfig(
     set_code="fin", packs_per_box=30,
-    mythic_rate=PLAY_MYTHIC_RATE, wc_rm_rate=1/12,
-    land_types=_std_land_types_basic_only(foil_rate=0.20),
+    mythic_rate=20*(1/200) / (74*(2/185) + 20*(1/200)),   # 1/9 ≈ 0.1111, was PLAY_MYTHIC_RATE
+    wc_rates=RarityRates(                                   # was wc_rm_rate=1/12
+        common=80*(167/80000),
+        uncommon=108*(581251/109000000) + 3*(8291/2000000) + 15*(581251/1635000000),
+        rare=13*(57/16000) + 74*(167/92500) + 54*(167/712500),
+        mythic=3*(13/1500) + 20*(167/200000) + 3*(1169/2280000) + 7*(1503/7700000) + 15*(167/2200000),
+    ),
+    land_types=[
+        LandTypeConfig("nonbasic", ["-type:basic", "type:land"], rate=10*(11/200), foil_rate=0.20),
+        LandTypeConfig("basic",    ["type:basic"],                rate=16*(9/320),  foil_rate=0.20),
+    ],
 )
 
 
