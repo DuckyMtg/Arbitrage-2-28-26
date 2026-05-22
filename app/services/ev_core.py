@@ -1582,11 +1582,20 @@ def model_inr_play_box() -> ProductModel:
 # ============================================================
 # SPM — Marvel's Spider-Man (30 packs/box)
 # Source Material MAR 1–40, replaces a common in 1/24 packs
+# Wildcard deviates heavily from standard: commons dominate at 70.8%,
+# R/M at 24.8% (1/4) vs the typical 1/12 — derived from mtg.wtf sheet rates.
+# Actual mythic fraction in R/M slot is ~12.6% (not the standard 1/7).
 # ============================================================
 
 SPM_CONFIG = PlayBoosterConfig(
     set_code="spm", packs_per_box=30,
-    mythic_rate=PLAY_MYTHIC_RATE, wc_rm_rate=1/12,
+    mythic_rate=15*(477/60500) + 9*(23/25500),
+    wc_rates=RarityRates(
+        common=60*(59/5000),
+        uncommon=55*(41/55000) + 3*(13/11500),
+        rare=53*(119/30250) + 21*(13/34500),
+        mythic=15*(119/60500) + 9*(13/69000),
+    ),
     land_types=_std_land_types_any_land(foil_rate=0.20),
 )
 
