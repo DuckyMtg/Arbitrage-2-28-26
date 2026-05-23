@@ -1388,13 +1388,43 @@ def model_from_draft_def(dd: "DraftBoosterDef") -> "ProductModel":
 # ============================================================
 # BLB — Bloomburrow (36 packs/box)
 # SPG 54–63, replaces a common in 15/1000 packs
+# Wildcard verified from mtg.wtf sheet data:
+#   Common   81 × 7/810 = 7/10 = 70.0%
+#   Uncommon 100 × 7/4000 + 23 × 1/560 = 121/560 ≈ 21.6%
+#   R/M      37 × 1/840 + 56 × 1/1680 + 19 × 1/3360 + 6 × 1/6720 = 47/560 ≈ 8.4%
+# P(R/M) ≈ 8.4% — close to 1/12 ≈ 8.3%, but build_wildcard_slot(count-ratio)
+# gives P(C)≈41% vs actual 70%; custom slot corrects the C/U distribution.
+# R/M split by PLAY_MYTHIC_RATE (1/7) — exact rare/mythic breakdown per group
+# not determinable without per-card rarity lookup.
 # ============================================================
 
 BLB_CONFIG = PlayBoosterConfig(
     set_code="blb", packs_per_box=36,
-    mythic_rate=PLAY_MYTHIC_RATE, wc_rm_rate=1/12,
+    mythic_rate=PLAY_MYTHIC_RATE,
     land_types=_std_land_types_any_land(foil_rate=0.20),
 )
+
+
+def slot_blb_wildcard() -> Slot:
+    sc = "blb"
+    q_c = _q(f"set:{sc}", "rarity:common",   "is:booster", "game:paper")
+    q_u = _q(f"set:{sc}", "rarity:uncommon", "is:booster", "game:paper")
+    q_r = _q(f"set:{sc}", "rarity:rare",     "is:booster", "game:paper")
+    q_m = _q(f"set:{sc}", "rarity:mythic",   "is:booster", "game:paper")
+    mr  = PLAY_MYTHIC_RATE
+    _c  = 81*(7/810)                                              # = 7/10 = 70.0%
+    _u  = 100*(7/4000) + 23*(1/560)                              # = 121/560 ≈ 21.6%
+    _rm = 37*(1/840) + 56*(1/1680) + 19*(1/3360) + 6*(1/6720)   # = 47/560 ≈ 8.4%
+    return Slot(
+        name="Wildcard (1 slot)",
+        outcomes=[
+            (_c,         QueryPool(f"{sc}_wc_common",   q_c, unique="prints", price_field="usd")),
+            (_u,         QueryPool(f"{sc}_wc_uncommon", q_u, unique="prints", price_field="usd")),
+            (_rm*(1-mr), QueryPool(f"{sc}_wc_rare",     q_r, unique="prints", price_field="usd")),
+            (_rm*mr,     QueryPool(f"{sc}_wc_mythic",   q_m, unique="prints", price_field="usd")),
+        ],
+        strict_probs=True,
+    )
 
 
 def slot_blb_special_guests() -> Slot:
@@ -1406,19 +1436,58 @@ def slot_blb_special_guests() -> Slot:
 
 
 def model_blb_play_box() -> ProductModel:
-    return model_from_config(BLB_CONFIG, extra_slots=[slot_blb_special_guests()])
+    return ProductModel(
+        set_code="blb", packs_per_box=36,
+        slots=[
+            build_main_rm_slot(BLB_CONFIG),
+            slot_blb_wildcard(),
+            build_foil_slot(BLB_CONFIG),
+            build_land_slot(BLB_CONFIG),
+            slot_blb_special_guests(),
+        ],
+    )
 
 
 # ============================================================
 # DSK — Duskmourn: House of Horror (36 packs/box)
 # SPG 64–73, replaces a common in 1/64 packs
+# Wildcard verified from mtg.wtf sheet data:
+#   Common   79 × 7/810 + 2 × 7/1080 + 2 × 7/3240 = 7/10 = 70.0%
+#   Uncommon 92 × 7/4000 + 14 × 1/560 + ~16 × 3/2240 ≈ 363/1750 ≈ 20.7%
+#   R/M      ~30 × 3/2240 + other rate groups ≈ 81/875 ≈ 9.3%
+# The 3/2240 group (46 card-links, 41 unique cards, CN 13–271) contains
+# ~16 uncommons and ~25 rares (classified by card name); 5 extra links
+# (above 41 unique) are assumed to be duplicate rare slots.
+# R/M split by PLAY_MYTHIC_RATE (1/7).
 # ============================================================
 
 DSK_CONFIG = PlayBoosterConfig(
     set_code="dsk", packs_per_box=36,
-    mythic_rate=PLAY_MYTHIC_RATE, wc_rm_rate=1/12,
+    mythic_rate=PLAY_MYTHIC_RATE,
     land_types=_std_land_types_basic_only(foil_rate=0.20),
 )
+
+
+def slot_dsk_wildcard() -> Slot:
+    sc = "dsk"
+    q_c = _q(f"set:{sc}", "rarity:common",   "is:booster", "game:paper")
+    q_u = _q(f"set:{sc}", "rarity:uncommon", "is:booster", "game:paper")
+    q_r = _q(f"set:{sc}", "rarity:rare",     "is:booster", "game:paper")
+    q_m = _q(f"set:{sc}", "rarity:mythic",   "is:booster", "game:paper")
+    mr  = PLAY_MYTHIC_RATE
+    _c  = 79*(7/810) + 2*(7/1080) + 2*(7/3240)    # = 7/10 = 70.0%
+    _u  = 92*(7/4000) + 14*(1/560) + 16*(3/2240)  # = 363/1750 ≈ 20.7%
+    _rm = 1 - _c - _u                              # = 81/875 ≈ 9.3%
+    return Slot(
+        name="Wildcard (1 slot)",
+        outcomes=[
+            (_c,         QueryPool(f"{sc}_wc_common",   q_c, unique="prints", price_field="usd")),
+            (_u,         QueryPool(f"{sc}_wc_uncommon", q_u, unique="prints", price_field="usd")),
+            (_rm*(1-mr), QueryPool(f"{sc}_wc_rare",     q_r, unique="prints", price_field="usd")),
+            (_rm*mr,     QueryPool(f"{sc}_wc_mythic",   q_m, unique="prints", price_field="usd")),
+        ],
+        strict_probs=True,
+    )
 
 
 def slot_dsk_special_guests() -> Slot:
@@ -1430,7 +1499,16 @@ def slot_dsk_special_guests() -> Slot:
 
 
 def model_dsk_play_box() -> ProductModel:
-    return model_from_config(DSK_CONFIG, extra_slots=[slot_dsk_special_guests()])
+    return ProductModel(
+        set_code="dsk", packs_per_box=36,
+        slots=[
+            build_main_rm_slot(DSK_CONFIG),
+            slot_dsk_wildcard(),
+            build_foil_slot(DSK_CONFIG),
+            build_land_slot(DSK_CONFIG),
+            slot_dsk_special_guests(),
+        ],
+    )
 
 
 # ============================================================
@@ -1507,13 +1585,47 @@ def model_dft_play_box() -> ProductModel:
 # ============================================================
 # FDN — Foundations (36 packs/box)
 # SPG 74–83, replaces a common in 3/200 packs
+# Wildcard verified from mtg.wtf sheet data:
+#   Common   88 × 37/18000 + 2 × 259/144000 + 2 × 37/144000 = 37/200 = 18.5%
+#   Uncommon 93 × 607/101000 + 8 × 4249/808000 + 8 × 607/808000
+#            = 607/1000 = 60.7%
+#   R/M      17 × 13/4375 + 43 × 13/5000 + 3 × 13/8750 + 17 × 13/10000
+#            + 43 × 13/35000 + 17 × 13/70000 = 26/125 = 20.8%
+# P(R/M) ≈ 20.8% — NOT the generic 1/12 ≈ 8.3%; same inverted C/U structure
+# as DFT (uncommons dominate the wildcard slot at 60.7% vs commons 18.5%).
+# Showcase rates in 13/35000 and 13/70000 are exactly 1/7 of their base
+# rate — confirming PLAY_MYTHIC_RATE (1/7) as the R/M split.
 # ============================================================
 
 FDN_CONFIG = PlayBoosterConfig(
     set_code="fdn", packs_per_box=36,
-    mythic_rate=PLAY_MYTHIC_RATE, wc_rm_rate=1/12,
+    mythic_rate=PLAY_MYTHIC_RATE,
     land_types=_std_land_types_basic_only(foil_rate=0.20),
 )
+
+_FDN_WC_RM = (17*(13/4375) + 43*(13/5000) + 3*(13/8750) + 17*(13/10000) +
+              43*(13/35000) + 17*(13/70000))   # = 26/125 = 0.208
+
+
+def slot_fdn_wildcard() -> Slot:
+    sc = "fdn"
+    q_c = _q(f"set:{sc}", "rarity:common",   "is:booster", "game:paper")
+    q_u = _q(f"set:{sc}", "rarity:uncommon", "is:booster", "game:paper")
+    q_r = _q(f"set:{sc}", "rarity:rare",     "is:booster", "game:paper")
+    q_m = _q(f"set:{sc}", "rarity:mythic",   "is:booster", "game:paper")
+    mr  = PLAY_MYTHIC_RATE
+    _c  = 88*(37/18000) + 2*(259/144000) + 2*(37/144000)       # = 37/200 = 18.5%
+    _u  = 93*(607/101000) + 8*(4249/808000) + 8*(607/808000)   # = 607/1000 = 60.7%
+    return Slot(
+        name="Wildcard (1 slot)",
+        outcomes=[
+            (_c,                QueryPool(f"{sc}_wc_common",   q_c, unique="prints", price_field="usd")),
+            (_u,                QueryPool(f"{sc}_wc_uncommon", q_u, unique="prints", price_field="usd")),
+            (_FDN_WC_RM*(1-mr), QueryPool(f"{sc}_wc_rare",     q_r, unique="prints", price_field="usd")),
+            (_FDN_WC_RM*mr,     QueryPool(f"{sc}_wc_mythic",   q_m, unique="prints", price_field="usd")),
+        ],
+        strict_probs=True,
+    )
 
 
 def slot_fdn_special_guests() -> Slot:
@@ -1525,7 +1637,16 @@ def slot_fdn_special_guests() -> Slot:
 
 
 def model_fdn_play_box() -> ProductModel:
-    return model_from_config(FDN_CONFIG, extra_slots=[slot_fdn_special_guests()])
+    return ProductModel(
+        set_code="fdn", packs_per_box=36,
+        slots=[
+            build_main_rm_slot(FDN_CONFIG),
+            slot_fdn_wildcard(),
+            build_foil_slot(FDN_CONFIG),
+            build_land_slot(FDN_CONFIG),
+            slot_fdn_special_guests(),
+        ],
+    )
 
 
 # ============================================================
