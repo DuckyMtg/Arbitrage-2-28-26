@@ -632,15 +632,15 @@ ECL_CONFIG = TreatmentPlayConfig(
 
 TLA_CONFIG = TreatmentPlayConfig(
     set_code="tla", packs_per_box=36,
-    main_p_r=62*(463/35000), main_p_m=26*(463/70000),
-    main_p_tr=40*(37/23500), main_p_tm=28*(37/47000),
+    main_p_r=60*(463/35000), main_p_m=20*(463/70000),
+    main_p_tr=36*(37/23500), main_p_tm=22*(37/47000),
     reg_rare_cn_max=278, reg_mythic_cn_max=262,
     treat_rare_cn_min=302, treat_mythic_cn_min=297,
     wc_p_c=81*(7/13500), wc_p_u=110*(741/110000), wc_p_su=4*(9/7375),
-    wc_p_r=62*(193/70000), wc_p_m=26*(193/140000), wc_p_tr=40*(3/7375), wc_p_tm=28*(3/14750),
+    wc_p_r=60*(193/70000), wc_p_m=20*(193/140000), wc_p_tr=36*(3/7375), wc_p_tm=22*(3/14750),
     reg_uncommon_cn_max=281, special_u_cn_min=299,
     foil_p_c=81*(539/80757), foil_p_u=110*(367/109670), foil_p_su=4*(36/58823),
-    foil_p_r=62*(79/69790), foil_p_m=26*(79/139580), foil_p_tr=40*(12/58823), foil_p_tm=28*(6/58823),
+    foil_p_r=60*(79/69790), foil_p_m=20*(79/139580), foil_p_tr=36*(12/58823), foil_p_tm=22*(6/58823),
     land_foil_rate=1/5,
     bonus_rate=5/130, bonus_set="tle", bonus_cn_min=1, bonus_cn_max=61,
     bonus_label="tla_source_material", bonus_slot_name="Source Material (TLE, replaces common)",
@@ -1484,12 +1484,24 @@ def model_fdn_play_box() -> ProductModel:
 # ============================================================
 # FIN — Final Fantasy (30 packs/box)
 # Through the Ages (FCA), replaces a common in 1/3 packs
+# Land slot: 10 non-basic (55%) + 16 basic (45%) — basic-only was wrong
+# Mythic rate: 20*(1/200) / (74*(2/185) + 20*(1/200)) = 1/9 ≈ 11.1%, not 1/7
+# Wildcard: commons 16.7%, not card-count-derived ~39%
 # ============================================================
 
 FIN_CONFIG = PlayBoosterConfig(
     set_code="fin", packs_per_box=30,
-    mythic_rate=PLAY_MYTHIC_RATE, wc_rm_rate=1/12,
-    land_types=_std_land_types_basic_only(foil_rate=0.20),
+    mythic_rate=20*(1/200) / (74*(2/185) + 20*(1/200)),   # 1/9 ≈ 0.1111, was PLAY_MYTHIC_RATE
+    wc_rates=RarityRates(                                   # was wc_rm_rate=1/12
+        common=80*(167/80000),
+        uncommon=108*(581251/109000000) + 3*(8291/2000000) + 15*(581251/1635000000),
+        rare=13*(57/16000) + 74*(167/92500) + 54*(167/712500),
+        mythic=3*(13/1500) + 20*(167/200000) + 3*(1169/2280000) + 7*(1503/7700000) + 15*(167/2200000),
+    ),
+    land_types=[
+        LandTypeConfig("nonbasic", ["-type:basic", "type:land"], rate=10*(11/200), foil_rate=0.20),
+        LandTypeConfig("basic",    ["type:basic"],                rate=16*(9/320),  foil_rate=0.20),
+    ],
 )
 
 
@@ -1508,13 +1520,43 @@ def model_fin_play_box() -> ProductModel:
 # ============================================================
 # EOE — Edge of Eternities (30 packs/box)
 # SPG 119–128, replaces a common in 9/500 packs
+# EOS bonus set appears in wildcard: 30 cards at 1/300 + 15 cards at 1/600
+# Mythic rate derived from R/M sheet: 20*(71/10000) / (60*(67/5000) + 20*(71/10000)) ≈ 15.01%
 # ============================================================
 
 EOE_CONFIG = PlayBoosterConfig(
     set_code="eoe", packs_per_box=30,
-    mythic_rate=PLAY_MYTHIC_RATE, wc_rm_rate=1/12,
+    mythic_rate=20*(71/10000) / (60*(67/5000) + 20*(71/10000)),  # ~0.15011, was PLAY_MYTHIC_RATE
     land_types=_std_land_types_basic_only(foil_rate=0.20),
 )
+
+
+def slot_eoe_wildcard() -> Slot:
+    # Wildcard sheet has 5 distinct pools (verified from mtg.wtf):
+    #   Common  (81 cards, 1/648 each):           12.50%
+    #   Uncommon (100 cards, 1/160 each):          62.50%
+    #   EOE rare (60+11+12+5+5 cards, varies):     12.22%
+    #   EOS bonus set (30@1/300 + 15@1/600):       12.50%
+    #   Mythic (20+3+4 cards, varies):              0.28%
+    q_c   = _q("set:eoe", "rarity:common",   "is:booster", "game:paper")
+    q_u   = _q("set:eoe", "rarity:uncommon", "is:booster", "game:paper")
+    q_r   = _q("set:eoe", "rarity:rare",     "is:booster", "game:paper")
+    q_m   = _q("set:eoe", "rarity:mythic",   "is:booster", "game:paper")
+    q_eos = _q("set:eos", "game:paper")
+    return Slot(
+        name="Wildcard (1 slot)",
+        outcomes=[
+            (81*(1/648),   QueryPool("eoe_wc_common",   q_c,   unique="prints", price_field="usd")),
+            (100*(1/160),  QueryPool("eoe_wc_uncommon", q_u,   unique="prints", price_field="usd")),
+            (60*(53/30000) + 11*(9/50000) + 12*(9/56000) + 5*(49/30000) + 5*(49/60000),
+             QueryPool("eoe_wc_rare",    q_r,   unique="prints", price_field="usd")),
+            (30*(1/300) + 15*(1/600),
+             QueryPool("eoe_wc_eos",     q_eos, unique="prints", price_field="usd")),
+            (20*(9/80000) + 3*(9/100000) + 4*(9/112000),
+             QueryPool("eoe_wc_mythic",  q_m,   unique="prints", price_field="usd")),
+        ],
+        strict_probs=True,
+    )
 
 
 def slot_eoe_special_guests() -> Slot:
@@ -1526,7 +1568,16 @@ def slot_eoe_special_guests() -> Slot:
 
 
 def model_eoe_play_box() -> ProductModel:
-    return model_from_config(EOE_CONFIG, extra_slots=[slot_eoe_special_guests()])
+    return ProductModel(
+        set_code="eoe", packs_per_box=30,
+        slots=[
+            build_main_rm_slot(EOE_CONFIG),
+            slot_eoe_wildcard(),
+            build_foil_slot(EOE_CONFIG),
+            build_land_slot(EOE_CONFIG),
+            slot_eoe_special_guests(),
+        ],
+    )
 
 
 # ============================================================
@@ -1582,11 +1633,20 @@ def model_inr_play_box() -> ProductModel:
 # ============================================================
 # SPM — Marvel's Spider-Man (30 packs/box)
 # Source Material MAR 1–40, replaces a common in 1/24 packs
+# Wildcard deviates heavily from standard: commons dominate at 70.8%,
+# R/M at 24.8% (1/4) vs the typical 1/12 — derived from mtg.wtf sheet rates.
+# Actual mythic fraction in R/M slot is ~12.6% (not the standard 1/7).
 # ============================================================
 
 SPM_CONFIG = PlayBoosterConfig(
     set_code="spm", packs_per_box=30,
-    mythic_rate=PLAY_MYTHIC_RATE, wc_rm_rate=1/12,
+    mythic_rate=15*(477/60500) + 9*(23/25500),
+    wc_rates=RarityRates(
+        common=60*(59/5000),
+        uncommon=55*(41/55000) + 3*(13/11500),
+        rare=53*(119/30250) + 21*(13/34500),
+        mythic=15*(119/60500) + 9*(13/69000),
+    ),
     land_types=_std_land_types_any_land(foil_rate=0.20),
 )
 
