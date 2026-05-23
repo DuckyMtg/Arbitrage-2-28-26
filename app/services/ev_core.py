@@ -878,7 +878,6 @@ OTJ_CONFIG = PlayBoosterConfig(
     set_code="otj", packs_per_box=36,
     mythic_rate=PLAY_MYTHIC_RATE,
     borderless_fraction=0.40,
-    wc_rm_rate=1 / 12,
     land_types=[
         LandTypeConfig("dual",  ["type:land", "rarity:common",
                        "-type:basic"], rate=1/2, foil_rate=1/5),
@@ -888,6 +887,35 @@ OTJ_CONFIG = PlayBoosterConfig(
                        rate=1/3, foil_rate=1/5),
     ],
 )
+
+
+def slot_otj_wildcard() -> Slot:
+    # Wildcard sheet verified from mtg.wtf/pack/otj-play wildcard sheet:
+    #   81 commons  × 7/810  each  = 7/10  = 70.0%
+    #   100 uncommons × 7/4000 each = 7/40  = 17.5%
+    #   R/M cards at mixed rates    = 1/8   = 12.5%  (Fraction arithmetic: 840/6720 = 1/8)
+    # Sum = 7/10 + 7/40 + 1/8 = 280/400 + 70/400 + 50/400 = 1 ✓
+    # NOTE: generic build_wildcard_slot() would use MTGJSON card-count ratio
+    # (81:100 → 44.75% C / 55.25% U) which is wrong; actual sheet rates differ.
+    sc = "otj"
+    q_c = _q(f"set:{sc}", "rarity:common",   "is:booster", "game:paper")
+    q_u = _q(f"set:{sc}", "rarity:uncommon", "is:booster", "game:paper")
+    q_r = _q(f"set:{sc}", "rarity:rare",     "is:booster", "game:paper")
+    q_m = _q(f"set:{sc}", "rarity:mythic",   "is:booster", "game:paper")
+    mr  = PLAY_MYTHIC_RATE
+    _c  = 81 * (7 / 810)    # = 7/10 = 70.0%
+    _u  = 100 * (7 / 4000)  # = 7/40 = 17.5%
+    _rm = 1 / 8              # = 12.5%
+    return Slot(
+        name="Wildcard (1 slot)",
+        outcomes=[
+            (_c,         QueryPool(f"{sc}_wc_common",   q_c, unique="prints", price_field="usd")),
+            (_u,         QueryPool(f"{sc}_wc_uncommon", q_u, unique="prints", price_field="usd")),
+            (_rm*(1-mr), QueryPool(f"{sc}_wc_rare",     q_r, unique="prints", price_field="usd")),
+            (_rm*mr,     QueryPool(f"{sc}_wc_mythic",   q_m, unique="prints", price_field="usd")),
+        ],
+        strict_probs=True,
+    )
 
 
 def slot_otj_breaking_news() -> Slot:
@@ -931,7 +959,17 @@ def slot_otj_the_list() -> Slot:
 
 
 def model_otj_play_box() -> ProductModel:
-    return model_from_config(OTJ_CONFIG, extra_slots=[slot_otj_breaking_news(), slot_otj_the_list()])
+    return ProductModel(
+        set_code="otj", packs_per_box=36,
+        slots=[
+            build_main_rm_slot(OTJ_CONFIG),
+            slot_otj_wildcard(),
+            build_foil_slot(OTJ_CONFIG),
+            build_land_slot(OTJ_CONFIG),
+            slot_otj_breaking_news(),
+            slot_otj_the_list(),
+        ],
+    )
 
 
 # ============================================================
@@ -1966,12 +2004,16 @@ def model_acr_beyond_box() -> ProductModel:
                 strict_probs=False,
             ),
             # Land / scene slot (96.6% basic omitted as 0.0 EV)
+            # Scene cards cn111–116: 5 rare + 1 mythic on land sheet of 180 entries.
+            # Each rare  appears with weight 2/180; each mythic with weight 1/180.
+            # P(scene_r) = 10/180 × (1/180 total basic omitted so we use raw sheet weights)
+            # From HTML: P(rare scene) = 6/180 × 10/11 = 1/33; P(mythic scene) = 6/180 × 1/11 = 1/330
             Slot(
-                name="Land or scene card (rare 3.09% / mythic 0.31%)",
+                name="Land or scene card (rare 1/33 ≈ 3.03% / mythic 1/330 ≈ 0.30%)",
                 outcomes=[
-                    (0.0309, QueryPool(
+                    (1/33,  QueryPool(
                         f"{sc}_scene_r", q_scene_r, fallback=q_rare, unique="cards", price_field="usd")),
-                    (0.0031, QueryPool(
+                    (1/330, QueryPool(
                         f"{sc}_scene_m", q_scene_m, fallback=q_myth, unique="cards", price_field="usd")),
                 ],
                 strict_probs=False,
