@@ -1436,13 +1436,51 @@ def model_dsk_play_box() -> ProductModel:
 # ============================================================
 # DFT — Aetherdrift (30 packs/box)
 # SPG 84–93, replaces a common in 1/64 packs
+# Wildcard rates verified from mtg.wtf sheet data:
+#   Common  (72 cards × 1/648):                  11.11%
+#   Uncommon (83 × 667/100000 + 17 × 2001/400000 66.70%
+#             + 17 × 667/400000):
+#   R/M     (15 × 13/4375 + 45 × 39/17500        22.19%
+#             + 7 × 13/8750 + 13 × 39/35000
+#             + 45 × 13/17500 + 13 × 13/35000
+#             + 9 × 1/864 + 9 × 1/2592):
+# P(R/M) ≈ 22.2%  — NOT the generic 1/12 ≈ 8.3%
+# R/M split by PLAY_MYTHIC_RATE (1/7) since per-card rare/mythic
+# distinction within the DFT wildcard sheet is not independently verifiable.
 # ============================================================
 
 DFT_CONFIG = PlayBoosterConfig(
     set_code="dft", packs_per_box=30,
-    mythic_rate=PLAY_MYTHIC_RATE, wc_rm_rate=1/12,
+    mythic_rate=PLAY_MYTHIC_RATE,
     land_types=_std_land_types_basic_only(foil_rate=0.20),
 )
+
+_DFT_WC_RM = (15*(13/4375) + 45*(39/17500) + 7*(13/8750) +
+              13*(39/35000) + 45*(13/17500) + 13*(13/35000) +
+              9*(1/864) + 9*(1/2592))
+
+
+def slot_dft_wildcard() -> Slot:
+    sc = "dft"
+    q_c = _q(f"set:{sc}", "rarity:common",   "is:booster", "game:paper")
+    q_u = _q(f"set:{sc}", "rarity:uncommon", "is:booster", "game:paper")
+    q_r = _q(f"set:{sc}", "rarity:rare",     "is:booster", "game:paper")
+    q_m = _q(f"set:{sc}", "rarity:mythic",   "is:booster", "game:paper")
+    mr  = PLAY_MYTHIC_RATE
+    return Slot(
+        name="Wildcard (1 slot)",
+        outcomes=[
+            (72*(1/648),
+             QueryPool(f"{sc}_wc_common",   q_c, unique="prints", price_field="usd")),
+            (83*(667/100000) + 17*(2001/400000) + 17*(667/400000),
+             QueryPool(f"{sc}_wc_uncommon", q_u, unique="prints", price_field="usd")),
+            (_DFT_WC_RM * (1 - mr),
+             QueryPool(f"{sc}_wc_rare",     q_r, unique="prints", price_field="usd")),
+            (_DFT_WC_RM * mr,
+             QueryPool(f"{sc}_wc_mythic",   q_m, unique="prints", price_field="usd")),
+        ],
+        strict_probs=True,
+    )
 
 
 def slot_dft_special_guests() -> Slot:
@@ -1454,7 +1492,16 @@ def slot_dft_special_guests() -> Slot:
 
 
 def model_dft_play_box() -> ProductModel:
-    return model_from_config(DFT_CONFIG, extra_slots=[slot_dft_special_guests()])
+    return ProductModel(
+        set_code="dft", packs_per_box=30,
+        slots=[
+            build_main_rm_slot(DFT_CONFIG),
+            slot_dft_wildcard(),
+            build_foil_slot(DFT_CONFIG),
+            build_land_slot(DFT_CONFIG),
+            slot_dft_special_guests(),
+        ],
+    )
 
 
 # ============================================================
@@ -1583,13 +1630,42 @@ def model_eoe_play_box() -> ProductModel:
 # ============================================================
 # TDM — Tarkir: Dragonstorm (30 packs/box)
 # SPG 104–113, replaces a common in 1/64 packs
+# Wildcard rates verified from mtg.wtf sheet data:
+#   Common  (81 cards × 1/648 each):             12.50%
+#   Uncommon (100 × 583/100000 + 6 × 33/5750     64.61%
+#             + 15 × 11/5750):
+#   Rare    (60 × 13/5000 + 61 × 11/17250):      19.49%
+#   Mythic  (20 × 13/10000 + 25 × 11/34500):      3.40%
+# P(R/M) ≈ 22.9%  — NOT the generic 1/12 ≈ 8.3%
 # ============================================================
 
 TDM_CONFIG = PlayBoosterConfig(
     set_code="tdm", packs_per_box=30,
-    mythic_rate=PLAY_MYTHIC_RATE, wc_rm_rate=1/12,
+    mythic_rate=PLAY_MYTHIC_RATE,
     land_types=_std_land_types_basic_only(foil_rate=0.20),
 )
+
+
+def slot_tdm_wildcard() -> Slot:
+    sc = "tdm"
+    q_c = _q(f"set:{sc}", "rarity:common",   "is:booster", "game:paper")
+    q_u = _q(f"set:{sc}", "rarity:uncommon", "is:booster", "game:paper")
+    q_r = _q(f"set:{sc}", "rarity:rare",     "is:booster", "game:paper")
+    q_m = _q(f"set:{sc}", "rarity:mythic",   "is:booster", "game:paper")
+    return Slot(
+        name="Wildcard (1 slot)",
+        outcomes=[
+            (81*(1/648),
+             QueryPool(f"{sc}_wc_common",   q_c, unique="prints", price_field="usd")),
+            (100*(583/100000) + 6*(33/5750) + 15*(11/5750),
+             QueryPool(f"{sc}_wc_uncommon", q_u, unique="prints", price_field="usd")),
+            (60*(13/5000) + 61*(11/17250),
+             QueryPool(f"{sc}_wc_rare",     q_r, unique="prints", price_field="usd")),
+            (20*(13/10000) + 25*(11/34500),
+             QueryPool(f"{sc}_wc_mythic",   q_m, unique="prints", price_field="usd")),
+        ],
+        strict_probs=True,
+    )
 
 
 def slot_tdm_special_guests() -> Slot:
@@ -1601,33 +1677,97 @@ def slot_tdm_special_guests() -> Slot:
 
 
 def model_tdm_play_box() -> ProductModel:
-    return model_from_config(TDM_CONFIG, extra_slots=[slot_tdm_special_guests()])
+    return ProductModel(
+        set_code="tdm", packs_per_box=30,
+        slots=[
+            build_main_rm_slot(TDM_CONFIG),
+            slot_tdm_wildcard(),
+            build_foil_slot(TDM_CONFIG),
+            build_land_slot(TDM_CONFIG),
+            slot_tdm_special_guests(),
+        ],
+    )
 
 
 # ============================================================
 # INR — Innistrad Remastered (36 packs/box)
 # Retro slot cn 329–480 appears once per pack
+# Wildcard rates verified from mtg.wtf sheet data:
+#   Common  (100 cards × 7/4160):                16.83%
+#   Uncommon (84 × 7/880 + 4 × 21/3520           70.00%
+#             + 4 × 7/3520):
+#   R/M     (55 × 1/672 + 17 × 1/896             13.17%
+#             + 17 × 1/1288 + 6 × 3/5152
+#             + 17 × 1/2688 + 6 × 1/5152
+#             + 4 × 21/16640 + 4 × 7/16640):
+# P(R/M) ≈ 13.2%  — NOT the generic 1/12 ≈ 8.3%
+# Retro slot (CN 329–480): rarity-weighted per mtg.wtf sheet:
+#   35 commons × 8/649, 76 uncommons × 4/649,
+#   24 rares × 2/649, 17 mythics × 1/649
 # ============================================================
 
 INR_CONFIG = PlayBoosterConfig(
     set_code="inr", packs_per_box=36,
-    mythic_rate=PLAY_MYTHIC_RATE, wc_rm_rate=1/12,
+    mythic_rate=PLAY_MYTHIC_RATE,
     land_types=_std_land_types_basic_only(foil_rate=0.20),
 )
 
+_INR_WC_RM = (55*(1/672) + 17*(1/896) + 17*(1/1288) + 6*(3/5152) +
+              17*(1/2688) + 6*(1/5152) + 4*(21/16640) + 4*(7/16640))
+
+
+def slot_inr_wildcard() -> Slot:
+    sc = "inr"
+    q_c = _q(f"set:{sc}", "rarity:common",   "is:booster", "game:paper")
+    q_u = _q(f"set:{sc}", "rarity:uncommon", "is:booster", "game:paper")
+    q_r = _q(f"set:{sc}", "rarity:rare",     "is:booster", "game:paper")
+    q_m = _q(f"set:{sc}", "rarity:mythic",   "is:booster", "game:paper")
+    mr  = PLAY_MYTHIC_RATE
+    return Slot(
+        name="Wildcard (1 slot)",
+        outcomes=[
+            (100*(7/4160),
+             QueryPool(f"{sc}_wc_common",   q_c, unique="prints", price_field="usd")),
+            (84*(7/880) + 4*(21/3520) + 4*(7/3520),
+             QueryPool(f"{sc}_wc_uncommon", q_u, unique="prints", price_field="usd")),
+            (_INR_WC_RM * (1 - mr),
+             QueryPool(f"{sc}_wc_rare",     q_r, unique="prints", price_field="usd")),
+            (_INR_WC_RM * mr,
+             QueryPool(f"{sc}_wc_mythic",   q_m, unique="prints", price_field="usd")),
+        ],
+        strict_probs=True,
+    )
+
 
 def slot_inr_retro() -> Slot:
-    q_retro = _q("set:inr", "cn>=329", "cn<=480", "game:paper")
+    # CN 329–480: 152 retro cards at rarity-weighted rates per mtg.wtf:
+    #   35 commons × 8/649 ≈ 43.1%, 76 uncommons × 4/649 ≈ 46.8%,
+    #   24 rares × 2/649 ≈ 7.4%, 17 mythics × 1/649 ≈ 2.6%
+    def _rq(rarity: str) -> str:
+        return _q("set:inr", f"rarity:{rarity}", "cn>=329", "cn<=480", "game:paper")
     return Slot(
         name="Retro slot",
-        outcomes=[(1.0, QueryPool("inr_retro", q_retro,
-                   fallback=q_retro, unique="prints", price_field="usd"))],
+        outcomes=[
+            (35*(8/649), QueryPool("inr_retro_c", _rq("common"),   unique="prints", price_field="usd")),
+            (76*(4/649), QueryPool("inr_retro_u", _rq("uncommon"), unique="prints", price_field="usd")),
+            (24*(2/649), QueryPool("inr_retro_r", _rq("rare"),     unique="prints", price_field="usd")),
+            (17*(1/649), QueryPool("inr_retro_m", _rq("mythic"),   unique="prints", price_field="usd")),
+        ],
         strict_probs=True,
     )
 
 
 def model_inr_play_box() -> ProductModel:
-    return model_from_config(INR_CONFIG, extra_slots=[slot_inr_retro()])
+    return ProductModel(
+        set_code="inr", packs_per_box=36,
+        slots=[
+            build_main_rm_slot(INR_CONFIG),
+            slot_inr_wildcard(),
+            build_foil_slot(INR_CONFIG),
+            build_land_slot(INR_CONFIG),
+            slot_inr_retro(),
+        ],
+    )
 
 
 # ============================================================
