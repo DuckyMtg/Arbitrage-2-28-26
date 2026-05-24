@@ -2416,7 +2416,7 @@ def model_lci_draft_box() -> ProductModel:
 #   3x common + 3x uncommon + 1x common_uncommon_showcase  (≈$0, not modeled)
 #   2x wildcard (7/1055 per rare, 7/2110 per mythic)
 #      → wc_rm_rate ≈ 0.37 per slot (~101 rares × 7/1055 / 2 ≈ 33.5% + ~3.3% mythic)
-#   1x rare_mythic (1/70 per rare, 1/140 per mythic → DEFAULT_MYTHIC_RATE approximates)
+#   1x rare_mythic (1/70 per rare, 1/140 per mythic → mythic_rate = 1/7 exactly)
 #   1x foil (rarity-weighted from card counts)
 #   25% chance: 1x The List (PLST, ~75 cards at 1/300 each)
 #
@@ -2427,7 +2427,7 @@ def model_lci_draft_box() -> ProductModel:
 
 LTR_SET_CONFIG = PlayBoosterConfig(
     set_code="ltr", packs_per_box=30,
-    mythic_rate=DEFAULT_MYTHIC_RATE,
+    mythic_rate=1/7,         # mtg.wtf: 60 rares @ 1/70, 20 mythics @ 1/140 → P(M)=1/7
     wc_rm_rate=0.37,        # per-slot RM rate; ~101 rares × 7/1055 / 2 ≈ 33.5% + ~3.3% mythic
     wc_slots_per_pack=2,
     land_types=[LandTypeConfig(
@@ -2464,7 +2464,7 @@ def model_ltr_draft_box() -> ProductModel:
     """
     cfg = PlayBoosterConfig(
         set_code="ltr", packs_per_box=36,
-        mythic_rate=DEFAULT_MYTHIC_RATE,
+        mythic_rate=1/7,         # mtg.wtf: rare_mythic_with_showcase sheet → 149/1043 = 1/7
         wc_rates=RarityRates(), wc_slots_per_pack=0,
         land_types=[LandTypeConfig(
             "basic", ["type:basic"],
