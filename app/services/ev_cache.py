@@ -13,7 +13,7 @@ import redis
 logger = logging.getLogger(__name__)
 
 # Bump this when EV logic/probabilities/queries change
-MODEL_VERSION = os.getenv("EV_MODEL_VERSION", "2026-05-24.1")
+MODEL_VERSION = os.getenv("EV_MODEL_VERSION", "2026-05-26.1")
 
 # TTLs (seconds) — configurable via env vars
 TTL_EV = int(os.getenv("EV_CACHE_TTL", str(65 * 60)))
