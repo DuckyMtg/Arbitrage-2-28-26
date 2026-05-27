@@ -2920,9 +2920,12 @@ def model_stx_draft_box() -> ProductModel:
     1/3 packs: traditional foil.  Basic lands included in land slot.
     Foil rarity split: ~27% U, 10% R, 3% M (remainder are 0-EV common foils).
     """
+    # STX nonlesson_rare_mythic sheet: 444 slots
+    # 64 rares×6 + 11 mythics×3 + 9 premium-frame mythics×2 + 9 showcase mythics×1 = 444
+    # mythic slots = 33+18+9 = 60  →  P(mythic) = 60/444 = 5/37
     cfg = PlayBoosterConfig(
         set_code="stx", packs_per_box=36,
-        mythic_rate=DEFAULT_MYTHIC_RATE,
+        mythic_rate=5/37,
         wc_rates=RarityRates(), wc_slots_per_pack=0,
         land_types=[LandTypeConfig("basic", ["type:basic"], rate=1.0, foil_rate=0.0)],
     )
@@ -2937,9 +2940,11 @@ def model_stx_draft_box() -> ProductModel:
     )
 
 
+# STX set-booster rare_mythic sheet: 159 slots
+# 69 rares×2 + 21 mythics×1 = 159  →  P(mythic) = 21/159 = 7/53
 STX_SET_CONFIG = PlayBoosterConfig(
     set_code="stx", packs_per_box=30,
-    mythic_rate=DEFAULT_MYTHIC_RATE,
+    mythic_rate=7/53,
     wc_rm_rate=0.25,
     wc_slots_per_pack=2,
     land_types=[LandTypeConfig("basic", ["type:basic"], rate=1.0, foil_rate=0.15)],
@@ -3073,9 +3078,12 @@ def model_mh2_draft_box() -> ProductModel:
     1/3 packs: traditional foil.  No basic land slot (no basics in MH2 draft).
     Foil rarity split approx from Masters foil sheet: ~20% U, 15% R, 5% M.
     """
+    # MH2 new_rare_mythic sheet: 848 slots
+    # 3/212×12R + 1/106×48R + 1/212×(20M+50SR) + 1/424×11M + 1/848×18M = 848
+    # mythic slots = 20×4 + 11×2 + 18×1 = 120  →  P(mythic) = 120/848 = 15/106
     cfg = PlayBoosterConfig(
         set_code="mh2", packs_per_box=36,
-        mythic_rate=DEFAULT_MYTHIC_RATE,
+        mythic_rate=15/106,
         wc_rates=RarityRates(), wc_slots_per_pack=0,
         land_types=[],
     )
@@ -3120,7 +3128,10 @@ def slot_2x2_foil(label_prefix: str) -> Slot:
     )
 
 
-_2X2_MYTHIC_RATE = DEFAULT_MYTHIC_RATE
+# 2X2 rare_mythic_with_showcase sheet: 840 slots
+# 1/140×90R + 1/210×30SR + 1/280×20M + 1/420×(30SR+20M) + 1/840×20SM = 840
+# mythic slots = 20×3 + 20×2 + 20×1 = 120  →  P(mythic) = 120/840 = 1/7
+_2X2_MYTHIC_RATE = 1/7
 
 
 def slot_2x2_rm(label: str) -> Slot:
