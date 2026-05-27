@@ -853,7 +853,11 @@ def slot_woe_draft_foil() -> Slot:
 
 WOE_DRAFT_CONFIG = PlayBoosterConfig(
     set_code="woe", packs_per_box=36,
-    mythic_rate=20 / 138,
+    # rare_mythic_with_showcase sheet: 840 slots total.
+    # 60 rares each get 12 copies (42 at 1/70 × 12 + 18 at 1/105 w/ 1/210 showcase × 12).
+    # 20 mythics each get 6 copies (8 at 1/140 + 12 at 1/210+1/420 or 1/840).
+    # P(mythic) = 20×6 / (60×12 + 20×6) = 120/840 = 1/7.
+    mythic_rate=1 / 7,
     wc_rates=RarityRates(), wc_slots_per_pack=0,
 )
 
@@ -978,7 +982,8 @@ def model_otj_play_box() -> ProductModel:
 
 WOE_CONFIG = PlayBoosterConfig(
     set_code="woe", packs_per_box=30,
-    mythic_rate=20 / 138,
+    # Same rare_mythic sheet as Draft: 60R/20M, P(mythic) = 1/7 (verified from HTML).
+    mythic_rate=1 / 7,
     wc_rates=RarityRates(common=0.700, uncommon=0.168,
                          rare=0.095, mythic=0.025),
     wc_slots_per_pack=2,
@@ -2194,7 +2199,6 @@ def model_mkm_play_box() -> ProductModel:
 RVR_CONFIG = PlayBoosterConfig(
     set_code="rvr", packs_per_box=36,
     mythic_rate=DEFAULT_MYTHIC_RATE,  # placeholder only; main R/M built manually below
-    wc_rm_rate=1/12,
     land_types=[],  # no basic lands in RVR; mana slot handled separately
     foil_rates=RarityRates(
         common=(111/292) * 0.333,
@@ -2279,13 +2283,17 @@ def model_rvr_draft_box() -> ProductModel:
     """
     Built as a raw ProductModel rather than via model_from_config to avoid
     generating a third, incorrect main R/M slot from build_main_rm_slot().
-    The wildcard and foil slots are reused from RVR_CONFIG via their builders.
+
+    RVR has NO wildcard slot.  The retro_common_uncommon slot (fires 90% of
+    packs) and retro_rare_mythic (fires 10%) are mutually exclusive bonus
+    slots.  retro_common_uncommon has only commons/uncommons (≈$0 EV) so it
+    is omitted; retro_rare_mythic is modeled by slot_rvr_retro_rare().
+
+    foil_rates already scaled to 33.3% frequency.
     """
     return ProductModel(
         set_code="rvr", packs_per_box=36,
         slots=[
-            build_wildcard_slot(RVR_CONFIG),
-            # foil_rates already scaled to 33.3% frequency
             build_foil_slot(RVR_CONFIG),
             slot_rvr_mana_slot(),
             slot_rvr_main_rare(),
@@ -2302,23 +2310,25 @@ def model_rvr_draft_box() -> ProductModel:
 # Set Booster (30/box):
 #   1x cave_fullart_land (basic full-art, non-foil 80% / foil 20%)
 #   3x common + 3x uncommon + 1x showcase_dfc_c_u  (≈$0, not modeled)
-#   2x wildcard (any rarity; derived sheet rates: 7/1010 per rare, 7/3680 per mythic)
-#      → wc_rm_rate ≈ 0.26 per slot (~70 rares × 7/1010 / 2 ≈ 24.3% + ~1.9% mythic)
-#   1x rare_mythic (1/75 per rare, 1/150 per mythic; DEFAULT_MYTHIC_RATE approximates)
+#   2x wildcard (any rarity)
+#      Wildcard sheet: 101 commons × 7/1010 = 70%, (78+14+14) U × various = 17.5%,
+#      R/M groups = 12.5% = 1/8 per slot; 2 slots → 25% total R/M per pack.
+#   1x rare_mythic: 64 rares at 1/75 each, 22 mythics at 1/150 each
+#      → mythic rate = 22/150 = 11/75 ≈ 14.67%
 #   1x foil (rarity-weighted from card counts)
 #   25% chance: 1x The List (SPG cn 1-10 at ~1/64, PLST remainder)
 #
 # Draft Booster (36/box):
 #   1x cave_fullart_land (always non-foil in draft)
 #   9-10x common + 1x dfc_common_uncommon + 3x uncommon (≈$0, not modeled)
-#   1x rare_mythic (same sheet rates as set booster)
+#   1x rare_mythic (sheet structure same as set booster; mythic rate ≈ 12.41% ≈ 1/8)
 #   1/3 packs: traditional foil replaces 1 common
 # ============================================================
 
 LCI_SET_CONFIG = PlayBoosterConfig(
     set_code="lci", packs_per_box=30,
-    mythic_rate=DEFAULT_MYTHIC_RATE,
-    wc_rm_rate=0.26,        # per-slot RM rate; 2 WC slots give ~52% total RM across both
+    mythic_rate=11/75,       # rare_mythic sheet: 64 × 1/75 rare, 22 × 1/150 mythic → 11/75 ≈ 14.67%
+    wc_rm_rate=1/8,          # wildcard sheet: R/M = 12.5% per slot; 2 slots → 25% total
     wc_slots_per_pack=2,
     land_types=[LandTypeConfig(
         "cave_fullart", ["type:basic", "is:fullart"],
@@ -2411,7 +2421,7 @@ def model_lci_draft_box() -> ProductModel:
 #   3x common + 3x uncommon + 1x common_uncommon_showcase  (≈$0, not modeled)
 #   2x wildcard (7/1055 per rare, 7/2110 per mythic)
 #      → wc_rm_rate ≈ 0.37 per slot (~101 rares × 7/1055 / 2 ≈ 33.5% + ~3.3% mythic)
-#   1x rare_mythic (1/70 per rare, 1/140 per mythic → DEFAULT_MYTHIC_RATE approximates)
+#   1x rare_mythic (1/70 per rare, 1/140 per mythic → mythic_rate = 1/7 exactly)
 #   1x foil (rarity-weighted from card counts)
 #   25% chance: 1x The List (PLST, ~75 cards at 1/300 each)
 #
@@ -2422,7 +2432,7 @@ def model_lci_draft_box() -> ProductModel:
 
 LTR_SET_CONFIG = PlayBoosterConfig(
     set_code="ltr", packs_per_box=30,
-    mythic_rate=DEFAULT_MYTHIC_RATE,
+    mythic_rate=1/7,         # mtg.wtf: 60 rares @ 1/70, 20 mythics @ 1/140 → P(M)=1/7
     wc_rm_rate=0.37,        # per-slot RM rate; ~101 rares × 7/1055 / 2 ≈ 33.5% + ~3.3% mythic
     wc_slots_per_pack=2,
     land_types=[LandTypeConfig(
@@ -2459,7 +2469,7 @@ def model_ltr_draft_box() -> ProductModel:
     """
     cfg = PlayBoosterConfig(
         set_code="ltr", packs_per_box=36,
-        mythic_rate=DEFAULT_MYTHIC_RATE,
+        mythic_rate=1/7,         # mtg.wtf: rare_mythic_with_showcase sheet → 149/1043 = 1/7
         wc_rates=RarityRates(), wc_slots_per_pack=0,
         land_types=[LandTypeConfig(
             "basic", ["type:basic"],
@@ -2825,10 +2835,13 @@ def model_one_draft_box() -> ProductModel:
     Card counts: 101C / 80U / 60R / 20M → foil split p_fu=0.31, p_fr=0.23, p_fm=0.08.
     Prices from Scryfall; MTGJSON rarity counts fall back to Scryfall automatically
     (ONE predates Play Boosters; its boosterTypes are "draft", not "play").
+    rare_mythic_with_showcase sheet: 2520 slots total.
+    Mythic slots = 468 (6 base-mythics×24 + 4×18 + 16×12 + 4×6 + 10×3 + 3×2).
+    P(mythic) = 468/2520 = 13/70 ≈ 18.57%  (mtg.wtf ONE draft HTML verified).
     """
     cfg = PlayBoosterConfig(
         set_code="one", packs_per_box=36,
-        mythic_rate=DEFAULT_MYTHIC_RATE,
+        mythic_rate=13 / 70,
         wc_rates=RarityRates(), wc_slots_per_pack=0,
         land_types=[LandTypeConfig(
             "panorama_fullart", ["type:basic", "is:fullart"],
@@ -2847,7 +2860,8 @@ def model_one_draft_box() -> ProductModel:
 
 ONE_SET_CONFIG = PlayBoosterConfig(
     set_code="one", packs_per_box=30,
-    mythic_rate=DEFAULT_MYTHIC_RATE,
+    # Same rare_mythic sheet structure as Draft: P(mythic) = 13/70 (mtg.wtf verified).
+    mythic_rate=13 / 70,
     wc_rm_rate=0.25,
     wc_slots_per_pack=2,
     land_types=[LandTypeConfig(
@@ -2906,9 +2920,12 @@ def model_stx_draft_box() -> ProductModel:
     1/3 packs: traditional foil.  Basic lands included in land slot.
     Foil rarity split: ~27% U, 10% R, 3% M (remainder are 0-EV common foils).
     """
+    # STX nonlesson_rare_mythic sheet: 444 slots
+    # 64 rares×6 + 11 mythics×3 + 9 premium-frame mythics×2 + 9 showcase mythics×1 = 444
+    # mythic slots = 33+18+9 = 60  →  P(mythic) = 60/444 = 5/37
     cfg = PlayBoosterConfig(
         set_code="stx", packs_per_box=36,
-        mythic_rate=DEFAULT_MYTHIC_RATE,
+        mythic_rate=5/37,
         wc_rates=RarityRates(), wc_slots_per_pack=0,
         land_types=[LandTypeConfig("basic", ["type:basic"], rate=1.0, foil_rate=0.0)],
     )
@@ -2923,9 +2940,11 @@ def model_stx_draft_box() -> ProductModel:
     )
 
 
+# STX set-booster rare_mythic sheet: 159 slots
+# 69 rares×2 + 21 mythics×1 = 159  →  P(mythic) = 21/159 = 7/53
 STX_SET_CONFIG = PlayBoosterConfig(
     set_code="stx", packs_per_box=30,
-    mythic_rate=DEFAULT_MYTHIC_RATE,
+    mythic_rate=7/53,
     wc_rm_rate=0.25,
     wc_slots_per_pack=2,
     land_types=[LandTypeConfig("basic", ["type:basic"], rate=1.0, foil_rate=0.15)],
@@ -2989,10 +3008,12 @@ def model_bro_draft_box() -> ProductModel:
     BRO Draft Booster (36/box).
     Every pack: 1 main RM + 1 Retro Artifact (BRR, dedicated bonus slot).
     1/3 packs: traditional foil.  Basic land slot included.
+    BRO has 63 rares (rate 2/149) and 23 mythics (rate 1/149) per set-booster
+    rare_mythic sheet (mtg.wtf verified).  P(mythic) = 23/149 ≈ 15.44%.
     """
     cfg = PlayBoosterConfig(
         set_code="bro", packs_per_box=36,
-        mythic_rate=DEFAULT_MYTHIC_RATE,
+        mythic_rate=23 / 149,
         wc_rates=RarityRates(), wc_slots_per_pack=0,
         land_types=[LandTypeConfig("basic", ["type:basic"], rate=1.0, foil_rate=0.0)],
     )
@@ -3009,7 +3030,8 @@ def model_bro_draft_box() -> ProductModel:
 
 BRO_SET_CONFIG = PlayBoosterConfig(
     set_code="bro", packs_per_box=30,
-    mythic_rate=DEFAULT_MYTHIC_RATE,
+    # rare_mythic sheet: 63 rares + 23 mythics → P(mythic) = 23/149 (mtg.wtf verified).
+    mythic_rate=23 / 149,
     wc_rm_rate=0.25,
     wc_slots_per_pack=2,
     land_types=[LandTypeConfig("basic", ["type:basic"], rate=1.0, foil_rate=0.15)],
@@ -3056,9 +3078,12 @@ def model_mh2_draft_box() -> ProductModel:
     1/3 packs: traditional foil.  No basic land slot (no basics in MH2 draft).
     Foil rarity split approx from Masters foil sheet: ~20% U, 15% R, 5% M.
     """
+    # MH2 new_rare_mythic sheet: 848 slots
+    # 3/212×12R + 1/106×48R + 1/212×(20M+50SR) + 1/424×11M + 1/848×18M = 848
+    # mythic slots = 20×4 + 11×2 + 18×1 = 120  →  P(mythic) = 120/848 = 15/106
     cfg = PlayBoosterConfig(
         set_code="mh2", packs_per_box=36,
-        mythic_rate=DEFAULT_MYTHIC_RATE,
+        mythic_rate=15/106,
         wc_rates=RarityRates(), wc_slots_per_pack=0,
         land_types=[],
     )
@@ -3103,7 +3128,10 @@ def slot_2x2_foil(label_prefix: str) -> Slot:
     )
 
 
-_2X2_MYTHIC_RATE = DEFAULT_MYTHIC_RATE
+# 2X2 rare_mythic_with_showcase sheet: 840 slots
+# 1/140×90R + 1/210×30SR + 1/280×20M + 1/420×(30SR+20M) + 1/840×20SM = 840
+# mythic slots = 20×3 + 20×2 + 20×1 = 120  →  P(mythic) = 120/840 = 1/7
+_2X2_MYTHIC_RATE = 1/7
 
 
 def slot_2x2_rm(label: str) -> Slot:
