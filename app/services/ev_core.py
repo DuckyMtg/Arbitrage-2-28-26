@@ -3217,14 +3217,22 @@ def model_for_code(code: str, kind: str = "box") -> "ProductModel | None":
     Return a fresh ProductModel for the given set-code + product kind, or None.
 
     Resolution order:
-      1. MODEL_REGISTRY — hand-crafted models (highest priority)
-      2. SET_REGISTRY   — auto-generated Play Booster models (via model_from_setdef)
-      3. DRAFT_REGISTRY — auto-generated Draft Booster models (via model_from_draft_def)
+      1. MODEL_REGISTRY        — hand-crafted models (highest priority)
+      2. COLLECTOR_MODEL_REGISTRY — collector booster models (lazy import)
+      3. SET_REGISTRY          — auto-generated Play Booster models
+      4. DRAFT_REGISTRY        — auto-generated Draft Booster models
     """
     key = (code.strip().upper(), kind.strip().lower())
     factory = MODEL_REGISTRY.get(key)
     if factory:
         return factory()
+
+    if key[1] == "collector_box":
+        from app.services import collector_ev
+        col_factory = collector_ev.COLLECTOR_MODEL_REGISTRY.get(key)
+        if col_factory:
+            return col_factory()
+        return None
 
     from app.services.set_registry import SET_REGISTRY, DRAFT_REGISTRY, EV_CORE_OVERRIDES
     if key not in EV_CORE_OVERRIDES:
