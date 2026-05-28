@@ -69,10 +69,11 @@ def _fl(sc: str, extra: str = "") -> Slot:
 
 def _frm(sc: str, rr: float, mr: float, *, old: bool = False, lbl: str = "Foil R/M",
          xr: str = "", xm: str = "") -> Slot:
-    """Foil rare/mythic from the base-frame pool."""
+    """Foil rare/mythic from the base-frame pool (excludes showcase/extended/borderless)."""
     p_r, p_m = _old(sc, rr, mr) if old else _rp(sc, rr, mr)
-    qr = _q(f"set:{sc}", "rarity:rare", "game:paper", xr)
-    qm = _q(f"set:{sc}", "rarity:mythic", "game:paper", xm)
+    base = "-is:showcase -is:extendedart -is:borderless"
+    qr = _q(f"set:{sc}", "rarity:rare", base, "game:paper", xr)
+    qm = _q(f"set:{sc}", "rarity:mythic", base, "game:paper", xm)
     return Slot(lbl, [(p_r, _qp(f"{sc}_fr", qr)), (p_m, _qp(f"{sc}_fm", qm))],
                 strict_probs=True, renormalize=True)
 
@@ -197,7 +198,7 @@ def model_blb_collector_box() -> ProductModel:
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fc(sc, 5),
         _fu(sc, 4),
-        _fl(sc),
+        _fb(sc),
         _frm(sc, 1 / 70, 1 / 140),
         _cmd_var(sc, q_cmd, 0.0282, "Commander (97.18% NF / 2.82% foil)"),
         _treat(sc, 1 / 76,  1 / 152, "is:showcase", foil=False, n=2.0, lbl="2x Showcase R/M NF",  tag="blb_sc_nf"),
@@ -387,8 +388,9 @@ def model_eoe_collector_box() -> ProductModel:
 def model_fdn_collector_box() -> ProductModel:
     sc = "fdn"
     p_r, p_m = _rp(sc, 1 / 70, 1 / 140)
-    qr = _q(f"set:{sc}", "rarity:rare",   "game:paper")
-    qm = _q(f"set:{sc}", "rarity:mythic", "game:paper")
+    base = "-is:showcase -is:extendedart -is:borderless"
+    qr = _q(f"set:{sc}", "rarity:rare",   base, "game:paper")
+    qm = _q(f"set:{sc}", "rarity:mythic", base, "game:paper")
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fc(sc, 5),
         _fu(sc, 4),
@@ -405,27 +407,31 @@ def model_fdn_collector_box() -> ProductModel:
 
 # ---------------------------------------------------------------------------
 # FIN — Final Fantasy  (12 packs/box)
-# 4 variants based on through_the_ages (NF/foil) × fic_foil presence (37.68% each NF/foil, 12.32% each with FIC)
+# 4 variants: V1 37.68% (NF TTA, 3x NF BF RM), V2 37.68% (foil TTA, 3x NF BF RM),
+#             V3 12.32% (NF TTA, 2x NF BF RM + fic_foil), V4 12.32% (foil TTA, same).
+# foil_rare_mythic rates from HTM: 351/29600 rare, 49/8000 mythic.
 # ---------------------------------------------------------------------------
 def model_fin_collector_box() -> ProductModel:
     sc = "fin"
     bf_filt = "(is:showcase or is:extendedart or is:borderless)"
-    # through_the_ages: same pool as NF, just foil treatment
     q_tta = _q(f"set:{sc}", "(is:showcase or is:extendedart)", "(rarity:rare or rarity:mythic)", "game:paper")
-    # fic_foil: special foil treatment (~24.64 % of packs)
     q_fic = _q(f"set:{sc}", "is:showcase", "rarity:rare", "game:paper")
-    mr = PLAY_MYTHIC_RATE
+    # NF BF RM: 3× in 75.36% of packs, 2× in 24.64% → average weight 2.754
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fc(sc, 3),
         _fu(sc, 3),
         _bf_slot(sc, "(is:showcase or is:extendedart)", foil=False, lbl="BoosterFun C/U NF"),
         _bf_slot(sc, "(is:showcase or is:extendedart)", foil=True,  lbl="Foil BoosterFun C/U"),
         _fb(sc),
-        _frm(sc, 1 / 30, 1 / 60),          # approximate mid-range denominators from HTM
-        _bf_slot(sc, bf_filt, foil=False, n=3.0, lbl="3x BoosterFun R/M NF"),
-        Slot("Through the Ages / FIC Foil (variant)",
-             [(0.7536, _qp("fin_tta_nf", q_tta, f=False)),
-              (0.2464, _qp("fin_fic_f",  q_fic))],
+        _frm(sc, 351 / 29600, 49 / 8000),   # exact rates from HTM
+        _bf_slot(sc, bf_filt, foil=False, n=2.754, lbl="~3x BoosterFun R/M NF"),
+        Slot("Through the Ages (50% NF / 50% foil)",
+             [(0.50, _qp("fin_tta_nf", q_tta, f=False)),
+              (0.50, _qp("fin_tta_f",  q_tta))],
+             strict_probs=True),
+        Slot("FIC Foil R/M (24.64% bonus)",
+             [(0.2464, _qp("fin_fic_f", q_fic)),
+              (0.7536, 0.0)],
              strict_probs=True),
         _bf_slot(sc, bf_filt, foil=True, lbl="Foil BoosterFun R/M"),
     ])
@@ -461,21 +467,33 @@ def model_inr_collector_box() -> ProductModel:
 
 # ---------------------------------------------------------------------------
 # LCI — Lost Caverns of Ixalan  (12 packs/box)
-# Jurassic World: 69.4 % NF / 17.0 % foil / 0.43 % emblem; neon_ink ~0.5 %
+# JW slot: 79.9 % NF / 19.6 % foil / 0.5 % emblem (0 EV).
+# Neon-ink appears in 0.7 % of packs replacing foil_showcase_rm.
 # ---------------------------------------------------------------------------
 def model_lci_collector_box() -> ProductModel:
     sc = "lci"
-    q_rex   = _q("set:rex", "game:paper")
-    q_rex_r = _q("set:rex", "rarity:rare", "game:paper")
-    q_neon  = _q(f"set:{sc}", "rarity:rare", "frame:neon", "game:paper")
+    q_rex  = _q("set:rex", "game:paper")
+    q_neon = _q(f"set:{sc}", "rarity:rare", "frame:neon", "game:paper")
+    # Jurassic World slot: NF 79.9 %, foil 19.6 %, emblem 0.5 % (no card value)
     jw_slot = Slot(
-        "Jurassic World (69.4% NF / 17.0% foil / 0.5% neon, rest emblem)",
-        [(0.694, _qp("rex_nf",   q_rex,   f=False)),
-         (0.170, _qp("rex_f",    q_rex)),
-         (0.136, _qp("neon_ink", q_neon,  f=True))],
+        "Jurassic World (79.9% NF / 19.6% foil / 0.5% emblem)",
+        [(0.799, _qp("rex_nf", q_rex, f=False)),
+         (0.196, _qp("rex_f",  q_rex)),
+         (0.005, 0.0)],
         strict_probs=True, renormalize=True,
     )
-    q_sc_u = _q(f"set:{sc}", "rarity:uncommon", "(is:showcase or is:borderless)", "game:paper")
+    q_sc_u  = _q(f"set:{sc}", "rarity:uncommon", "(is:showcase or is:borderless)", "game:paper")
+    q_fsc_r = _q(f"set:{sc}", "rarity:rare",   "is:showcase", "game:paper")
+    q_fsc_m = _q(f"set:{sc}", "rarity:mythic", "is:showcase", "game:paper")
+    p_fsc_r, p_fsc_m = _old(sc, 2 / 171, 1 / 171)
+    # foil_showcase_rm present in 99.3 % of packs; neon_ink replaces it in 0.7 %
+    fsc_slot = Slot(
+        "Foil Showcase R/M (99.3%) / Neon Ink (0.7%)",
+        [(0.993 * p_fsc_r, _qp("lci_fsc_r", q_fsc_r)),
+         (0.993 * p_fsc_m, _qp("lci_fsc_m", q_fsc_m)),
+         (0.007,           _qp("lci_neon",   q_neon))],
+        strict_probs=True, renormalize=True,
+    )
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fal(sc),
         _fc(sc, 4),
@@ -486,7 +504,7 @@ def model_lci_collector_box() -> ProductModel:
         _treat(sc, 1 / 43, 1 / 86, "is:extendedart", foil=False, old=True, lbl="Extended Commander NF", tag="lci_ext_c"),
         _treat(sc, 1 / 4,  1 / 4,  "is:showcase",    foil=False, old=True, lbl="Showcase R/M NF",       tag="lci_sc"),
         jw_slot,
-        _treat(sc, 2 / 171, 1 / 171, "is:showcase",  foil=True,  old=True, lbl="Foil Showcase R/M",     tag="lci_fsc"),
+        fsc_slot,
     ])
 
 
@@ -542,7 +560,7 @@ def model_mh2_collector_box() -> ProductModel:
         _treat(sc, 1 / 39, 1 / 39, "is:extendedart", foil=False, old=True, lbl="Extended Art Rare NF", tag="mh2_ext"),
         Slot("2x Foil BoosterFun C/U", [(2.0, _qp("mh2_fbf_cu", _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "(is:showcase or is:extendedart)", "game:paper")))], strict_probs=False),
         _treat(sc, 2 / 77, 1 / 77, "(is:showcase or is:extendedart or is:borderless)", foil=False, old=True, lbl="BoosterFun R/M NF", tag="mh2_bf_nf"),
-        _frm(sc, 2 / 253, 1 / 253, old=True, lbl="Foil BoosterFun R/M"),
+        _treat(sc, 2 / 253, 1 / 253, "(is:showcase or is:extendedart or is:borderless)", foil=True, old=True, lbl="Foil BoosterFun R/M", tag="mh2_bf_f"),
         Slot("Etched Basic",       [(1.0, _qp("mh2_eth_b", _q(f"set:{sc}", "type:basic", "is:etched", "game:paper"), f=False))],  strict_probs=True),
         Slot("Etched C/U",         [(1.0, _qp("mh2_eth_cu", q_eth_cu, f=False))],  strict_probs=True),
         _treat(sc, 2 / 109, 1 / 109, "is:etched", foil=False, old=True, lbl="Etched R/M", tag="mh2_eth_rm"),
