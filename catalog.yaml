@@ -326,3 +326,235 @@ MH2:
     ev_kind: draft_box
     product_kind: draft_box
     default_sort: price
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Double Masters 2022 collector booster box MTG"
+    ev_set_code: 2X2
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+ACR:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Assassin's Creed collector booster box MTG"
+    ev_set_code: ACR
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+BLB:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Bloomburrow collector booster box MTG"
+    ev_set_code: BLB
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+BRO:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Brothers War collector booster box MTG"
+    ev_set_code: BRO
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+CMM:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Commander Masters collector booster box MTG"
+    ev_set_code: CMM
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+DFT:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Aetherdrift collector booster box MTG"
+    ev_set_code: DFT
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+DSK:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Duskmourn House of Horror collector booster box MTG"
+    ev_set_code: DSK
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+ECL:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Lorwyn Eclipsed collector booster box MTG"
+    ev_set_code: ECL
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+EOE:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Edge of Eternities collector booster box MTG"
+    ev_set_code: EOE
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+FDN:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Foundations collector booster box MTG"
+    ev_set_code: FDN
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+FIN:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Final Fantasy collector booster box MTG"
+    ev_set_code: FIN
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+INR:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Innistrad Remastered collector booster box MTG"
+    ev_set_code: INR
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+LCI:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Lost Caverns of Ixalan collector booster box MTG"
+    ev_set_code: LCI
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+LTR:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Lord of the Rings Tales of Middle-earth collector booster box MTG"
+    ev_set_code: LTR
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+MH2:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Modern Horizons 2 collector booster box MTG"
+    ev_set_code: MH2
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+MH3:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Modern Horizons 3 collector booster box MTG"
+    ev_set_code: MH3
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+MKM:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Murders at Karlov Manor collector booster box MTG"
+    ev_set_code: MKM
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+MOM:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "March of the Machine collector booster box MTG"
+    ev_set_code: MOM
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+ONE:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Phyrexia All Will Be One collector booster box MTG"
+    ev_set_code: ONE
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+OTJ:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Outlaws of Thunder Junction collector booster box MTG"
+    ev_set_code: OTJ
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+RVR:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Ravnica Remastered collector booster box MTG"
+    ev_set_code: RVR
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+SPM:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Marvel's Spider-Man collector booster box MTG"
+    ev_set_code: SPM
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+STX:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Strixhaven School of Mages collector booster box MTG"
+    ev_set_code: STX
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+TDM:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Tarkir Dragonstorm collector booster box MTG"
+    ev_set_code: TDM
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+TLA:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Avatar Last Airbender collector booster box MTG"
+    ev_set_code: TLA
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
+
+WOE:
+  - key: collector_box
+    label: Collector Booster Box
+    ebay_query: "Wilds of Eldraine collector booster box MTG"
+    ev_set_code: WOE
+    ev_kind: collector_box
+    product_kind: collector_box
+    default_sort: price
