@@ -83,7 +83,7 @@ def ev_all():
         except Exception as exc:
             return {"set_code": sc, "product_key": key, "label": label, "pack_ev": None, "box_ev": None, "error": str(exc)}
 
-    with ThreadPoolExecutor(max_workers=8) as pool:
+    with ThreadPoolExecutor(max_workers=3) as pool:
         results = list(pool.map(fetch, tasks))
 
     return jsonable_encoder(sorted(results, key=lambda r: (r["set_code"], r["product_key"])))
