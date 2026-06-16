@@ -1,5 +1,6 @@
 from __future__ import annotations
 import random
+import threading
 import time
 from dataclasses import dataclass, field
 from functools import lru_cache
@@ -18,6 +19,9 @@ HEADERS = {
 _RARITY_COUNTS_TTL: int = 7 * 24 * 3600
 _rarity_counts_cache: dict[str, tuple[dict[str, int], float]] = {}
 
+# Cap concurrent in-flight Scryfall requests across all threads to avoid 429 floods
+_SCRYFALL_SEM = threading.Semaphore(3)
+
 # ----------------------------
 # Robust HTTP
 # ----------------------------
@@ -27,32 +31,33 @@ def scryfall_get(
     url: str,
     *,
     params: dict | None = None,
-    timeout: int = 30,
-    max_retries: int = 6,
+    timeout: int = 15,
+    max_retries: int = 3,
     backoff: float = 0.5,
 ) -> requests.Response:
     last_exc: Exception | None = None
-    for _attempt in range(max_retries):
-        try:
-            r = requests.get(url, headers=HEADERS,
-                             params=params, timeout=timeout)
-            if r.status_code in (429, 500, 502, 503, 504):
-                retry_after = r.headers.get("Retry-After")
-                if retry_after:
-                    try:
-                        time.sleep(float(retry_after))
-                        continue
-                    except ValueError:
-                        pass
+    with _SCRYFALL_SEM:
+        for _attempt in range(max_retries):
+            try:
+                r = requests.get(url, headers=HEADERS,
+                                 params=params, timeout=timeout)
+                if r.status_code in (429, 500, 502, 503, 504):
+                    retry_after = r.headers.get("Retry-After")
+                    if retry_after:
+                        try:
+                            time.sleep(float(retry_after))
+                            continue
+                        except ValueError:
+                            pass
+                    time.sleep(backoff + random.uniform(0, 0.25))
+                    backoff = min(backoff * 2, 4.0)
+                    continue
+                r.raise_for_status()
+                return r
+            except (HTTPError, RequestException) as e:
+                last_exc = e
                 time.sleep(backoff + random.uniform(0, 0.25))
-                backoff = min(backoff * 2, 8.0)
-                continue
-            r.raise_for_status()
-            return r
-        except (HTTPError, RequestException) as e:
-            last_exc = e
-            time.sleep(backoff + random.uniform(0, 0.25))
-            backoff = min(backoff * 2, 8.0)
+                backoff = min(backoff * 2, 4.0)
     raise last_exc if last_exc else RuntimeError(
         "Unknown Scryfall request failure")
 
@@ -67,14 +72,22 @@ def get_set_name(set_code: str) -> str:
     return r.json().get("name", set_code.upper())
 
 
-def _fetch_all_cards_uncached(query: str, *, unique: str = "cards", sleep_s: float = 0.12) -> list[dict]:
+def _fetch_all_cards_uncached(
+    query: str,
+    *,
+    unique: str = "cards",
+    sleep_s: float = 0.12,
+    deadline: float | None = None,
+) -> list[dict]:
     params = {"q": query, "unique": unique, "order": "name"}
     url = SCRYFALL_SEARCH_URL
     out: list[dict] = []
     while True:
+        if deadline is not None and time.monotonic() > deadline:
+            raise TimeoutError(f"Scryfall fetch exceeded deadline for query: {query!r}")
         try:
             r = scryfall_get(url, params=params if url ==
-                             SCRYFALL_SEARCH_URL else None, timeout=30)
+                             SCRYFALL_SEARCH_URL else None)
         except HTTPError as e:
             status = getattr(e.response, "status_code", None)
             if status == 404:
@@ -100,7 +113,8 @@ def fetch_all_cards(query: str, *, unique: str = "cards") -> list[dict]:
     cached = ev_cache.cache_get_json(cache_key)
     if cached is not None:
         return cached
-    full_cards = _fetch_all_cards_uncached(query, unique=unique)
+    deadline = time.monotonic() + 90
+    full_cards = _fetch_all_cards_uncached(query, unique=unique, deadline=deadline)
     minimal = [{"prices": c.get("prices") or {}} for c in full_cards]
     ev_cache.cache_set_json(cache_key, minimal, ev_cache.TTL_CARDS)
     return minimal
