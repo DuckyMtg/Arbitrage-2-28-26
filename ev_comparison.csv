@@ -1,0 +1,72 @@
+Product,MoxAlpha ($),6/16 Run ($),6/18 Run ($),Delta 6/16→6/18,Delta% vs MoxAlpha (6/18),Status,Notes
+2X2 C,327,48,49,+1,−85%,too low,Showcase slot queries returning 0 cards
+2X2 D,542,462,493,+31,−9%,close,Uncommons added ✓
+ACR C,357,185,186,+1,−48%,too low,
+ACR P,169,170,171,+1,+1%,✓,
+AFR D,212,89,123,+34,−42%,too low,set+collector missing
+BLB C,4661,895,896,+1,−81%,too low,Double rainbow foil slot missing
+BLB P,258,212,248,+36,−4%,✓,Uncommons added ✓
+BRO C,389,1152,1153,+1,+196%,TOO HIGH,BRR unique=prints inflation
+BRO D,261,161,182,+21,−30%,too low,
+BRO S,263,211,212,+1,−19%,close,
+CMM C,355,90,91,+1,−74%,too low,4 packs/box? Model may use wrong count
+CMM D,652,520,570,+50,−13%,close,Uncommons added ✓
+CMM S,682,779,783,+4,+15%,close,
+DFT C,182,227,227,0,+25%,slightly high,
+DFT P,156,121,121,0,−22%,too low,
+DMU D,174,89,118,+29,−32%,too low,missing set
+DSK C,333,279,279,0,−16%,close,
+DSK P,235,171,209,+38,−11%,close,Uncommons added ✓
+ECL C,235,297,299,+2,+27%,slightly high,
+ECL P,169,141,165,+24,−2%,✓,Uncommons added ✓
+EOE C,393,449,449,0,+14%,✓,
+EOE P,213,197,198,+1,−7%,✓,
+FDN C,436,413,415,+2,−5%,✓,
+FDN P,255,174,203,+29,−20%,too low,
+FIN C,678,1481,1483,+2,+119%,TOO HIGH,unique=prints inflation
+FIN P,255,296,296,0,+16%,close,
+IKO D,260,171,197,+26,−24%,too low,
+INR C,425,596,598,+2,+41%,slightly high,
+INR P,269,237,238,+1,−11%,close,
+KHM D,230,145,172,+27,−25%,too low,missing set+collector
+LCI C,502,5401,5403,+2,+977%,TOO HIGH,REX unique=prints inflation (serialized JW cards)
+LCI D,236,156,193,+37,−18%,close,
+LCI S,263,239,241,+2,−8%,✓,
+LTR C,1260,1069,1070,+1,−15%,close,
+LTR D,423,215,279,+64,−34%,too low,
+LTR S,405,419,420,+1,+4%,✓,
+M21 D,211,110,144,+34,−32%,too low,missing collector
+MH2 C,471,373,374,+1,−21%,too low,missing set
+MH2 D,419,306,355,+49,−15%,close,
+MH3 C,608,680,681,+1,+12%,✓,
+MH3 P,401,298,300,+2,−25%,too low,
+MID D,150,68,92,+24,−39%,too low,missing set+collector
+MKM C,260,762,764,+2,+194%,TOO HIGH,unique=prints inflation
+MKM P,234,378,398,+20,+70%,TOO HIGH,Dual-land wildcard double-count?
+MOM C,459,1594,1595,+1,+247%,TOO HIGH,MUL unique=prints inflation (halo vs regular)
+MOM D,275,199,225,+26,−18%,close,
+MOM S,265,368,367,−1,+38%,slightly high,
+NEO D,296,171,201,+30,−32%,too low,missing set+collector
+ONE C,323,348,350,+2,+8%,✓,
+ONE D,240,142,170,+28,−29%,too low,
+ONE S,244,221,221,0,−9%,✓,
+OTJ C,305,142,143,+1,−53%,too low,
+OTJ P,279,226,null,—,—,ERROR,Scryfall error during run
+RVR C,525,1844,1843,−1,+251%,TOO HIGH,showcase unique=prints inflation
+RVR D,341,318,366,+48,+7%,✓,Uncommons added ✓ (now slightly over)
+SNC D,189,87,116,+29,−39%,too low,missing collector+set
+SPM C,280,577,578,+1,+106%,TOO HIGH,unique=prints inflation
+SPM P,147,140,142,+2,−3%,✓,
+STX C,490,347,null,—,—,ERROR,Scryfall error during run
+STX D,217,127,160,+33,−26%,too low,
+STX S,213,163,163,0,−23%,too low,
+TDM C,265,388,390,+2,+47%,slightly high,
+TDM P,183,228,230,+2,+26%,slightly high,
+THB D,238,162,187,+25,−21%,too low,missing collector
+TLA C,439,1013,1018,+5,+132%,TOO HIGH,unique=prints inflation
+TLA P,180,160,184,+24,+2%,✓,Uncommons added ✓
+VOW D,180,68,90,+22,−50%,too low,missing set+collector
+WOE C,453,313,314,+1,−31%,too low,
+WOE D,395,154,184,+30,−53%,too low,Enchanting Tales slot? Missing showcase slot?
+WOE S,392,364,364,0,−7%,✓,
+ZNR D,233,113,163,+50,−30%,too low,set+collector missing
