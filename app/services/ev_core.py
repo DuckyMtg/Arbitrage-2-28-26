@@ -320,7 +320,10 @@ def rarity_counts(set_code: str) -> dict[str, int]:
         counts = {}
         for r in ["common", "uncommon", "rare", "mythic"]:
             q = _q(f"set:{key}", f"rarity:{r}", "is:booster", "game:paper")
-            counts[r] = len(fetch_all_cards(q, unique="cards"))
+            try:
+                counts[r] = len(fetch_all_cards(q, unique="cards"))
+            except Exception:
+                counts[r] = 0
 
     _rarity_counts_cache[key] = (counts, time.time() + _RARITY_COUNTS_TTL)
     return counts
