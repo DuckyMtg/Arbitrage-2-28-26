@@ -42,6 +42,7 @@ def scryfall_get(
                 r = requests.get(url, headers=HEADERS,
                                  params=params, timeout=timeout)
                 if r.status_code in (429, 500, 502, 503, 504):
+                    last_exc = HTTPError(response=r)
                     retry_after = r.headers.get("Retry-After")
                     if retry_after:
                         try:
