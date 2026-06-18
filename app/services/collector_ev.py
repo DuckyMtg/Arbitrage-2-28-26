@@ -218,7 +218,8 @@ def model_bro_collector_box() -> ProductModel:
     q_tr_r = _q(f"set:{sc}", "rarity:rare",   "is:showcase", "game:paper")  # transformers tagged as showcase in BRO
     q_tr_m = _q(f"set:{sc}", "rarity:mythic", "is:showcase", "game:paper")
     # 50 % brr_retro_artifact_rare_mythic / 50 % brr_schematic_rare_mythic (same sheet structure)
-    brr_rm = _bonus_rm(brrsc, 2 / 75, 1 / 75, lbl="BRR Retro/Schematic R/M", xr="-is:serialized", xm="-is:serialized")
+    # finish:nonfoil avoids averaging in foil variants when unique=prints is used
+    brr_rm = _bonus_rm(brrsc, 2 / 75, 1 / 75, lbl="BRR Retro/Schematic R/M", xr="-is:serialized finish:nonfoil", xm="-is:serialized finish:nonfoil")
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fb(sc),
         _fc(sc, 2),
@@ -472,13 +473,15 @@ def model_inr_collector_box() -> ProductModel:
 # ---------------------------------------------------------------------------
 def model_lci_collector_box() -> ProductModel:
     sc = "lci"
-    q_rex  = _q("set:rex", "game:paper", "-is:serialized")
+    # REX NF and foil priced from their own finishes to avoid cross-treatment averaging
+    q_rex_nf  = _q("set:rex", "game:paper", "-is:serialized", "finish:nonfoil")
+    q_rex_f   = _q("set:rex", "game:paper", "-is:serialized", "finish:foil")
     q_neon = _q(f"set:{sc}", "rarity:rare", "frame:neon", "game:paper")
     # Jurassic World slot: NF 79.9 %, foil 19.6 %, emblem 0.5 % (no card value)
     jw_slot = Slot(
         "Jurassic World (79.9% NF / 19.6% foil / 0.5% emblem)",
-        [(0.799, _qp("rex_nf", q_rex, f=False)),
-         (0.196, _qp("rex_f",  q_rex)),
+        [(0.799, QueryPool("rex_nf", q_rex_nf, unique="cards", price_field="usd")),
+         (0.196, QueryPool("rex_f",  q_rex_f,  unique="cards", price_field="usd_foil")),
          (0.005, 0.0)],
         strict_probs=True, renormalize=True,
     )
@@ -617,9 +620,13 @@ def model_mkm_collector_box() -> ProductModel:
 # ---------------------------------------------------------------------------
 def model_mom_collector_box() -> ProductModel:
     sc = "mom"
-    mul_filt = "(is:showcase or is:etched or is:borderless)"
-    q_mul_r = _q("set:mul", "rarity:rare",   "game:paper", "-is:serialized")
-    q_mul_m = _q("set:mul", "rarity:mythic", "game:paper", "-is:serialized")
+    # Each MUL treatment priced from its own finish to avoid cross-treatment averaging
+    q_mul_r_nf   = _q("set:mul", "rarity:rare",   "game:paper", "finish:nonfoil")
+    q_mul_m_nf   = _q("set:mul", "rarity:mythic", "game:paper", "finish:nonfoil")
+    q_mul_r_eth  = _q("set:mul", "rarity:rare",   "game:paper", "finish:etched")
+    q_mul_m_eth  = _q("set:mul", "rarity:mythic", "game:paper", "finish:etched")
+    q_mul_r_halo = _q("set:mul", "rarity:rare",   "game:paper", "finish:foil", "-finish:etched")
+    q_mul_m_halo = _q("set:mul", "rarity:mythic", "game:paper", "finish:foil", "-finish:etched")
     p_mul_r, p_mul_m = _old("mul", 2 / 155, 1 / 155)
     mul_slot = Slot(
         "MUL Foil Uncommon",
@@ -627,13 +634,13 @@ def model_mom_collector_box() -> ProductModel:
         strict_probs=True,
     )
     mul_rm_slot = Slot(
-        "MUL R/M (traditional 56%/etched 10.8%/halo 7.5%/serialised 0.4%)",
-        [(0.5597 * p_mul_r, _qp("mul_trad_r", q_mul_r, f=False)),
-         (0.5597 * p_mul_m, _qp("mul_trad_m", q_mul_m, f=False)),
-         (0.1082 * p_mul_r, _qp("mul_eth_r",  q_mul_r, f=False)),
-         (0.1082 * p_mul_m, _qp("mul_eth_m",  q_mul_m, f=False)),
-         (0.2463 * p_mul_r, _qp("mul_halo_r", q_mul_r, f=False)),
-         (0.2463 * p_mul_m, _qp("mul_halo_m", q_mul_m, f=False))],
+        "MUL R/M (traditional 56%/etched 10.8%/halo 24.6%)",
+        [(0.5597 * p_mul_r, QueryPool("mul_trad_r",  q_mul_r_nf,   unique="cards", price_field="usd")),
+         (0.5597 * p_mul_m, QueryPool("mul_trad_m",  q_mul_m_nf,   unique="cards", price_field="usd")),
+         (0.1082 * p_mul_r, QueryPool("mul_eth_r",   q_mul_r_eth,  unique="cards", price_field="usd_foil")),
+         (0.1082 * p_mul_m, QueryPool("mul_eth_m",   q_mul_m_eth,  unique="cards", price_field="usd_foil")),
+         (0.2463 * p_mul_r, QueryPool("mul_halo_r",  q_mul_r_halo, unique="cards", price_field="usd_foil")),
+         (0.2463 * p_mul_m, QueryPool("mul_halo_m",  q_mul_m_halo, unique="cards", price_field="usd_foil"))],
         strict_probs=True, renormalize=True,
     )
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
