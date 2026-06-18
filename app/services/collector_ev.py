@@ -129,30 +129,30 @@ def model_2x2_collector_box() -> ProductModel:
     # 94.12% foil_showcase / 5.88% textured — combined variant slot
     p_fsc_r, p_fsc_m = _old(sc, 1 / 40, 1 / 80)
     p_tx_r,  p_tx_m  = _old(sc, 1 / 5,  1 / 5)
-    q_fsc_r = _q(f"set:{sc}", "rarity:rare",   "is:showcase", "game:paper")
-    q_fsc_m = _q(f"set:{sc}", "rarity:mythic", "is:showcase", "game:paper")
+    q_fsc_r = _q(f"set:{sc}", "rarity:rare",   "is:borderless", "game:paper")
+    q_fsc_m = _q(f"set:{sc}", "rarity:mythic", "is:borderless", "game:paper")
     q_tx_r  = _q(f"set:{sc}", "rarity:rare",   "finish:textured", "game:paper")
     q_tx_m  = _q(f"set:{sc}", "rarity:mythic", "finish:textured", "game:paper")
     var_slot = Slot(
-        "Foil Showcase R/M (94.12%) / Textured R/M (5.88%)",
+        "Foil Borderless R/M (94.12%) / Textured R/M (5.88%)",
         [(0.9412 * p_fsc_r, _qp("2x2_fsc_r", q_fsc_r)),
          (0.9412 * p_fsc_m, _qp("2x2_fsc_m", q_fsc_m)),
          (0.0588 * p_tx_r,  _qp("2x2_tx_r",  q_tx_r)),
          (0.0588 * p_tx_m,  _qp("2x2_tx_m",  q_tx_m))],
         strict_probs=True, renormalize=True,
     )
-    q_sc_c = _q(f"set:{sc}", "rarity:common",   "is:showcase", "game:paper")
-    q_sc_u = _q(f"set:{sc}", "rarity:uncommon", "is:showcase", "game:paper")
+    q_sc_c = _q(f"set:{sc}", "rarity:common",   "is:borderless", "game:paper")
+    q_sc_u = _q(f"set:{sc}", "rarity:uncommon", "is:borderless", "game:paper")
     return ProductModel(set_code=sc, packs_per_box=4, slots=[
         _fc(sc, 5),
         _fu(sc, 2),
-        Slot("2x Showcase C/U NF",   [(2.0, _qp("2x2_sc_c", q_sc_c, f=False)),
-                                       (1.0, _qp("2x2_sc_u", q_sc_u, f=False))], strict_probs=False),
-        Slot("2x Foil Showcase C/U", [(2.0, _qp("2x2_fsc_c", q_sc_c)),
-                                       (1.0, _qp("2x2_fsc_u", q_sc_u))],          strict_probs=False),
+        Slot("2x Borderless C/U NF",   [(2.0, _qp("2x2_sc_c", q_sc_c, f=False)),
+                                        (1.0, _qp("2x2_sc_u", q_sc_u, f=False))], strict_probs=False),
+        Slot("2x Foil Borderless C/U", [(2.0, _qp("2x2_fsc_c", q_sc_c)),
+                                        (1.0, _qp("2x2_fsc_u", q_sc_u))],          strict_probs=False),
         _frm(sc, 1 / 140, 1 / 280, old=True),
-        _treat(sc, 1 / 40,  1 / 80,  "is:showcase",    foil=False, old=True, lbl="Showcase R/M NF",   tag="2x2_sc_nf"),
-        _treat(sc, 1 / 140, 1 / 280, "is:etched",      foil=False, old=True, lbl="Etched R/M",        tag="2x2_eth"),
+        _treat(sc, 1 / 40,  1 / 80,  "is:borderless", foil=False, old=True, lbl="Borderless R/M NF", tag="2x2_sc_nf"),
+        _treat(sc, 1 / 140, 1 / 280, "is:etched",     foil=False, old=True, lbl="Etched R/M",        tag="2x2_eth"),
         var_slot,
     ])
 
@@ -266,29 +266,29 @@ def model_cmm_collector_box() -> ProductModel:
     )
     # Foil_sc_rm (96.8 %) / textured (3.2 %)
     p_fsc_r, p_fsc_m = _old(sc, 1 / 43, 1 / 86)
-    q_sc_r = _q(f"set:{sc}", "rarity:rare",   "is:showcase", "game:paper")
-    q_sc_m = _q(f"set:{sc}", "rarity:mythic", "is:showcase", "game:paper")
+    q_sc_r = _q(f"set:{sc}", "rarity:rare",   "is:borderless", "game:paper")
+    q_sc_m = _q(f"set:{sc}", "rarity:mythic", "is:borderless", "game:paper")
     fsc_tx = Slot(
-        "Foil Showcase R/M (96.8%) / Textured R/M (3.2%)",
+        "Foil Borderless R/M (96.8%) / Textured R/M (3.2%)",
         [(0.968 * p_fsc_r, _qp("cmm_fsc_r", q_sc_r)),
          (0.968 * p_fsc_m, _qp("cmm_fsc_m", q_sc_m)),
          (0.032 * p_tx_r,  _qp("cmm_tx_r",  q_tx_r)),
          (0.032 * p_tx_m,  _qp("cmm_tx_m",  q_tx_m))],
         strict_probs=True, renormalize=True,
     )
-    q_sc_c = _q(f"set:{sc}", "rarity:common",   "is:showcase", "game:paper")
-    q_sc_u = _q(f"set:{sc}", "rarity:uncommon", "is:showcase", "game:paper")
+    q_sc_c = _q(f"set:{sc}", "rarity:common",   "is:borderless", "game:paper")
+    q_sc_u = _q(f"set:{sc}", "rarity:uncommon", "is:borderless", "game:paper")
     return ProductModel(set_code=sc, packs_per_box=4, slots=[
         _fc(sc, 4),
         _fu(sc, 2),
         _fb(sc),
-        Slot("2x Showcase C/U NF",   [(1.0, _qp("cmm_sc_c", q_sc_c, f=False)),
-                                       (1.0, _qp("cmm_sc_u", q_sc_u, f=False))], strict_probs=False),
-        Slot("Foil Showcase C/U",    [(1.0, _qp("cmm_fsc_c", q_sc_c)),
-                                       (1.0, _qp("cmm_fsc_u", q_sc_u))],          strict_probs=False),
+        Slot("2x Borderless C/U NF",   [(1.0, _qp("cmm_sc_c", q_sc_c, f=False)),
+                                        (1.0, _qp("cmm_sc_u", q_sc_u, f=False))], strict_probs=False),
+        Slot("Foil Borderless C/U",    [(1.0, _qp("cmm_fsc_c", q_sc_c)),
+                                        (1.0, _qp("cmm_fsc_u", q_sc_u))],          strict_probs=False),
         _frm(sc, 2 / 305, 1 / 305, old=True),
-        _treat(sc, 1 / 43, 1 / 86, "is:showcase", foil=False, old=True, lbl="Showcase R/M NF", tag="cmm_sc_nf"),
-        _treat(sc, 2 / 309, 1 / 309, "is:etched",  foil=False, old=True, lbl="Etched R/M",     tag="cmm_eth"),
+        _treat(sc, 1 / 43, 1 / 86, "is:borderless", foil=False, old=True, lbl="Borderless R/M NF", tag="cmm_sc_nf"),
+        _treat(sc, 2 / 309, 1 / 309, "is:etched",    foil=False, old=True, lbl="Etched R/M",       tag="cmm_eth"),
         cmd_slot,
         fsc_tx,
     ])
