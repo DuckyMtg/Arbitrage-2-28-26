@@ -566,6 +566,22 @@ def build_land_slot(cfg: PlayBoosterConfig) -> Slot:
     return Slot(name="Land slot", outcomes=outcomes, strict_probs=True)
 
 
+def build_uncommon_slot(set_code: str, count: int = 3) -> Slot:
+    """N dedicated uncommon slots per pack (standard play/draft boosters have 3)."""
+    sc = set_code.lower()
+    query = _q(f"set:{sc}", "rarity:uncommon", "is:booster", "game:paper")
+    return Slot(
+        name=f"Uncommons ({count}× per pack)",
+        outcomes=[(float(count), QueryPool(
+            label=f"{sc}_uncommon",
+            primary=query,
+            unique="cards",
+            price_field="usd",
+        ))],
+        strict_probs=False,
+    )
+
+
 def model_from_config(
     cfg: PlayBoosterConfig,
     extra_slots: list[Slot] | None = None,
@@ -794,6 +810,7 @@ def model_from_treatment_config(cfg: TreatmentPlayConfig) -> ProductModel:
         packs_per_box=cfg.packs_per_box,
         slots=[
             build_treatment_main_rm_slot(cfg),
+            build_uncommon_slot(cfg.set_code),
             build_treatment_wildcard_slot(cfg),
             build_treatment_foil_slot(cfg),
             build_treatment_land_slot(cfg),
@@ -882,6 +899,7 @@ def model_woe_draft_box() -> ProductModel:
         packs_per_box=WOE_DRAFT_CONFIG.packs_per_box,
         slots=[
             build_main_rm_slot(WOE_DRAFT_CONFIG),
+            build_uncommon_slot("woe", count=3),
             slot_woe_draft_enchanting_tales(),
             slot_woe_draft_foil(),
         ],
@@ -981,6 +999,7 @@ def model_otj_play_box() -> ProductModel:
         set_code="otj", packs_per_box=36,
         slots=[
             build_main_rm_slot(OTJ_CONFIG),
+            build_uncommon_slot("otj", count=3),
             slot_otj_wildcard(),
             build_foil_slot(OTJ_CONFIG),
             build_land_slot(OTJ_CONFIG),
@@ -1395,7 +1414,7 @@ def model_from_setdef(sd: "SetDef") -> "ProductModel":
         wc_rm_rate=1 / 12,
         land_types=land_types,
     )
-    extra_slots: list[Slot] = []
+    extra_slots: list[Slot] = [build_uncommon_slot(sd.set_code)]
     if sd.bonus:
         b = sd.bonus
         q = _q(f"set:{b.bonus_set}", f"cn>={b.cn_min}", f"cn<={b.cn_max}", "game:paper")
@@ -1433,7 +1452,7 @@ def model_from_draft_def(dd: "DraftBoosterDef") -> "ProductModel":
             slot_name=b.slot_name, replace_rate=b.rate,
             pool_label=b.label, query=q,
         ))
-    slots: list[Slot] = [build_main_rm_slot(cfg)]
+    slots: list[Slot] = [build_main_rm_slot(cfg), build_uncommon_slot(sc, count=3)]
     if land_types:
         slots.append(build_land_slot(cfg))
     slots.append(_draft_foil_slot(sc, dd.foil_rate,
@@ -1497,6 +1516,7 @@ def model_blb_play_box() -> ProductModel:
         set_code="blb", packs_per_box=36,
         slots=[
             build_main_rm_slot(BLB_CONFIG),
+            build_uncommon_slot("blb", count=3),
             slot_blb_wildcard(),
             build_foil_slot(BLB_CONFIG),
             build_land_slot(BLB_CONFIG),
@@ -1560,6 +1580,7 @@ def model_dsk_play_box() -> ProductModel:
         set_code="dsk", packs_per_box=36,
         slots=[
             build_main_rm_slot(DSK_CONFIG),
+            build_uncommon_slot("dsk", count=3),
             slot_dsk_wildcard(),
             build_foil_slot(DSK_CONFIG),
             build_land_slot(DSK_CONFIG),
@@ -1698,6 +1719,7 @@ def model_fdn_play_box() -> ProductModel:
         set_code="fdn", packs_per_box=36,
         slots=[
             build_main_rm_slot(FDN_CONFIG),
+            build_uncommon_slot("fdn", count=3),
             slot_fdn_wildcard(),
             build_foil_slot(FDN_CONFIG),
             build_land_slot(FDN_CONFIG),
@@ -2180,6 +2202,7 @@ def model_mkm_play_box() -> ProductModel:
         set_code="mkm", packs_per_box=36,
         slots=[
             build_main_rm_slot(MKM_CONFIG),
+            build_uncommon_slot("mkm", count=3),
             slot_mkm_wildcard(),
             build_foil_slot(MKM_CONFIG),
             build_land_slot(MKM_CONFIG),
@@ -2308,6 +2331,7 @@ def model_rvr_draft_box() -> ProductModel:
     return ProductModel(
         set_code="rvr", packs_per_box=36,
         slots=[
+            build_uncommon_slot("rvr", count=3),
             build_foil_slot(RVR_CONFIG),
             slot_rvr_mana_slot(),
             slot_rvr_main_rare(),
@@ -2419,6 +2443,7 @@ def model_lci_draft_box() -> ProductModel:
         set_code="lci", packs_per_box=36,
         slots=[
             build_main_rm_slot(cfg),
+            build_uncommon_slot("lci", count=3),
             build_land_slot(cfg),
             _draft_foil_slot("lci", 1/3, p_fu=0.25, p_fr=0.09, p_fm=0.03),
         ],
@@ -2494,6 +2519,7 @@ def model_ltr_draft_box() -> ProductModel:
         set_code="ltr", packs_per_box=36,
         slots=[
             build_main_rm_slot(cfg),
+            build_uncommon_slot("ltr", count=3),
             build_land_slot(cfg),
             _draft_foil_slot("ltr", 1/3, p_fu=0.25, p_fr=0.08, p_fm=0.02),
         ],
@@ -2659,6 +2685,7 @@ def model_mom_draft_box() -> ProductModel:
         set_code="mom", packs_per_box=36,
         slots=[
             slot_mom_draft_rm(),
+            build_uncommon_slot("mom", count=3),
             slot_mul_legend("mom_draft"),
             _draft_foil_slot("mom", 1/3, p_fu=0.24, p_fr=0.09, p_fm=0.02),
         ],
@@ -2780,6 +2807,7 @@ def model_cmm_draft_box() -> ProductModel:
         set_code="cmm", packs_per_box=24,
         slots=[
             slot_cmm_leg_rm(),
+            build_uncommon_slot("cmm", count=3),
             slot_cmm_nonleg_rm(weight=4/3),
             slot_cmm_draft_foil(),
         ],
@@ -2866,6 +2894,7 @@ def model_one_draft_box() -> ProductModel:
         set_code="one", packs_per_box=36,
         slots=[
             build_main_rm_slot(cfg),
+            build_uncommon_slot("one", count=3),
             build_land_slot(cfg),
             _draft_foil_slot("one", 1/3, p_fu=0.31, p_fr=0.23, p_fm=0.08),
         ],
@@ -2947,6 +2976,7 @@ def model_stx_draft_box() -> ProductModel:
         set_code="stx", packs_per_box=36,
         slots=[
             build_main_rm_slot(cfg),
+            build_uncommon_slot("stx", count=3),
             build_land_slot(cfg),
             slot_stx_mystical_archive(),
             _draft_foil_slot("stx", 1/3, p_fu=0.27, p_fr=0.10, p_fm=0.03),
@@ -3035,6 +3065,7 @@ def model_bro_draft_box() -> ProductModel:
         set_code="bro", packs_per_box=36,
         slots=[
             build_main_rm_slot(cfg),
+            build_uncommon_slot("bro", count=3),
             build_land_slot(cfg),
             slot_bro_retro_artifact(),
             _draft_foil_slot("bro", 1/3, p_fu=0.27, p_fr=0.10, p_fm=0.03),
@@ -3105,6 +3136,7 @@ def model_mh2_draft_box() -> ProductModel:
         set_code="mh2", packs_per_box=36,
         slots=[
             build_main_rm_slot(cfg),
+            build_uncommon_slot("mh2", count=3),
             slot_mh2_new_to_modern(),
             _draft_foil_slot("mh2", 1/3, p_fu=0.20, p_fr=0.15, p_fm=0.05),
         ],
@@ -3173,6 +3205,7 @@ def model_2x2_draft_box() -> ProductModel:
         slots=[
             slot_2x2_rm("1"),
             slot_2x2_rm("2"),
+            build_uncommon_slot("2x2", count=3),
             slot_2x2_foil("f1"),
             slot_2x2_foil("f2"),
         ],

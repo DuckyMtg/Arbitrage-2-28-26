@@ -218,7 +218,7 @@ def model_bro_collector_box() -> ProductModel:
     q_tr_r = _q(f"set:{sc}", "rarity:rare",   "is:showcase", "game:paper")  # transformers tagged as showcase in BRO
     q_tr_m = _q(f"set:{sc}", "rarity:mythic", "is:showcase", "game:paper")
     # 50 % brr_retro_artifact_rare_mythic / 50 % brr_schematic_rare_mythic (same sheet structure)
-    brr_rm = _bonus_rm(brrsc, 2 / 75, 1 / 75, lbl="BRR Retro/Schematic R/M")
+    brr_rm = _bonus_rm(brrsc, 2 / 75, 1 / 75, lbl="BRR Retro/Schematic R/M", xr="-is:serialized", xm="-is:serialized")
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fb(sc),
         _fc(sc, 2),
@@ -472,7 +472,7 @@ def model_inr_collector_box() -> ProductModel:
 # ---------------------------------------------------------------------------
 def model_lci_collector_box() -> ProductModel:
     sc = "lci"
-    q_rex  = _q("set:rex", "game:paper")
+    q_rex  = _q("set:rex", "game:paper", "-is:serialized")
     q_neon = _q(f"set:{sc}", "rarity:rare", "frame:neon", "game:paper")
     # Jurassic World slot: NF 79.9 %, foil 19.6 %, emblem 0.5 % (no card value)
     jw_slot = Slot(
@@ -483,8 +483,8 @@ def model_lci_collector_box() -> ProductModel:
         strict_probs=True, renormalize=True,
     )
     q_sc_u  = _q(f"set:{sc}", "rarity:uncommon", "(is:showcase or is:borderless)", "game:paper")
-    q_fsc_r = _q(f"set:{sc}", "rarity:rare",   "is:showcase", "game:paper")
-    q_fsc_m = _q(f"set:{sc}", "rarity:mythic", "is:showcase", "game:paper")
+    q_fsc_r = _q(f"set:{sc}", "rarity:rare",   "is:showcase", "game:paper", "-is:serialized")
+    q_fsc_m = _q(f"set:{sc}", "rarity:mythic", "is:showcase", "game:paper", "-is:serialized")
     p_fsc_r, p_fsc_m = _old(sc, 2 / 171, 1 / 171)
     # foil_showcase_rm present in 99.3 % of packs; neon_ink replaces it in 0.7 %
     fsc_slot = Slot(
@@ -618,8 +618,8 @@ def model_mkm_collector_box() -> ProductModel:
 def model_mom_collector_box() -> ProductModel:
     sc = "mom"
     mul_filt = "(is:showcase or is:etched or is:borderless)"
-    q_mul_r = _q("set:mul", "rarity:rare",   "game:paper")
-    q_mul_m = _q("set:mul", "rarity:mythic", "game:paper")
+    q_mul_r = _q("set:mul", "rarity:rare",   "game:paper", "-is:serialized")
+    q_mul_m = _q("set:mul", "rarity:mythic", "game:paper", "-is:serialized")
     p_mul_r, p_mul_m = _old("mul", 2 / 155, 1 / 155)
     mul_slot = Slot(
         "MUL Foil Uncommon",
@@ -705,8 +705,8 @@ def model_rvr_collector_box() -> ProductModel:
     sc = "rvr"
     q_ret_cu = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "frame:1997", "game:paper")
     p_fsc_r, p_fsc_m = _old(sc, 2 / 199, 1 / 199)
-    q_fsc_r = _q(f"set:{sc}", "rarity:rare",   "is:showcase", "game:paper")
-    q_fsc_m = _q(f"set:{sc}", "rarity:mythic", "is:showcase", "game:paper")
+    q_fsc_r = _q(f"set:{sc}", "rarity:rare",   "is:showcase", "game:paper", "-is:serialized")
+    q_fsc_m = _q(f"set:{sc}", "rarity:mythic", "is:showcase", "game:paper", "-is:serialized")
     q_ser   = _q(f"set:{sc}", "is:serialized", "game:paper")
     var_slot = Slot(
         "Foil Showcase R/M (99%) / Serialised (1%)",
