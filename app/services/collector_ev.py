@@ -68,34 +68,34 @@ def _fl(sc: str, extra: str = "") -> Slot:
 
 
 def _frm(sc: str, rr: float, mr: float, *, old: bool = False, lbl: str = "Foil R/M",
-         xr: str = "", xm: str = "") -> Slot:
+         xr: str = "", xm: str = "", lang: str = "lang:en") -> Slot:
     """Foil rare/mythic from the base-frame pool (excludes showcase/extended/borderless)."""
     p_r, p_m = _old(sc, rr, mr) if old else _rp(sc, rr, mr)
     base = "-is:showcase -is:extendedart -is:borderless"
-    qr = _q(f"set:{sc}", "rarity:rare", base, "game:paper", xr)
-    qm = _q(f"set:{sc}", "rarity:mythic", base, "game:paper", xm)
+    qr = _q(f"set:{sc}", "rarity:rare", base, "game:paper", lang, xr)
+    qm = _q(f"set:{sc}", "rarity:mythic", base, "game:paper", lang, xm)
     return Slot(lbl, [(p_r, _qp(f"{sc}_fr", qr)), (p_m, _qp(f"{sc}_fm", qm))],
                 strict_probs=True, renormalize=True)
 
 
 def _treat(sc: str, rr: float, mr: float, filt: str, *, foil: bool, old: bool = False,
-           lbl: str, n: float = 1.0, tag: str = "") -> Slot:
+           lbl: str, n: float = 1.0, tag: str = "", lang: str = "lang:en") -> Slot:
     """Special-treatment R/M slot (showcase, extended, etched, borderless, textured)."""
     p_r, p_m = _old(sc, rr, mr) if old else _rp(sc, rr, mr)
     tag = tag or sc + "_t"
-    qr = _q(f"set:{sc}", "rarity:rare", filt, "game:paper")
-    qm = _q(f"set:{sc}", "rarity:mythic", filt, "game:paper")
+    qr = _q(f"set:{sc}", "rarity:rare", filt, "game:paper", lang)
+    qm = _q(f"set:{sc}", "rarity:mythic", filt, "game:paper", lang)
     return Slot(lbl, [(n * p_r, _qp(f"{tag}_r", qr, f=foil)),
                       (n * p_m, _qp(f"{tag}_m", qm, f=foil))],
                 strict_probs=(n == 1.0), renormalize=True)
 
 
 def _bonus_rm(bsc: str, rr: float, mr: float, *, foil: bool = False, lbl: str,
-              xr: str = "", xm: str = "") -> Slot:
+              xr: str = "", xm: str = "", lang: str = "lang:en") -> Slot:
     """R/M from a bonus set with given per-card rates."""
     p_r, p_m = _old(bsc, rr, mr)
-    qr = _q(f"set:{bsc}", "rarity:rare", "game:paper", xr)
-    qm = _q(f"set:{bsc}", "rarity:mythic", "game:paper", xm)
+    qr = _q(f"set:{bsc}", "rarity:rare", "game:paper", lang, xr)
+    qm = _q(f"set:{bsc}", "rarity:mythic", "game:paper", lang, xm)
     return Slot(lbl, [(p_r, _qp(f"{bsc}_br", qr, f=foil)),
                       (p_m, _qp(f"{bsc}_bm", qm, f=foil))],
                 strict_probs=True, renormalize=True)
@@ -110,11 +110,11 @@ def _cmd_var(sc: str, q_cmd: str, p_foil: float, lbl: str) -> Slot:
 
 
 def _bf_slot(sc: str, filt: str, *, foil: bool, n: float = 1.0, lbl: str,
-             old: bool = False) -> Slot:
+             old: bool = False, lang: str = "lang:en") -> Slot:
     """BoosterFun combined R/M slot — avg-price approximation."""
     mr = DEFAULT_MYTHIC_RATE if old else PLAY_MYTHIC_RATE
-    qr = _q(f"set:{sc}", "rarity:rare", filt, "game:paper")
-    qm = _q(f"set:{sc}", "rarity:mythic", filt, "game:paper")
+    qr = _q(f"set:{sc}", "rarity:rare", filt, "game:paper", lang)
+    qm = _q(f"set:{sc}", "rarity:mythic", filt, "game:paper", lang)
     return Slot(lbl, [(n * (1 - mr), _qp(f"{sc}_bfr", qr, f=foil)),
                       (n * mr, _qp(f"{sc}_bfm", qm, f=foil))],
                 strict_probs=(n == 1.0), renormalize=True)
@@ -129,10 +129,10 @@ def model_2x2_collector_box() -> ProductModel:
     # 94.12% foil_showcase / 5.88% textured — combined variant slot
     p_fsc_r, p_fsc_m = _old(sc, 1 / 40, 1 / 80)
     p_tx_r,  p_tx_m  = _old(sc, 1 / 5,  1 / 5)
-    q_fsc_r = _q(f"set:{sc}", "rarity:rare",   "is:borderless", "game:paper")
-    q_fsc_m = _q(f"set:{sc}", "rarity:mythic", "is:borderless", "game:paper")
-    q_tx_r  = _q(f"set:{sc}", "rarity:rare",   "finish:textured", "game:paper")
-    q_tx_m  = _q(f"set:{sc}", "rarity:mythic", "finish:textured", "game:paper")
+    q_fsc_r = _q(f"set:{sc}", "rarity:rare",   "is:borderless", "game:paper", "lang:en")
+    q_fsc_m = _q(f"set:{sc}", "rarity:mythic", "is:borderless", "game:paper", "lang:en")
+    q_tx_r  = _q(f"set:{sc}", "rarity:rare",   "finish:textured", "game:paper", "lang:en")
+    q_tx_m  = _q(f"set:{sc}", "rarity:mythic", "finish:textured", "game:paper", "lang:en")
     var_slot = Slot(
         "Foil Borderless R/M (94.12%) / Textured R/M (5.88%)",
         [(0.9412 * p_fsc_r, _qp("2x2_fsc_r", q_fsc_r)),
@@ -141,8 +141,8 @@ def model_2x2_collector_box() -> ProductModel:
          (0.0588 * p_tx_m,  _qp("2x2_tx_m",  q_tx_m))],
         strict_probs=True, renormalize=True,
     )
-    q_sc_c = _q(f"set:{sc}", "rarity:common",   "is:borderless", "game:paper")
-    q_sc_u = _q(f"set:{sc}", "rarity:uncommon", "is:borderless", "game:paper")
+    q_sc_c = _q(f"set:{sc}", "rarity:common",   "is:borderless", "game:paper", "lang:en")
+    q_sc_u = _q(f"set:{sc}", "rarity:uncommon", "is:borderless", "game:paper", "lang:en")
     return ProductModel(set_code=sc, packs_per_box=4, slots=[
         _fc(sc, 5),
         _fu(sc, 2),
@@ -164,9 +164,9 @@ def model_2x2_collector_box() -> ProductModel:
 def model_acr_collector_box() -> ProductModel:
     sc = "acr"
     p_bl_r, p_bl_m = _rp(sc, 2 / 11, 1 / 11)
-    q_fb   = _q(f"set:{sc}", "type:basic", "game:paper")
-    q_bl_r = _q(f"set:{sc}", "rarity:rare",   "is:borderless", "game:paper")
-    q_bl_m = _q(f"set:{sc}", "rarity:mythic", "is:borderless", "game:paper")
+    q_fb   = _q(f"set:{sc}", "type:basic", "game:paper", "lang:en")
+    q_bl_r = _q(f"set:{sc}", "rarity:rare",   "is:borderless", "game:paper", "lang:en")
+    q_bl_m = _q(f"set:{sc}", "rarity:mythic", "is:borderless", "game:paper", "lang:en")
     var_slot = Slot(
         "Foil Basic (86.4%) / Borderless Scene NF (13.6%)",
         [(0.864,           _qp("acr_fb",   q_fb)),
@@ -174,8 +174,8 @@ def model_acr_collector_box() -> ProductModel:
          (0.136 * p_bl_m,  _qp("acr_bl_m", q_bl_m, f=False))],
         strict_probs=True, renormalize=True,
     )
-    q_fsc_u = _q(f"set:{sc}", "rarity:uncommon", "is:showcase", "game:paper")
-    q_eth_u = _q(f"set:{sc}", "rarity:uncommon", "is:etched",   "game:paper")
+    q_fsc_u = _q(f"set:{sc}", "rarity:uncommon", "is:showcase", "game:paper", "lang:en")
+    q_eth_u = _q(f"set:{sc}", "rarity:uncommon", "is:etched",   "game:paper", "lang:en")
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fu(sc, 3),
         Slot("Foil Showcase Uncommon", [(1.0, _qp("acr_fsc_u", q_fsc_u))], strict_probs=True),
@@ -194,7 +194,7 @@ def model_acr_collector_box() -> ProductModel:
 # ---------------------------------------------------------------------------
 def model_blb_collector_box() -> ProductModel:
     sc = "blb"
-    q_cmd = _q("set:blc", "rarity:rare", "game:paper")
+    q_cmd = _q("set:blc", "rarity:rare", "game:paper", "lang:en")
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fc(sc, 5),
         _fu(sc, 4),
@@ -214,9 +214,10 @@ def model_blb_collector_box() -> ProductModel:
 def model_bro_collector_box() -> ProductModel:
     sc = "bro"
     brrsc = "brr"
-    p_tr_r, p_tr_m = _old(sc, 1 / 17, 1 / 17)    # transformers sheet (1/17 per card)
-    q_tr_r = _q(f"set:{sc}", "rarity:rare",   "is:showcase", "game:paper")  # transformers tagged as showcase in BRO
-    q_tr_m = _q(f"set:{sc}", "rarity:mythic", "is:showcase", "game:paper")
+    # Transformers are in set:bot (The Brothers' War Transformers), not is:showcase in set:bro
+    p_tr_r, p_tr_m = _old("bot", 1 / 15, 1 / 15)
+    q_tr_r = _q("set:bot", "rarity:rare",   "game:paper", "lang:en")
+    q_tr_m = _q("set:bot", "rarity:mythic", "game:paper", "lang:en")
     # 50 % brr_retro_artifact_rare_mythic / 50 % brr_schematic_rare_mythic (same sheet structure)
     # finish:nonfoil avoids averaging in foil variants when unique=prints is used
     brr_rm = _bonus_rm(brrsc, 2 / 75, 1 / 75, lbl="BRR Retro/Schematic R/M", xr="-is:serialized finish:nonfoil", xm="-is:serialized finish:nonfoil")
@@ -228,11 +229,11 @@ def model_bro_collector_box() -> ProductModel:
         _treat(sc, 2 / 125, 1 / 125, "is:extendedart", foil=False, old=True, lbl="Extended Art R/M",        tag="bro_ext"),
         _treat(sc, 2 / 61,  1 / 61,  "is:extendedart", foil=False, old=True, lbl="Extended Commander/Jump", tag="bro_cmd"),
         Slot("BRR Retro Artifact/Schematic Uncommon",
-             [(1.0, _qp("brr_u", _q(f"set:{brrsc}", "rarity:uncommon", "game:paper"), f=False))],
+             [(1.0, _qp("brr_u", _q(f"set:{brrsc}", "rarity:uncommon", "game:paper", "lang:en"), f=False))],
              strict_probs=True),
         brr_rm,
         Slot("Foil BRR Retro/Schematic C/U",
-             [(1.0, _qp("brr_fcu", _q(f"set:{brrsc}", "(rarity:common or rarity:uncommon)", "game:paper")))],
+             [(1.0, _qp("brr_fcu", _q(f"set:{brrsc}", "(rarity:common or rarity:uncommon)", "game:paper", "lang:en")))],
              strict_probs=True),
         Slot("Transformers (89.8% NF / 10.7% foil)",
              [(0.893 * p_tr_r, _qp("bro_tr_r", q_tr_r, f=False)),
@@ -301,8 +302,8 @@ def model_cmm_collector_box() -> ProductModel:
 # ---------------------------------------------------------------------------
 def model_dft_collector_box() -> ProductModel:
     sc = "dft"
-    q_cmd = _q(f"set:{sc}", "rarity:rare", "is:showcase", "game:paper")
-    q_cu  = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "is:showcase", "game:paper")
+    q_cmd = _q(f"set:{sc}", "rarity:rare", "is:extendedart", "game:paper", "lang:en")
+    q_cu  = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "is:extendedart", "game:paper", "lang:en")
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fc(sc, 4),
         _fu(sc, 3),
@@ -322,7 +323,7 @@ def model_dft_collector_box() -> ProductModel:
 # ---------------------------------------------------------------------------
 def model_dsk_collector_box() -> ProductModel:
     sc = "dsk"
-    q_cmd = _q(f"set:{sc}", "rarity:rare", "is:showcase", "game:paper")
+    q_cmd = _q(f"set:{sc}", "rarity:rare", "is:showcase", "game:paper", "lang:en")
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fc(sc, 5),
         _fu(sc, 4),
@@ -347,7 +348,7 @@ def model_ecl_collector_box() -> ProductModel:
         _fl(sc),
         _frm(sc, 1 / 76, 1 / 152),
         Slot("ECC NF R/M",
-             [(1.0, _qp("ecc_rm", _q(f"set:{eccsc}", "(rarity:rare or rarity:mythic)", "game:paper"), f=False))],
+             [(1.0, _qp("ecc_rm", _q(f"set:{eccsc}", "(rarity:rare or rarity:mythic)", "game:paper", "lang:en"), f=False))],
              strict_probs=True),
         _bf_slot(sc, "(is:showcase or is:extendedart or is:borderless)", foil=False, n=2.0, lbl="2x BoosterFun R/M NF"),
         _bf_slot(sc, "(is:showcase or is:extendedart or is:borderless)", foil=True,       lbl="Foil BoosterFun R/M"),
@@ -360,8 +361,8 @@ def model_ecl_collector_box() -> ProductModel:
 # ---------------------------------------------------------------------------
 def model_eoe_collector_box() -> ProductModel:
     sc = "eoe"
-    q_land = _q(f"set:{sc}", "type:land", "game:paper")
-    q_cmd  = _q(f"set:{sc}", "rarity:rare", "is:extendedart", "game:paper")
+    q_land = _q(f"set:{sc}", "type:land", "game:paper", "lang:en")
+    q_cmd  = _q(f"set:{sc}", "rarity:rare", "is:extendedart", "game:paper", "lang:en")
     # Stellar Sights land slot weighted by variant
     stellar_slot = Slot(
         "Stellar Sights Land (66.5% NF / 22.3% foil / 11.1% galaxy foil)",
@@ -390,8 +391,8 @@ def model_fdn_collector_box() -> ProductModel:
     sc = "fdn"
     p_r, p_m = _rp(sc, 1 / 70, 1 / 140)
     base = "-is:showcase -is:extendedart -is:borderless"
-    qr = _q(f"set:{sc}", "rarity:rare",   base, "game:paper")
-    qm = _q(f"set:{sc}", "rarity:mythic", base, "game:paper")
+    qr = _q(f"set:{sc}", "rarity:rare",   base, "game:paper", "lang:en")
+    qm = _q(f"set:{sc}", "rarity:mythic", base, "game:paper", "lang:en")
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fc(sc, 5),
         _fu(sc, 4),
@@ -400,8 +401,8 @@ def model_fdn_collector_box() -> ProductModel:
              strict_probs=True, renormalize=True),
         Slot("Foil R/M #2", [(p_r, _qp("fdn_fr2_r", qr)), (p_m, _qp("fdn_fr2_m", qm))],
              strict_probs=True, renormalize=True),
-        _treat(sc, 1 / 93, 1 / 186, "is:showcase", foil=False, lbl="Showcase R/M #1 NF", tag="fdn_sc1"),
-        _treat(sc, 1 / 93, 1 / 186, "is:showcase", foil=False, lbl="Showcase R/M #2 NF", tag="fdn_sc2"),
+        _treat(sc, 1 / 93, 1 / 186, "is:extendedart", foil=False, lbl="Showcase R/M #1 NF", tag="fdn_sc1"),
+        _treat(sc, 1 / 93, 1 / 186, "is:extendedart", foil=False, lbl="Showcase R/M #2 NF", tag="fdn_sc2"),
         _bf_slot(sc, "(is:showcase or is:extendedart or is:borderless)", foil=True, lbl="Foil BoosterFun R/M"),
     ])
 
@@ -415,8 +416,8 @@ def model_fdn_collector_box() -> ProductModel:
 def model_fin_collector_box() -> ProductModel:
     sc = "fin"
     bf_filt = "(is:showcase or is:extendedart or is:borderless)"
-    q_tta = _q(f"set:{sc}", "(is:showcase or is:extendedart)", "(rarity:rare or rarity:mythic)", "game:paper")
-    q_fic = _q(f"set:{sc}", "is:showcase", "rarity:rare", "game:paper")
+    q_tta = _q(f"set:{sc}", "(is:showcase or is:extendedart)", "(rarity:rare or rarity:mythic)", "game:paper", "lang:en")
+    q_fic = _q(f"set:{sc}", "is:showcase", "rarity:rare", "game:paper", "lang:en")
     # NF BF RM: 3× in 75.36% of packs, 2× in 24.64% → average weight 2.754
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fc(sc, 3),
@@ -444,9 +445,9 @@ def model_fin_collector_box() -> ProductModel:
 # ---------------------------------------------------------------------------
 def model_inr_collector_box() -> ProductModel:
     sc = "inr"
-    q_sc_cu  = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "is:showcase", "game:paper")
-    q_ret_cu = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "frame:1997",  "game:paper")
-    q_fsc_cu = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "is:showcase", "game:paper")
+    q_sc_cu  = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "is:showcase", "game:paper", "lang:en")
+    q_ret_cu = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "frame:1997",  "game:paper", "lang:en")
+    q_fsc_cu = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "is:showcase", "game:paper", "lang:en")
     # Variant-averaged C/U slot: 7.6 % showcase + weighted retro
     cu_slot = Slot(
         "C/U Special (7.6% showcase + retro)",
@@ -485,9 +486,10 @@ def model_lci_collector_box() -> ProductModel:
          (0.005, 0.0)],
         strict_probs=True, renormalize=True,
     )
-    q_sc_u  = _q(f"set:{sc}", "rarity:uncommon", "(is:showcase or is:borderless)", "game:paper")
-    q_fsc_r = _q(f"set:{sc}", "rarity:rare",   "is:showcase", "game:paper", "-is:serialized")
-    q_fsc_m = _q(f"set:{sc}", "rarity:mythic", "is:showcase", "game:paper", "-is:serialized")
+    q_sc_u  = _q(f"set:{sc}", "rarity:uncommon", "(is:showcase or is:borderless)", "game:paper", "lang:en")
+    # -frame:neon excludes Neon Ink showcase (already priced in its own 0.7% slot)
+    q_fsc_r = _q(f"set:{sc}", "rarity:rare",   "is:showcase", "game:paper", "-is:serialized", "-frame:neon", "lang:en")
+    q_fsc_m = _q(f"set:{sc}", "rarity:mythic", "is:showcase", "game:paper", "-is:serialized", "-frame:neon", "lang:en")
     p_fsc_r, p_fsc_m = _old(sc, 2 / 171, 1 / 171)
     # foil_showcase_rm present in 99.3 % of packs; neon_ink replaces it in 0.7 %
     fsc_slot = Slot(
@@ -517,19 +519,18 @@ def model_lci_collector_box() -> ProductModel:
 # ---------------------------------------------------------------------------
 def model_ltr_collector_box() -> ProductModel:
     sc = "ltr"
-    q_sr  = _q(f"set:{sc}", '"Sol Ring"', "game:paper")          # Sol Ring nonfoil printings
-    q_fsc_rm = _q(f"set:{sc}", "rarity:rare",   "is:showcase", "game:paper")
-    q_fsc_rm_m = _q(f"set:{sc}", "rarity:mythic", "is:showcase", "game:paper")
-    # Variant-averaged foil common (4×) or 3× foil_c + sol_ring replacement
+    q_sr  = _q(f"set:{sc}", '"Sol Ring"', "game:paper", "lang:en")
+    q_fsc_rm   = _q(f"set:{sc}", "rarity:rare",   "is:showcase", "game:paper", "lang:en")
+    q_fsc_rm_m = _q(f"set:{sc}", "rarity:mythic", "is:showcase", "game:paper", "lang:en")
     p_fsc_r, p_fsc_m = _old(sc, 4 / 131, 2 / 131)
     sol_slot = Slot(
         "Foil Common #4 (91.8% foil_c) / Sol Ring (7.37%) / Surge Relic (0.74%) / One Ring (~0%)",
-        [(0.9183, _qp("ltr_fc4",    _q(f"set:{sc}", "rarity:common", "game:paper"))),
+        [(0.9183, _qp("ltr_fc4",    _q(f"set:{sc}", "rarity:common", "game:paper", "lang:en"))),
          (0.0737, _qp("ltr_sol",    q_sr,  f=False)),
-         (0.0073, _qp("ltr_surge",  _q(f"set:{sc}", "rarity:rare", "is:showcase", "game:paper")))],
+         (0.0073, _qp("ltr_surge",  _q(f"set:{sc}", "rarity:rare", "is:showcase", "game:paper", "lang:en")))],
         strict_probs=True, renormalize=True,
     )
-    q_sc_u = _q(f"set:{sc}", "rarity:uncommon", "is:showcase", "game:paper")
+    q_sc_u = _q(f"set:{sc}", "rarity:uncommon", "is:showcase", "game:paper", "lang:en")
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fc(sc, 3),       # 4th foil_common handled by sol_slot variant below
         _fu(sc, 2),
@@ -554,14 +555,14 @@ def model_ltr_collector_box() -> ProductModel:
 # ---------------------------------------------------------------------------
 def model_mh2_collector_box() -> ProductModel:
     sc = "mh2"
-    q_sk_cu = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "is:showcase", "game:paper")
-    q_eth_cu = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "is:etched", "game:paper")
+    q_sk_cu = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "is:showcase", "game:paper", "lang:en")
+    q_eth_cu = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "is:etched", "game:paper", "lang:en")
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fc(sc, 4),
         _fu(sc, 2),
         Slot("Sketch C/U",             [(1.0, _qp("mh2_sk_cu",  q_sk_cu, f=False))],  strict_probs=True),
         _treat(sc, 1 / 39, 1 / 39, "is:extendedart", foil=False, old=True, lbl="Extended Art Rare NF", tag="mh2_ext"),
-        Slot("2x Foil BoosterFun C/U", [(2.0, _qp("mh2_fbf_cu", _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "(is:showcase or is:extendedart)", "game:paper")))], strict_probs=False),
+        Slot("2x Foil BoosterFun C/U", [(2.0, _qp("mh2_fbf_cu", _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "(is:showcase or is:extendedart)", "game:paper", "lang:en")))], strict_probs=False),
         _treat(sc, 2 / 77, 1 / 77, "(is:showcase or is:extendedart or is:borderless)", foil=False, old=True, lbl="BoosterFun R/M NF", tag="mh2_bf_nf"),
         _treat(sc, 2 / 253, 1 / 253, "(is:showcase or is:extendedart or is:borderless)", foil=True, old=True, lbl="Foil BoosterFun R/M", tag="mh2_bf_f"),
         Slot("Etched Basic",       [(1.0, _qp("mh2_eth_b", _q(f"set:{sc}", "type:basic", "is:etched", "game:paper"), f=False))],  strict_probs=True),
@@ -576,8 +577,8 @@ def model_mh2_collector_box() -> ProductModel:
 # ---------------------------------------------------------------------------
 def model_mh3_collector_box() -> ProductModel:
     sc = "mh3"
-    q_cmd    = _q(f"set:{sc}", "rarity:rare", "is:borderless", "game:paper")
-    q_ret_cu = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "frame:1997", "game:paper")
+    q_cmd    = _q(f"set:{sc}", "rarity:rare", "is:borderless", "game:paper", "lang:en")
+    q_ret_cu = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "frame:1997", "game:paper", "lang:en")
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fc(sc, 4),
         _fu(sc, 3),
@@ -586,8 +587,8 @@ def model_mh3_collector_box() -> ProductModel:
         Slot("Foil Retro C/U", [(1.0, _qp("mh3_fret_cu",   q_ret_cu))],          strict_probs=True),
         _frm(sc, 1 / 90, 1 / 180),
         _cmd_var(sc, q_cmd, 0.0881, "Showcase Commander (91.19% NF / 8.81% foil)"),
-        _treat(sc, 1 / 83, 1 / 166, "is:showcase", foil=False, n=2.0, lbl="2x Showcase R/M NF", tag="mh3_sc_nf"),
-        _treat(sc, 1 / 83, 1 / 166, "is:showcase", foil=True,       lbl="Foil Showcase R/M",    tag="mh3_fsc"),
+        _treat(sc, 1 / 83, 1 / 166, "is:extendedart", foil=False, n=2.0, lbl="2x Showcase R/M NF", tag="mh3_sc_nf"),
+        _treat(sc, 1 / 83, 1 / 166, "is:extendedart", foil=True,       lbl="Foil Showcase R/M",    tag="mh3_fsc"),
     ])
 
 
@@ -597,8 +598,8 @@ def model_mh3_collector_box() -> ProductModel:
 # ---------------------------------------------------------------------------
 def model_mkm_collector_box() -> ProductModel:
     sc = "mkm"
-    q_cmd = _q("set:mkc", "rarity:rare", "game:paper")
-    q_cu_sc = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "is:showcase", "game:paper")
+    q_cmd = _q("set:mkc", "rarity:rare", "game:paper", "lang:en")
+    q_cu_sc = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "is:showcase", "game:paper", "lang:en")
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fal(sc),
         _fc(sc, 4),
@@ -621,16 +622,16 @@ def model_mkm_collector_box() -> ProductModel:
 def model_mom_collector_box() -> ProductModel:
     sc = "mom"
     # Each MUL treatment priced from its own finish to avoid cross-treatment averaging
-    q_mul_r_nf   = _q("set:mul", "rarity:rare",   "game:paper", "finish:nonfoil")
-    q_mul_m_nf   = _q("set:mul", "rarity:mythic", "game:paper", "finish:nonfoil")
-    q_mul_r_eth  = _q("set:mul", "rarity:rare",   "game:paper", "finish:etched")
-    q_mul_m_eth  = _q("set:mul", "rarity:mythic", "game:paper", "finish:etched")
-    q_mul_r_halo = _q("set:mul", "rarity:rare",   "game:paper", "finish:foil", "-finish:etched")
-    q_mul_m_halo = _q("set:mul", "rarity:mythic", "game:paper", "finish:foil", "-finish:etched")
+    q_mul_r_nf   = _q("set:mul", "rarity:rare",   "game:paper", "finish:nonfoil", "lang:en")
+    q_mul_m_nf   = _q("set:mul", "rarity:mythic", "game:paper", "finish:nonfoil", "lang:en")
+    q_mul_r_eth  = _q("set:mul", "rarity:rare",   "game:paper", "finish:etched",  "lang:en")
+    q_mul_m_eth  = _q("set:mul", "rarity:mythic", "game:paper", "finish:etched",  "lang:en")
+    q_mul_r_halo = _q("set:mul", "rarity:rare",   "game:paper", "finish:foil", "-finish:etched", "lang:en")
+    q_mul_m_halo = _q("set:mul", "rarity:mythic", "game:paper", "finish:foil", "-finish:etched", "lang:en")
     p_mul_r, p_mul_m = _old("mul", 2 / 155, 1 / 155)
     mul_slot = Slot(
         "MUL Foil Uncommon",
-        [(1.0, _qp("mul_fu", _q("set:mul", "rarity:uncommon", "game:paper")))],
+        [(1.0, _qp("mul_fu", _q("set:mul", "rarity:uncommon", "game:paper", "lang:en")))],
         strict_probs=True,
     )
     mul_rm_slot = Slot(
@@ -662,8 +663,8 @@ def model_mom_collector_box() -> ProductModel:
 # ---------------------------------------------------------------------------
 def model_one_collector_box() -> ProductModel:
     sc = "one"
-    q_comp = _q(f"set:{sc}", "(is:showcase or finish:oil)", "game:paper")
-    q_sc_cu = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "is:showcase", "game:paper")
+    q_comp = _q(f"set:{sc}", "(is:showcase or finish:oil)", "game:paper", "lang:en")
+    q_sc_cu = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "is:showcase", "game:paper", "lang:en")
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         Slot("Foil Full-Art Basic", [(1.0, _qp("one_fab", _q(f"set:{sc}", "type:basic", "is:fullart", "game:paper")))], strict_probs=True),
         _fc(sc, 4),
@@ -686,14 +687,14 @@ def model_one_collector_box() -> ProductModel:
 # ---------------------------------------------------------------------------
 def model_otj_collector_box() -> ProductModel:
     sc = "otj"
-    q_cmd = _q("set:otc", "rarity:rare", "game:paper")
-    q_fin = _q(f"set:{sc}", "rarity:rare", "is:showcase", "game:paper")  # Finale = special showcase
+    q_cmd = _q("set:otc", "rarity:rare", "game:paper", "lang:en")
+    q_fin = _q(f"set:{sc}", "rarity:rare", "is:showcase", "game:paper", "lang:en")
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fc(sc, 4),
         _fu(sc, 3),
         _fal(sc),
-        Slot("OTP Uncommon NF",   [(1.0, _qp("otp_u_nf", _q("set:otp", "rarity:uncommon", "game:paper"), f=False))], strict_probs=True),
-        Slot("Foil OTP Uncommon", [(1.0, _qp("otp_u_f",  _q("set:otp", "rarity:uncommon", "game:paper")))],          strict_probs=True),
+        Slot("OTP Uncommon NF",   [(1.0, _qp("otp_u_nf", _q("set:otp", "rarity:uncommon", "game:paper", "lang:en"), f=False))], strict_probs=True),
+        Slot("Foil OTP Uncommon", [(1.0, _qp("otp_u_f",  _q("set:otp", "rarity:uncommon", "game:paper", "lang:en")))],          strict_probs=True),
         _frm(sc, 1 / 85, 1 / 170),
         _treat(sc, 2 / 201, 1 / 201, "is:showcase",    foil=False, lbl="Showcase R/M NF", tag="otj_sc"),
         _cmd_var(sc, q_cmd, 0.0526, "Commander (94.74% NF / 5.26% foil)"),
@@ -710,10 +711,10 @@ def model_otj_collector_box() -> ProductModel:
 # ---------------------------------------------------------------------------
 def model_rvr_collector_box() -> ProductModel:
     sc = "rvr"
-    q_ret_cu = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "frame:1997", "game:paper")
+    q_ret_cu = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "frame:1997", "game:paper", "lang:en")
     p_fsc_r, p_fsc_m = _old(sc, 2 / 199, 1 / 199)
-    q_fsc_r = _q(f"set:{sc}", "rarity:rare",   "is:showcase", "game:paper", "-is:serialized")
-    q_fsc_m = _q(f"set:{sc}", "rarity:mythic", "is:showcase", "game:paper", "-is:serialized")
+    q_fsc_r = _q(f"set:{sc}", "rarity:rare",   "is:extendedart", "game:paper", "-is:serialized", "lang:en")
+    q_fsc_m = _q(f"set:{sc}", "rarity:mythic", "is:extendedart", "game:paper", "-is:serialized", "lang:en")
     q_ser   = _q(f"set:{sc}", "is:serialized", "game:paper")
     var_slot = Slot(
         "Foil Showcase R/M (99%) / Serialised (1%)",
@@ -725,7 +726,7 @@ def model_rvr_collector_box() -> ProductModel:
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fc(sc, 4),
         _fu(sc, 3),
-        Slot("Foil Artifact Land", [(1.0, _qp("rvr_fal", _q(f"set:{sc}", "type:artifact", "type:land", "game:paper")))], strict_probs=True),
+        _fl(sc),
         Slot("2x Retro C/U NF",   [(2.0, _qp("rvr_ret_cu_nf", q_ret_cu, f=False))], strict_probs=False),
         Slot("Foil Retro C/U",    [(1.0, _qp("rvr_fret_cu",   q_ret_cu))],           strict_probs=True),
         _frm(sc, 1 / 70,  1 / 140, old=True),
@@ -741,7 +742,7 @@ def model_rvr_collector_box() -> ProductModel:
 # ---------------------------------------------------------------------------
 def model_spm_collector_box() -> ProductModel:
     sc = "spm"
-    q_src = _q(f"set:{sc}", "(is:showcase or is:extendedart)", "rarity:rare", "game:paper")
+    q_src = _q(f"set:{sc}", "(is:showcase or is:extendedart)", "rarity:rare", "game:paper", "lang:en")
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fc(sc, 5),
         _fu(sc, 4),
@@ -762,13 +763,13 @@ def model_spm_collector_box() -> ProductModel:
 # ---------------------------------------------------------------------------
 def model_stx_collector_box() -> ProductModel:
     sc = "stx"
-    q_sta_u  = _q("set:sta", "rarity:uncommon", "game:paper")
-    q_sta_rm = _q("set:sta", "(rarity:rare or rarity:mythic)", "game:paper")
-    q_ext_cmd = _q(f"set:{sc}", "rarity:rare", "is:extendedart", "game:paper")
-    q_ext_bl  = _q(f"set:{sc}", "(rarity:rare or rarity:mythic)", "is:borderless", "game:paper")
-    q_less    = _q(f"set:{sc}", "rarity:uncommon", "is:showcase", "game:paper")  # lessons
-    q_alt_r   = _q(f"set:{sc}", "rarity:rare",   "is:showcase", "game:paper")
-    q_alt_m   = _q(f"set:{sc}", "rarity:mythic", "is:showcase", "game:paper")
+    q_sta_u  = _q("set:sta", "rarity:uncommon", "game:paper", "lang:en")
+    q_sta_rm = _q("set:sta", "(rarity:rare or rarity:mythic)", "game:paper", "lang:en")
+    q_ext_cmd = _q(f"set:{sc}", "rarity:rare", "is:extendedart", "game:paper", "lang:en")
+    q_ext_bl  = _q(f"set:{sc}", "(rarity:rare or rarity:mythic)", "is:borderless", "game:paper", "lang:en")
+    q_less    = _q(f"set:{sc}", "rarity:uncommon", "is:extendedart", "game:paper", "lang:en")  # lessons
+    q_alt_r   = _q(f"set:{sc}", "rarity:rare",   "is:extendedart", "game:paper", "lang:en")
+    q_alt_m   = _q(f"set:{sc}", "rarity:mythic", "is:extendedart", "game:paper", "lang:en")
     p_r, p_m = _old(sc, 2 / 159, 1 / 159)
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fc(sc, 5),
@@ -795,8 +796,8 @@ def model_stx_collector_box() -> ProductModel:
 # ---------------------------------------------------------------------------
 def model_tdm_collector_box() -> ProductModel:
     sc = "tdm"
-    q_drac_cu = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "is:showcase", "game:paper")
-    q_cmd     = _q(f"set:{sc}", "rarity:rare", "is:extendedart", "game:paper")
+    q_drac_cu = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "is:showcase", "game:paper", "lang:en")
+    q_cmd     = _q(f"set:{sc}", "rarity:rare", "is:extendedart", "game:paper", "lang:en")
     q_basic   = _q(f"set:{sc}", "type:basic", "game:paper")
     basic_var = Slot(
         "Basic Land (16.7% NF / 83.3% foil)",
@@ -825,13 +826,13 @@ def model_tdm_collector_box() -> ProductModel:
 def model_tla_collector_box() -> ProductModel:
     sc = "tla"
     tlesc = "tle"
-    q_src = _q(f"set:{sc}", "(is:showcase or is:extendedart)", "(rarity:rare or rarity:mythic)", "game:paper")
-    q_bf  = _q(f"set:{sc}", "(is:showcase or is:extendedart or is:borderless)", "game:paper")
+    q_src = _q(f"set:{sc}", "(is:showcase or is:extendedart)", "(rarity:rare or rarity:mythic)", "game:paper", "lang:en")
+    q_bf  = _q(f"set:{sc}", "(is:showcase or is:extendedart or is:borderless)", "game:paper", "lang:en")
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fc(sc, 3),
         _fu(sc, 3),
-        Slot("2x Foil TLE Common",     [(2.0, _qp("tle_fc", _q(f"set:{tlesc}", "rarity:common",   "game:paper")))], strict_probs=False),
-        Slot("Foil TLE Scene Uncommon", [(1.0, _qp("tle_fsc_u", _q(f"set:{tlesc}", "rarity:uncommon", "game:paper")))], strict_probs=True),
+        Slot("2x Foil TLE Common",     [(2.0, _qp("tle_fc", _q(f"set:{tlesc}", "rarity:common",   "game:paper", "lang:en")))], strict_probs=False),
+        Slot("Foil TLE Scene Uncommon", [(1.0, _qp("tle_fsc_u", _q(f"set:{tlesc}", "rarity:uncommon", "game:paper", "lang:en")))], strict_probs=True),
         _fl(sc),
         _frm(sc, 1 / 70, 1 / 140),
         _bonus_rm(tlesc, 2 / 163, 1 / 163, foil=True, lbl="Foil TLE R/M"),
@@ -853,8 +854,8 @@ def model_woe_collector_box() -> ProductModel:
     sc = "woe"
     wotsc = "wot"
     p_ext_r, p_ext_m = _rp(sc, 1 / 73, 1 / 146)
-    q_ext_r = _q(f"set:{sc}", "rarity:rare",   "is:extendedart", "game:paper")
-    q_ext_m = _q(f"set:{sc}", "rarity:mythic", "is:extendedart", "game:paper")
+    q_ext_r = _q(f"set:{sc}", "rarity:rare",   "is:extendedart", "game:paper", "lang:en")
+    q_ext_m = _q(f"set:{sc}", "rarity:mythic", "is:extendedart", "game:paper", "lang:en")
     ext_var = Slot(
         "Extended Art R/M (89.5% NF / 10.5% foil)",
         [(0.895 * p_ext_r, _qp("woe_ext_nf_r", q_ext_r, f=False)),
@@ -863,7 +864,7 @@ def model_woe_collector_box() -> ProductModel:
          (0.105 * p_ext_m, _qp("woe_ext_f_m",  q_ext_m))],
         strict_probs=True, renormalize=True,
     )
-    q_wot_u  = _q(f"set:{wotsc}", "rarity:uncommon", "game:paper")
+    q_wot_u  = _q(f"set:{wotsc}", "rarity:uncommon", "game:paper", "lang:en")
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fal(sc),
         _fc(sc, 4),
