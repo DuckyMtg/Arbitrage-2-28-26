@@ -19,8 +19,9 @@ from app.services.ev_core import (
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _qp(lbl: str, q: str, *, f: bool = True, fb: str | None = None) -> QueryPool:
-    return QueryPool(lbl, q, fallback=fb, unique="prints",
+def _qp(lbl: str, q: str, *, f: bool = True, fb: str | None = None,
+        unique: str = "prints") -> QueryPool:
+    return QueryPool(lbl, q, fallback=fb, unique=unique,
                      price_field="usd_foil" if f else "usd")
 
 
@@ -85,8 +86,8 @@ def _treat(sc: str, rr: float, mr: float, filt: str, *, foil: bool, old: bool = 
     tag = tag or sc + "_t"
     qr = _q(f"set:{sc}", "rarity:rare", filt, "game:paper", lang)
     qm = _q(f"set:{sc}", "rarity:mythic", filt, "game:paper", lang)
-    return Slot(lbl, [(n * p_r, _qp(f"{tag}_r", qr, f=foil)),
-                      (n * p_m, _qp(f"{tag}_m", qm, f=foil))],
+    return Slot(lbl, [(n * p_r, _qp(f"{tag}_r", qr, f=foil, unique="cards")),
+                      (n * p_m, _qp(f"{tag}_m", qm, f=foil, unique="cards"))],
                 strict_probs=(n == 1.0), renormalize=True)
 
 
@@ -96,8 +97,8 @@ def _bonus_rm(bsc: str, rr: float, mr: float, *, foil: bool = False, lbl: str,
     p_r, p_m = _old(bsc, rr, mr)
     qr = _q(f"set:{bsc}", "rarity:rare", "game:paper", lang, xr)
     qm = _q(f"set:{bsc}", "rarity:mythic", "game:paper", lang, xm)
-    return Slot(lbl, [(p_r, _qp(f"{bsc}_br", qr, f=foil)),
-                      (p_m, _qp(f"{bsc}_bm", qm, f=foil))],
+    return Slot(lbl, [(p_r, _qp(f"{bsc}_br", qr, f=foil, unique="cards")),
+                      (p_m, _qp(f"{bsc}_bm", qm, f=foil, unique="cards"))],
                 strict_probs=True, renormalize=True)
 
 
@@ -115,8 +116,8 @@ def _bf_slot(sc: str, filt: str, *, foil: bool, n: float = 1.0, lbl: str,
     mr = DEFAULT_MYTHIC_RATE if old else PLAY_MYTHIC_RATE
     qr = _q(f"set:{sc}", "rarity:rare", filt, "game:paper", lang)
     qm = _q(f"set:{sc}", "rarity:mythic", filt, "game:paper", lang)
-    return Slot(lbl, [(n * (1 - mr), _qp(f"{sc}_bfr", qr, f=foil)),
-                      (n * mr, _qp(f"{sc}_bfm", qm, f=foil))],
+    return Slot(lbl, [(n * (1 - mr), _qp(f"{sc}_bfr", qr, f=foil, unique="cards")),
+                      (n * mr, _qp(f"{sc}_bfm", qm, f=foil, unique="cards"))],
                 strict_probs=(n == 1.0), renormalize=True)
 
 
@@ -135,10 +136,10 @@ def model_2x2_collector_box() -> ProductModel:
     q_tx_m  = _q(f"set:{sc}", "rarity:mythic", "finish:textured", "game:paper", "lang:en")
     var_slot = Slot(
         "Foil Borderless R/M (94.12%) / Textured R/M (5.88%)",
-        [(0.9412 * p_fsc_r, _qp("2x2_fsc_r", q_fsc_r)),
-         (0.9412 * p_fsc_m, _qp("2x2_fsc_m", q_fsc_m)),
-         (0.0588 * p_tx_r,  _qp("2x2_tx_r",  q_tx_r)),
-         (0.0588 * p_tx_m,  _qp("2x2_tx_m",  q_tx_m))],
+        [(0.9412 * p_fsc_r, _qp("2x2_fsc_r", q_fsc_r, unique="cards")),
+         (0.9412 * p_fsc_m, _qp("2x2_fsc_m", q_fsc_m, unique="cards")),
+         (0.0588 * p_tx_r,  _qp("2x2_tx_r",  q_tx_r,  unique="cards")),
+         (0.0588 * p_tx_m,  _qp("2x2_tx_m",  q_tx_m,  unique="cards"))],
         strict_probs=True, renormalize=True,
     )
     q_sc_c = _q(f"set:{sc}", "rarity:common",   "is:borderless", "game:paper", "lang:en")
@@ -214,10 +215,8 @@ def model_blb_collector_box() -> ProductModel:
 def model_bro_collector_box() -> ProductModel:
     sc = "bro"
     brrsc = "brr"
-    # Transformers are in set:bot (The Brothers' War Transformers), not is:showcase in set:bro
-    p_tr_r, p_tr_m = _old("bot", 1 / 15, 1 / 15)
-    q_tr_r = _q("set:bot", "rarity:rare",   "game:paper", "lang:en")
-    q_tr_m = _q("set:bot", "rarity:mythic", "game:paper", "lang:en")
+    # BOT Transformers: rarity/lang filters return 0 cards in Scryfall; combined pool (English-only set)
+    q_tr = _q("set:bot", "game:paper")
     # 50 % brr_retro_artifact_rare_mythic / 50 % brr_schematic_rare_mythic (same sheet structure)
     # finish:nonfoil avoids averaging in foil variants when unique=prints is used
     brr_rm = _bonus_rm(brrsc, 2 / 75, 1 / 75, lbl="BRR Retro/Schematic R/M", xr="-is:serialized finish:nonfoil", xm="-is:serialized finish:nonfoil")
@@ -235,11 +234,9 @@ def model_bro_collector_box() -> ProductModel:
         Slot("Foil BRR Retro/Schematic C/U",
              [(1.0, _qp("brr_fcu", _q(f"set:{brrsc}", "(rarity:common or rarity:uncommon)", "game:paper", "lang:en")))],
              strict_probs=True),
-        Slot("Transformers (89.8% NF / 10.7% foil)",
-             [(0.893 * p_tr_r, _qp("bro_tr_r", q_tr_r, f=False)),
-              (0.893 * p_tr_m, _qp("bro_tr_m", q_tr_m, f=False)),
-              (0.107 * p_tr_r, _qp("bro_ftr_r", q_tr_r)),
-              (0.107 * p_tr_m, _qp("bro_ftr_m", q_tr_m))],
+        Slot("Transformers (89.3% NF / 10.7% foil)",
+             [(0.893, _qp("bro_tr_nf", q_tr, f=False, unique="cards")),
+              (0.107, _qp("bro_ftr",   q_tr, f=True,  unique="cards"))],
              strict_probs=True, renormalize=True),
         _bf_slot(sc, "is:extendedart", foil=True, lbl="Foil Alt Art", old=True),
     ])
@@ -494,9 +491,9 @@ def model_lci_collector_box() -> ProductModel:
     # foil_showcase_rm present in 99.3 % of packs; neon_ink replaces it in 0.7 %
     fsc_slot = Slot(
         "Foil Showcase R/M (99.3%) / Neon Ink (0.7%)",
-        [(0.993 * p_fsc_r, _qp("lci_fsc_r", q_fsc_r)),
-         (0.993 * p_fsc_m, _qp("lci_fsc_m", q_fsc_m)),
-         (0.007,           _qp("lci_neon",   q_neon))],
+        [(0.993 * p_fsc_r, _qp("lci_fsc_r", q_fsc_r, unique="cards")),
+         (0.993 * p_fsc_m, _qp("lci_fsc_m", q_fsc_m, unique="cards")),
+         (0.007,           _qp("lci_neon",   q_neon,  unique="cards"))],
         strict_probs=True, renormalize=True,
     )
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
