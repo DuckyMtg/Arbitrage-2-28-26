@@ -1456,7 +1456,18 @@ def model_from_draft_def(dd: "DraftBoosterDef") -> "ProductModel":
             slot_name=b.slot_name, replace_rate=b.rate,
             pool_label=b.label, query=q,
         ))
-    slots: list[Slot] = [build_main_rm_slot(cfg), build_uncommon_slot(sc, count=3)]
+    common_query = _q(f"set:{sc}", "rarity:common", "is:booster", "game:paper")
+    common_slot = Slot(
+        name="Commons (10× per pack)",
+        outcomes=[(10.0, QueryPool(
+            label=f"{sc}_common",
+            primary=common_query,
+            unique="cards",
+            price_field="usd",
+        ))],
+        strict_probs=False,
+    )
+    slots: list[Slot] = [build_main_rm_slot(cfg), build_uncommon_slot(sc, count=3), common_slot]
     if land_types:
         slots.append(build_land_slot(cfg))
     slots.append(_draft_foil_slot(sc, dd.foil_rate,
@@ -2418,12 +2429,12 @@ def _draft_foil_slot(sc: str, p_foil: float,
     return Slot(
         name=f"Foil (replaces common, {int(p_foil*100)}% of packs)",
         outcomes=[
-            (1 - p_foil, 0.0),
+            (1 - p_foil * (p_fu + p_fr + p_fm), 0.0),
             (p_foil * p_fu, _fp("u", "uncommon")),
             (p_foil * p_fr, _fp("r", "rare")),
             (p_foil * p_fm, _fp("m", "mythic")),
         ],
-        strict_probs=True, renormalize=True,
+        strict_probs=True,
     )
 
 
