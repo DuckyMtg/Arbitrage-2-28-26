@@ -6,7 +6,7 @@ from typing import List, Optional
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, Field
 
-from app.services.catalog import list_products_for_set, list_set_codes
+from app.services.catalog import _load_catalog, list_products_for_set, list_set_codes
 
 router = APIRouter(tags=["catalog"])
 
@@ -30,6 +30,37 @@ class ProductOut(BaseModel):
         None, examples=["MH3", "OTJ", "WOE", "TLA", "ECL"])
     ebay_query: Optional[str] = Field(
         None, examples=["Modern Horizons 3 play booster box"])
+
+
+class CatalogEntryOut(BaseModel):
+    set_code: str
+    key: str
+    label: str
+    ebay_query: Optional[str] = None
+    product_kind: Optional[str] = None
+    ev_set_code: Optional[str] = None
+    ev_kind: Optional[str] = None
+
+
+@router.get("/catalog/all", response_model=List[CatalogEntryOut])
+def catalog_all():
+    """Return every catalog entry across all sets as a flat list, sorted by set_code then key."""
+    catalog = _load_catalog()
+    out: list[dict] = []
+    for set_code in sorted(catalog):
+        for p in catalog[set_code]:
+            if not isinstance(p, dict) or not p.get("key"):
+                continue
+            out.append({
+                "set_code": set_code,
+                "key": p.get("key"),
+                "label": p.get("label") or p.get("key"),
+                "ebay_query": p.get("ebay_query"),
+                "product_kind": p.get("product_kind"),
+                "ev_set_code": p.get("ev_set_code"),
+                "ev_kind": p.get("ev_kind"),
+            })
+    return out
 
 
 @router.get("/catalog/sets", response_model=List[SetOut])
