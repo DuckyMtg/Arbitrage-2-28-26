@@ -457,3 +457,1236 @@ MH2:
   ev_kind: collector_box
   product_kind: collector_box
   default_sort: price
+
+# ── Part A: Missing product types for auto-registered draft sets ─────────────
+# draft_box is already auto-generated from DRAFT_REGISTRY; only add missing types
+
+THB:
+- key: collector_box
+  label: Collector Booster Box
+  ebay_query: Theros Beyond Death collector booster box MTG
+  product_kind: collector_box
+  default_sort: price
+
+IKO:
+- key: collector_box
+  label: Collector Booster Box
+  ebay_query: Ikoria Lair of Behemoths collector booster box MTG
+  product_kind: collector_box
+  default_sort: price
+
+M21:
+- key: set_box
+  label: Set Booster Box
+  ebay_query: Core Set 2021 set booster box MTG
+  product_kind: set_box
+  default_sort: price
+- key: collector_box
+  label: Collector Booster Box
+  ebay_query: Core Set 2021 collector booster box MTG
+  product_kind: collector_box
+  default_sort: price
+
+ZNR:
+- key: set_box
+  label: Set Booster Box
+  ebay_query: Zendikar Rising set booster box MTG
+  product_kind: set_box
+  default_sort: price
+- key: collector_box
+  label: Collector Booster Box
+  ebay_query: Zendikar Rising collector booster box MTG
+  product_kind: collector_box
+  default_sort: price
+
+KHM:
+- key: set_box
+  label: Set Booster Box
+  ebay_query: Kaldheim set booster box MTG
+  product_kind: set_box
+  default_sort: price
+- key: collector_box
+  label: Collector Booster Box
+  ebay_query: Kaldheim collector booster box MTG
+  product_kind: collector_box
+  default_sort: price
+
+AFR:
+- key: set_box
+  label: Set Booster Box
+  ebay_query: Adventures in the Forgotten Realms set booster box MTG
+  product_kind: set_box
+  default_sort: price
+- key: collector_box
+  label: Collector Booster Box
+  ebay_query: Adventures in the Forgotten Realms collector booster box MTG
+  product_kind: collector_box
+  default_sort: price
+
+MID:
+- key: set_box
+  label: Set Booster Box
+  ebay_query: Innistrad Midnight Hunt set booster box MTG
+  product_kind: set_box
+  default_sort: price
+- key: collector_box
+  label: Collector Booster Box
+  ebay_query: Innistrad Midnight Hunt collector booster box MTG
+  product_kind: collector_box
+  default_sort: price
+
+VOW:
+- key: set_box
+  label: Set Booster Box
+  ebay_query: Innistrad Crimson Vow set booster box MTG
+  product_kind: set_box
+  default_sort: price
+- key: collector_box
+  label: Collector Booster Box
+  ebay_query: Innistrad Crimson Vow collector booster box MTG
+  product_kind: collector_box
+  default_sort: price
+
+NEO:
+- key: set_box
+  label: Set Booster Box
+  ebay_query: Kamigawa Neon Dynasty set booster box MTG
+  product_kind: set_box
+  default_sort: price
+- key: collector_box
+  label: Collector Booster Box
+  ebay_query: Kamigawa Neon Dynasty collector booster box MTG
+  product_kind: collector_box
+  default_sort: price
+
+SNC:
+- key: set_box
+  label: Set Booster Box
+  ebay_query: Streets of New Capenna set booster box MTG
+  product_kind: set_box
+  default_sort: price
+- key: collector_box
+  label: Collector Booster Box
+  ebay_query: Streets of New Capenna collector booster box MTG
+  product_kind: collector_box
+  default_sort: price
+
+DMU:
+- key: set_box
+  label: Set Booster Box
+  ebay_query: Dominaria United set booster box MTG
+  product_kind: set_box
+  default_sort: price
+- key: collector_box
+  label: Collector Booster Box
+  ebay_query: Dominaria United collector booster box MTG
+  product_kind: collector_box
+  default_sort: price
+- key: jumpstart_box
+  label: Jumpstart Booster Display
+  ebay_query: Dominaria United jumpstart booster display MTG
+  product_kind: draft_box
+  default_sort: price
+
+# ── Part B: Missing jumpstart entries for sets already in catalog ─────────────
+
+BRO:
+- key: jumpstart_box
+  label: Jumpstart Booster Display
+  ebay_query: The Brothers War jumpstart booster display MTG
+  product_kind: draft_box
+  default_sort: price
+
+ONE:
+- key: jumpstart_box
+  label: Jumpstart Booster Display
+  ebay_query: Phyrexia All Will Be One jumpstart booster display MTG
+  product_kind: draft_box
+  default_sort: price
+
+MOM:
+- key: jumpstart_box
+  label: Jumpstart Booster Display
+  ebay_query: March of the Machine jumpstart booster display MTG
+  product_kind: draft_box
+  default_sort: price
+
+LTR:
+- key: jumpstart_box
+  label: Jumpstart Booster Display
+  ebay_query: Lord of the Rings jumpstart booster display MTG
+  product_kind: draft_box
+  default_sort: price
+- key: jumpstart_v2_box
+  label: Jumpstart Booster Display Volume 2
+  ebay_query: Lord of the Rings Jumpstart Volume 2 booster display MTG
+  product_kind: draft_box
+  default_sort: price
+
+# ── Part C: Recent/upcoming sets ──────────────────────────────────────────────
+
+MSH:
+- key: play_box
+  label: Play Booster Box
+  ebay_query: Marvel Super Heroes play booster box MTG
+  product_kind: play_box
+  default_sort: price
+- key: jumpstart_box
+  label: Jumpstart Booster Display
+  ebay_query: Marvel Super Heroes jumpstart booster display MTG
+  product_kind: draft_box
+  default_sort: price
+- key: collector_box
+  label: Collector Booster Box
+  ebay_query: Marvel Super Heroes collector booster box MTG
+  product_kind: collector_box
+  default_sort: price
+
+SOS:
+- key: play_box
+  label: Play Booster Box
+  ebay_query: Secrets of Strixhaven play booster box MTG
+  product_kind: play_box
+  default_sort: price
+- key: collector_box
+  label: Collector Booster Box
+  ebay_query: Secrets of Strixhaven collector booster box MTG
+  product_kind: collector_box
+  default_sort: price
+
+TMT:
+- key: play_box
+  label: Play Booster Box
+  ebay_query: Teenage Mutant Ninja Turtles play booster box MTG
+  product_kind: play_box
+  default_sort: price
+- key: collector_box
+  label: Collector Booster Box
+  ebay_query: Teenage Mutant Ninja Turtles collector booster box MTG
+  product_kind: collector_box
+  default_sort: price
+
+# ── Part D: Special/Commander/Remastered sets ──────────────────────────────────
+
+PIP:
+- key: collector_box
+  label: Collector Booster Box
+  ebay_query: Fallout collector booster box MTG
+  product_kind: collector_box
+  default_sort: price
+
+WHO:
+- key: collector_box
+  label: Collector Booster Box
+  ebay_query: Doctor Who collector booster box MTG
+  product_kind: collector_box
+  default_sort: price
+
+MAT:
+- key: epilogue_box
+  label: Epilogue Booster Box
+  ebay_query: March of the Machine Aftermath epilogue booster box MTG
+  product_kind: draft_box
+  default_sort: price
+- key: collector_box
+  label: Collector Booster Box
+  ebay_query: March of the Machine Aftermath collector booster box MTG
+  product_kind: collector_box
+  default_sort: price
+
+CLU:
+- key: booster_box
+  label: Booster Box
+  ebay_query: Ravnica Clue Edition booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+DMR:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Dominaria Remastered draft booster box MTG
+  product_kind: draft_box
+  default_sort: price
+- key: collector_box
+  label: Collector Booster Box
+  ebay_query: Dominaria Remastered collector booster box MTG
+  product_kind: collector_box
+  default_sort: price
+
+TSR:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Time Spiral Remastered booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+DBL:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Innistrad Double Feature booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+30A:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: 30th Anniversary Edition booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+UNF:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Unfinity draft booster box MTG
+  product_kind: draft_box
+  default_sort: price
+- key: collector_box
+  label: Collector Booster Box
+  ebay_query: Unfinity collector booster box MTG
+  product_kind: collector_box
+  default_sort: price
+
+CLB:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Commander Legends Battle for Baldurs Gate draft booster box MTG
+  product_kind: draft_box
+  default_sort: price
+- key: collector_box
+  label: Collector Booster Box
+  ebay_query: Commander Legends Battle for Baldurs Gate collector booster box MTG
+  product_kind: collector_box
+  default_sort: price
+
+CMR:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Commander Legends draft booster box MTG
+  product_kind: draft_box
+  default_sort: price
+- key: collector_box
+  label: Collector Booster Box
+  ebay_query: Commander Legends collector booster box MTG
+  product_kind: collector_box
+  default_sort: price
+
+# ── Part E: Standalone Jumpstart sets ─────────────────────────────────────────
+
+TLE:
+- key: jumpstart_box
+  label: Jumpstart Booster Display
+  ebay_query: Avatar Last Airbender Eternal Jumpstart booster display MTG
+  product_kind: draft_box
+  default_sort: price
+
+J25:
+- key: jumpstart_box
+  label: Jumpstart Booster Display
+  ebay_query: Foundations Jumpstart booster display MTG
+  product_kind: draft_box
+  default_sort: price
+
+J22:
+- key: jumpstart_box
+  label: Jumpstart Booster Display
+  ebay_query: Jumpstart 2022 booster display MTG
+  product_kind: draft_box
+  default_sort: price
+
+JMP:
+- key: jumpstart_box
+  label: Jumpstart Booster Display
+  ebay_query: Jumpstart booster display MTG
+  product_kind: draft_box
+  default_sort: price
+
+# ── Part F: Mystery Booster ────────────────────────────────────────────────────
+
+MB1:
+- key: retail_box
+  label: Retail Booster Box
+  ebay_query: Mystery Booster retail booster box MTG
+  product_kind: draft_box
+  default_sort: price
+- key: convention_box
+  label: Convention Booster Display
+  ebay_query: Mystery Booster convention booster display MTG
+  product_kind: draft_box
+  default_sort: price
+- key: convention_2021_box
+  label: Convention 2021 Booster Display
+  ebay_query: Mystery Booster 2021 convention booster display MTG
+  product_kind: draft_box
+  default_sort: price
+
+# ── Part G: Pre-2020 standard sets (2014–2019) ────────────────────────────────
+
+ELD:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Throne of Eldraine draft booster box MTG
+  product_kind: draft_box
+  default_sort: price
+- key: collector_box
+  label: Collector Booster Box
+  ebay_query: Throne of Eldraine collector booster box MTG
+  product_kind: collector_box
+  default_sort: price
+
+M20:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Core Set 2020 booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+WAR:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: War of the Spark booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+RNA:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Ravnica Allegiance booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+UMA:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Ultimate Masters booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+GRN:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Guilds of Ravnica booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+M19:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Core Set 2019 booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+BBD:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Battlebond booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+DOM:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Dominaria booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+A25:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Masters 25 booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+RIX:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Rivals of Ixalan booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+UST:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Unstable booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+IMA:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Iconic Masters booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+XLN:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Ixalan booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+HOU:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Hour of Devastation booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+AKH:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Amonkhet booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+MM3:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Modern Masters 2017 booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+AER:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Aether Revolt booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+KLD:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Kaladesh booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+CN2:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Conspiracy Take the Crown booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+EMN:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Eldritch Moon booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+EMA:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Eternal Masters booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+SOI:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Shadows over Innistrad booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+OGW:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Oath of the Gatewatch booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+BFZ:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Battle for Zendikar booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+ORI:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Magic Origins booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+MM2:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Modern Masters 2015 booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+MH1:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Modern Horizons booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+DTK:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Dragons of Tarkir booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+FRF:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Fate Reforged booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+KTK:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Khans of Tarkir booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+M15:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Magic 2015 booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+CNS:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Conspiracy booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+JOU:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Journey into Nyx booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+BNG:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Born of the Gods booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+THS:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Theros booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+M14:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Magic 2014 booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+MMA:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Modern Masters booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+DGM:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Dragon's Maze booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+GTC:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Gatecrash booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+RTR:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Return to Ravnica booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+M13:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Magic 2013 booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+AVR:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Avacyn Restored booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+DKA:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Dark Ascension booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+ISD:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Innistrad booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+M12:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Magic 2012 booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+NPH:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: New Phyrexia booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+MBS:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Mirrodin Besieged booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+SOM:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Scars of Mirrodin booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+M11:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Magic 2011 booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+ROE:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Rise of the Eldrazi booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+WWK:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Worldwake booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+ZEN:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Zendikar booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+M10:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Magic 2010 booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+# ── Part H: Classic era (2003–2009) ───────────────────────────────────────────
+
+ARB:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Alara Reborn booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+CON:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Conflux booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+ALA:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Shards of Alara booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+EVE:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Eventide booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+SHM:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Shadowmoor booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+MOR:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Morningtide booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+LRW:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Lorwyn booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+10E:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Tenth Edition booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+FUT:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Future Sight booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+PLC:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Planar Chaos booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+TSP:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Time Spiral booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+CSP:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Coldsnap booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+DIS:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Dissension booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+GPT:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Guildpact booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+RAV:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Ravnica City of Guilds booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+9ED:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Ninth Edition booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+SOK:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Saviors of Kamigawa booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+BOK:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Betrayers of Kamigawa booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+UNH:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Unhinged booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+CHK:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Champions of Kamigawa booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+5DN:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Fifth Dawn booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+DST:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Darksteel booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+MRD:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Mirrodin booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+8ED:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Eighth Edition booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+SCG:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Scourge booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+LGN:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Legions booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+ONS:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Onslaught booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+JUD:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Judgment booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+TOR:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Torment booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+ODY:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Odyssey booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+APC:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Apocalypse booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+7ED:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Seventh Edition booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+PLS:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Planeshift booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+INV:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Invasion booster box MTG
+  product_kind: draft_box
+  default_sort: price
+
+# ── Part I: Vintage era (pre-2001, "Magic the Gathering" suffix) ───────────────
+
+PCY:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Prophecy booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+NEM:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Nemesis booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+MMQ:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Mercadian Masques booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+UDS:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Urza's Destiny booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+6ED:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Classic Sixth Edition booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+ULG:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Urza's Legacy booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+USG:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Urza's Saga booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+UGL:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Unglued booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+P02:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Portal Second Age booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+EXO:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Exodus booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+STH:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Stronghold booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+TMP:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Tempest booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+WTH:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Weatherlight booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+PTK:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Portal Three Kingdoms booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+POR:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Portal booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+5ED:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Fifth Edition booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+VIS:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Visions booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+MIR:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Mirage booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+REN:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Renaissance booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+RIN:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Rinascimento booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+ALL:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Alliances booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+HML:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Homelands booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+CHR:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Chronicles booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+ICE:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Ice Age booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+4ED:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Fourth Edition booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+FEM:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Fallen Empires booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+DRK:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: The Dark booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+SUM:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Summer Magic booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+LEG:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Legends booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+3ED:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Revised Edition booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+ATQ:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Antiquities booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+ARN:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Arabian Nights booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+2ED:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Unlimited Edition booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+LEB:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Beta booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
+
+LEA:
+- key: draft_box
+  label: Draft Booster Box
+  ebay_query: Alpha booster box Magic the Gathering
+  product_kind: draft_box
+  default_sort: price
