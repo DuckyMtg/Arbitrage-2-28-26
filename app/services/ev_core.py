@@ -1286,12 +1286,11 @@ def slot_mh3_traditional_foil(cfg: MH3Config = MH3) -> Slot:
     q_r,   q_r_fb = _pair("rare")
     q_m,   q_m_fb = _pair("mythic")
     q_bl = _q(f"set:{sc}", "is:borderless", "(rarity:rare or rarity:mythic)",
-              "is:booster", "game:paper", "finish:foil")
+              "game:paper", "finish:foil")
     q_bl_fb = _q(f"set:{sc}", "is:borderless",
-                 "(rarity:rare or rarity:mythic)", "is:booster", "game:paper")
-    q_retro = _q(f"set:{sc}", "frame:1997", "is:booster",
-                 "game:paper", "finish:foil")
-    q_retro_fb = _q(f"set:{sc}", "frame:1997", "is:booster", "game:paper")
+                 "(rarity:rare or rarity:mythic)", "game:paper")
+    q_retro = _q(f"set:{sc}", "frame:1997", "game:paper", "finish:foil")
+    q_retro_fb = _q(f"set:{sc}", "frame:1997", "game:paper")
     q_cmdr = _q("set:m3c", "rarity:mythic", "game:paper", "finish:foil")
     q_cmdr_fb = _q("set:m3c", "rarity:mythic", "game:paper")
     q_snow = _q(f"set:{sc}", 'name:"Snow-Covered Wastes"',
