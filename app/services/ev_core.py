@@ -962,18 +962,15 @@ def slot_otj_breaking_news() -> Slot:
     p_u = 80 / 155
     p_r = 60 / 155
     p_m = 15 / 155
-    q_u = _q("set:otp", "rarity:uncommon", "is:booster", "game:paper")
-    q_r = _q("set:otp", "rarity:rare",     "is:booster", "game:paper")
-    q_m = _q("set:otp", "rarity:mythic",   "is:booster", "game:paper")
+    q_u = _q("set:otp", "rarity:uncommon", "game:paper")
+    q_r = _q("set:otp", "rarity:rare",     "game:paper")
+    q_m = _q("set:otp", "rarity:mythic",   "game:paper")
     return Slot(
         name="OTP (Breaking News) dedicated slot",
         outcomes=[
-            (p_u, QueryPool("otp_u", q_u, fallback=_q(
-                "set:otp", "rarity:uncommon", "game:paper"), unique="prints", price_field="usd")),
-            (p_r, QueryPool("otp_r", q_r, fallback=_q("set:otp", "rarity:rare",
-             "game:paper"), unique="prints", price_field="usd")),
-            (p_m, QueryPool("otp_m", q_m, fallback=_q("set:otp", "rarity:mythic",
-             "game:paper"), unique="prints", price_field="usd")),
+            (p_u, QueryPool("otp_u", q_u, unique="prints", price_field="usd")),
+            (p_r, QueryPool("otp_r", q_r, unique="prints", price_field="usd")),
+            (p_m, QueryPool("otp_m", q_m, unique="prints", price_field="usd")),
         ],
         strict_probs=True,
     )
@@ -1150,12 +1147,8 @@ def slot_mh3_main_rm(cfg: MH3Config = MH3) -> Slot:
                     "game:paper", "-frame:1997", "-is:borderless")
     q_m_reg_fb = _q(f"set:{sc}", "rarity:mythic",
                     "game:paper", "-frame:1997", "-is:borderless")
-    q_r_retro = _q(f"set:{sc}", "frame:1997",
-                   "rarity:rare",   "is:booster", "game:paper")
-    q_m_retro = _q(f"set:{sc}", "frame:1997",
-                   "rarity:mythic", "is:booster", "game:paper")
-    q_r_retro_fb = _q(f"set:{sc}", "frame:1997", "rarity:rare",   "game:paper")
-    q_m_retro_fb = _q(f"set:{sc}", "frame:1997", "rarity:mythic", "game:paper")
+    q_r_retro = _q(f"set:{sc}", "frame:1997", "rarity:rare",   "game:paper")
+    q_m_retro = _q(f"set:{sc}", "frame:1997", "rarity:mythic", "game:paper")
     q_bl = _q(f"set:{sc}", "is:borderless",
               "(rarity:rare or rarity:mythic)", "game:paper")
     return Slot(
@@ -1166,9 +1159,9 @@ def slot_mh3_main_rm(cfg: MH3Config = MH3) -> Slot:
             (cfg.main_p_m,               QueryPool("mh3_main_regular_m",  q_m_reg,
              fallback=q_m_reg_fb,  unique="prints", price_field="usd")),
             (p_retro_r,                  QueryPool("mh3_main_retro_r",    q_r_retro,
-             fallback=q_r_retro_fb, unique="prints", price_field="usd")),
+             unique="prints", price_field="usd")),
             (p_retro_m,                  QueryPool("mh3_main_retro_m",    q_m_retro,
-             fallback=q_m_retro_fb, unique="prints", price_field="usd")),
+             unique="prints", price_field="usd")),
             (cfg.main_p_borderless_total, QueryPool("mh3_main_borderless", q_bl,
              fallback=q_bl,         unique="prints", price_field="usd")),
         ],
@@ -1196,9 +1189,7 @@ def slot_mh3_new_to_modern(cfg: MH3Config = MH3) -> Slot:
     q_m_reg_fb = _q(f"set:{sc}", "-is:reprint", "rarity:mythic",
                     "game:paper", "-frame:1997", "-is:borderless")
     q_retro_any = _q(f"set:{sc}", "-is:reprint", "frame:1997",
-                     "(rarity:rare or rarity:mythic)", "is:booster", "game:paper")
-    q_retro_any_fb = _q(f"set:{sc}", "-is:reprint", "frame:1997",
-                        "(rarity:rare or rarity:mythic)", "game:paper")
+                     "(rarity:rare or rarity:mythic)", "game:paper")
     q_bl_any = _q(f"set:{sc}", "-is:reprint", "is:borderless",
                   "(rarity:rare or rarity:mythic)", "game:paper")
     q_bl_m = _q(f"set:{sc}", "-is:reprint", "is:borderless",
@@ -1213,7 +1204,7 @@ def slot_mh3_new_to_modern(cfg: MH3Config = MH3) -> Slot:
             (cfg.ntm_p_m, QueryPool("mh3_ntm_m_reg",         q_m_reg,
              fallback=q_m_reg_fb,     unique="prints", price_field="usd")),
             (p_retro_r_m, QueryPool("mh3_ntm_retro_any",     q_retro_any,
-             fallback=q_retro_any_fb, unique="prints", price_field="usd")),
+             unique="prints", price_field="usd")),
             (p_bl_r,      QueryPool("mh3_ntm_borderless_any", q_bl_any,
              fallback=q_bl_any,       unique="prints", price_field="usd")),
             (p_bl_m,      QueryPool("mh3_ntm_borderless_m",   q_bl_m,
@@ -1238,11 +1229,8 @@ def slot_mh3_wildcard(cfg: MH3Config = MH3) -> Slot:
     q_r,   q_r_fb = _q_pair("rare")
     q_m,   q_m_fb = _q_pair("mythic")
     q_bl_rm = _q(f"set:{sc}", "is:borderless",
-                 "(rarity:rare or rarity:mythic)", "is:booster", "game:paper")
-    q_bl_rm_fb = _q(f"set:{sc}", "is:borderless",
-                    "(rarity:rare or rarity:mythic)", "game:paper")
-    q_retro = _q(f"set:{sc}", "frame:1997", "is:booster", "game:paper")
-    q_retro_fb = _q(f"set:{sc}", "frame:1997", "game:paper")
+                 "(rarity:rare or rarity:mythic)", "game:paper")
+    q_retro = _q(f"set:{sc}", "frame:1997", "game:paper")
     q_cmdr = _q("set:m3c", "rarity:mythic", "game:paper")
     q_snow = _q(f"set:{sc}", 'name:"Snow-Covered Wastes"', "game:paper")
     return Slot(
@@ -1259,9 +1247,9 @@ def slot_mh3_wildcard(cfg: MH3Config = MH3) -> Slot:
             (cfg.wc_p_m,             QueryPool("mh3_wc_m",            q_m,
              fallback=q_m_fb,    unique="prints", price_field="usd")),
             (cfg.wc_p_borderless_rm, QueryPool("mh3_wc_borderless_rm", q_bl_rm,
-             fallback=q_bl_rm_fb, unique="prints", price_field="usd")),
+             unique="prints", price_field="usd")),
             (cfg.wc_p_retro,         QueryPool("mh3_wc_retro_any",    q_retro,
-             fallback=q_retro_fb, unique="prints", price_field="usd")),
+             unique="prints", price_field="usd")),
             (cfg.wc_p_cmdr_mythic,   QueryPool("mh3_wc_cmdr_mythic",  q_cmdr,
              fallback=q_cmdr,    unique="prints", price_field="usd")),
             (cfg.wc_p_snow_wastes,   QueryPool("mh3_wc_snow_wastes",  q_snow,
@@ -1286,12 +1274,11 @@ def slot_mh3_traditional_foil(cfg: MH3Config = MH3) -> Slot:
     q_r,   q_r_fb = _pair("rare")
     q_m,   q_m_fb = _pair("mythic")
     q_bl = _q(f"set:{sc}", "is:borderless", "(rarity:rare or rarity:mythic)",
-              "is:booster", "game:paper", "finish:foil")
+              "game:paper", "finish:foil")
     q_bl_fb = _q(f"set:{sc}", "is:borderless",
-                 "(rarity:rare or rarity:mythic)", "is:booster", "game:paper")
-    q_retro = _q(f"set:{sc}", "frame:1997", "is:booster",
-                 "game:paper", "finish:foil")
-    q_retro_fb = _q(f"set:{sc}", "frame:1997", "is:booster", "game:paper")
+                 "(rarity:rare or rarity:mythic)", "game:paper")
+    q_retro = _q(f"set:{sc}", "frame:1997", "game:paper", "finish:foil")
+    q_retro_fb = _q(f"set:{sc}", "frame:1997", "game:paper")
     q_cmdr = _q("set:m3c", "rarity:mythic", "game:paper", "finish:foil")
     q_cmdr_fb = _q("set:m3c", "rarity:mythic", "game:paper")
     q_snow = _q(f"set:{sc}", 'name:"Snow-Covered Wastes"',

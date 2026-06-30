@@ -414,7 +414,7 @@ def model_fin_collector_box() -> ProductModel:
     sc = "fin"
     bf_filt = "(is:showcase or is:extendedart or is:borderless)"
     q_tta = _q(f"set:{sc}", "(is:showcase or is:extendedart)", "(rarity:rare or rarity:mythic)", "game:paper", "lang:en")
-    q_fic = _q(f"set:{sc}", "is:showcase", "rarity:rare", "game:paper", "lang:en")
+    q_fic = _q(f"set:{sc}", "is:extendedart", "rarity:rare", "game:paper", "lang:en")
     # NF BF RM: 3× in 75.36% of packs, 2× in 24.64% → average weight 2.754
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fc(sc, 3),
@@ -516,7 +516,7 @@ def model_lci_collector_box() -> ProductModel:
 # ---------------------------------------------------------------------------
 def model_ltr_collector_box() -> ProductModel:
     sc = "ltr"
-    q_sr  = _q(f"set:{sc}", '"Sol Ring"', "game:paper", "lang:en")
+    q_sr  = _q("set:ltc", "sol ring", "game:paper", "lang:en")
     q_fsc_rm   = _q(f"set:{sc}", "rarity:rare",   "is:showcase", "game:paper", "lang:en")
     q_fsc_rm_m = _q(f"set:{sc}", "rarity:mythic", "is:showcase", "game:paper", "lang:en")
     p_fsc_r, p_fsc_m = _old(sc, 4 / 131, 2 / 131)
@@ -710,8 +710,8 @@ def model_rvr_collector_box() -> ProductModel:
     sc = "rvr"
     q_ret_cu = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "frame:1997", "game:paper", "lang:en")
     p_fsc_r, p_fsc_m = _old(sc, 2 / 199, 1 / 199)
-    q_fsc_r = _q(f"set:{sc}", "rarity:rare",   "is:extendedart", "game:paper", "-is:serialized", "lang:en")
-    q_fsc_m = _q(f"set:{sc}", "rarity:mythic", "is:extendedart", "game:paper", "-is:serialized", "lang:en")
+    q_fsc_r = _q(f"set:{sc}", "rarity:rare",   "frame:1997", "game:paper", "-is:serialized", "lang:en")
+    q_fsc_m = _q(f"set:{sc}", "rarity:mythic", "frame:1997", "game:paper", "-is:serialized", "lang:en")
     q_ser   = _q(f"set:{sc}", "is:serialized", "game:paper")
     var_slot = Slot(
         "Foil Showcase R/M (99%) / Serialised (1%)",
@@ -764,7 +764,7 @@ def model_stx_collector_box() -> ProductModel:
     q_sta_rm = _q("set:sta", "(rarity:rare or rarity:mythic)", "game:paper", "lang:en")
     q_ext_cmd = _q(f"set:{sc}", "rarity:rare", "is:extendedart", "game:paper", "lang:en")
     q_ext_bl  = _q(f"set:{sc}", "(rarity:rare or rarity:mythic)", "is:borderless", "game:paper", "lang:en")
-    q_less    = _q(f"set:{sc}", "rarity:uncommon", "is:extendedart", "game:paper", "lang:en")  # lessons
+    q_less    = _q(f"set:{sc}", "rarity:uncommon", "type:Lesson", "game:paper", "lang:en")
     q_alt_r   = _q(f"set:{sc}", "rarity:rare",   "is:extendedart", "game:paper", "lang:en")
     q_alt_m   = _q(f"set:{sc}", "rarity:mythic", "is:extendedart", "game:paper", "lang:en")
     p_r, p_m = _old(sc, 2 / 159, 1 / 159)
