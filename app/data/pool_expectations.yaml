@@ -21,3 +21,7 @@
 # OTJ|box|otj_main_rare:
 #   expected: 60
 #   source: "Scryfall 2025-06-30"
+
+FIN|collector_box|fin_fic_f:
+  expected: 44
+  source: "Scryfall 2026-06-30"

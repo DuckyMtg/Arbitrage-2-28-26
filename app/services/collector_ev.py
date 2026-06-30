@@ -414,7 +414,7 @@ def model_fin_collector_box() -> ProductModel:
     sc = "fin"
     bf_filt = "(is:showcase or is:extendedart or is:borderless)"
     q_tta = _q(f"set:{sc}", "(is:showcase or is:extendedart)", "(rarity:rare or rarity:mythic)", "game:paper", "lang:en")
-    q_fic = _q(f"set:{sc}", "is:showcase", "rarity:rare", "game:paper", "lang:en")
+    q_fic = _q(f"set:{sc}", "is:extendedart", "rarity:rare", "game:paper", "lang:en")
     # NF BF RM: 3× in 75.36% of packs, 2× in 24.64% → average weight 2.754
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fc(sc, 3),
