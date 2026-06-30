@@ -22,6 +22,18 @@
 #   expected: 60
 #   source: "Scryfall 2025-06-30"
 
+OTJ|box|otp_m:
+  expected: 30
+  source: "Scryfall 2026-06-30"
+
+OTJ|box|otp_r:
+  expected: 30
+  source: "Scryfall 2026-06-30"
+
+OTJ|box|otp_u:
+  expected: 20
+  source: "Scryfall 2026-06-30"
+
 STX|collector_box|stx_less:
   expected: 5
   source: "Scryfall 2026-06-30"

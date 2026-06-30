@@ -962,18 +962,15 @@ def slot_otj_breaking_news() -> Slot:
     p_u = 80 / 155
     p_r = 60 / 155
     p_m = 15 / 155
-    q_u = _q("set:otp", "rarity:uncommon", "is:booster", "game:paper")
-    q_r = _q("set:otp", "rarity:rare",     "is:booster", "game:paper")
-    q_m = _q("set:otp", "rarity:mythic",   "is:booster", "game:paper")
+    q_u = _q("set:otp", "rarity:uncommon", "game:paper")
+    q_r = _q("set:otp", "rarity:rare",     "game:paper")
+    q_m = _q("set:otp", "rarity:mythic",   "game:paper")
     return Slot(
         name="OTP (Breaking News) dedicated slot",
         outcomes=[
-            (p_u, QueryPool("otp_u", q_u, fallback=_q(
-                "set:otp", "rarity:uncommon", "game:paper"), unique="prints", price_field="usd")),
-            (p_r, QueryPool("otp_r", q_r, fallback=_q("set:otp", "rarity:rare",
-             "game:paper"), unique="prints", price_field="usd")),
-            (p_m, QueryPool("otp_m", q_m, fallback=_q("set:otp", "rarity:mythic",
-             "game:paper"), unique="prints", price_field="usd")),
+            (p_u, QueryPool("otp_u", q_u, unique="prints", price_field="usd")),
+            (p_r, QueryPool("otp_r", q_r, unique="prints", price_field="usd")),
+            (p_m, QueryPool("otp_m", q_m, unique="prints", price_field="usd")),
         ],
         strict_probs=True,
     )
