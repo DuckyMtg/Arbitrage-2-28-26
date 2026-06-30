@@ -141,6 +141,8 @@ def classify(
     if primary_count == _FETCH_ERROR:
         return "FETCH_ERROR"
     if primary_count == 0:
+        if expected_count == 0:
+            return "PASS"
         if fallback_count is None or fallback_count == 0:
             return "FAIL_ZERO"
         return "FALLBACK_USED"

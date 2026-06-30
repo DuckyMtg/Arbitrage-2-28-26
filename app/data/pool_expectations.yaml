@@ -22,6 +22,10 @@
 #   expected: 60
 #   source: "Scryfall 2025-06-30"
 
+MH2|collector_box|mh2_ext_m:
+  expected: 0
+  source: "Scryfall 2026-06-30 — MH2 has no extended-art mythics"
+
 LTR|collector_box|ltr_sol:
   expected: 1
   source: "Scryfall 2026-06-30"
