@@ -22,6 +22,10 @@
 #   expected: 60
 #   source: "Scryfall 2025-06-30"
 
+STX|collector_box|stx_less:
+  expected: 5
+  source: "Scryfall 2026-06-30"
+
 RVR|collector_box|rvr_fsc_r:
   expected: 59
   source: "Scryfall 2026-06-30"

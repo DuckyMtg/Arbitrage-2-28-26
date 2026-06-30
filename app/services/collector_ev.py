@@ -764,7 +764,7 @@ def model_stx_collector_box() -> ProductModel:
     q_sta_rm = _q("set:sta", "(rarity:rare or rarity:mythic)", "game:paper", "lang:en")
     q_ext_cmd = _q(f"set:{sc}", "rarity:rare", "is:extendedart", "game:paper", "lang:en")
     q_ext_bl  = _q(f"set:{sc}", "(rarity:rare or rarity:mythic)", "is:borderless", "game:paper", "lang:en")
-    q_less    = _q(f"set:{sc}", "rarity:uncommon", "is:extendedart", "game:paper", "lang:en")  # lessons
+    q_less    = _q(f"set:{sc}", "rarity:uncommon", "type:Lesson", "game:paper", "lang:en")
     q_alt_r   = _q(f"set:{sc}", "rarity:rare",   "is:extendedart", "game:paper", "lang:en")
     q_alt_m   = _q(f"set:{sc}", "rarity:mythic", "is:extendedart", "game:paper", "lang:en")
     p_r, p_m = _old(sc, 2 / 159, 1 / 159)
