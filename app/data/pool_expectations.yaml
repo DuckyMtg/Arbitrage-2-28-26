@@ -101,3 +101,11 @@ WOE|box|wot_anime_m:
 WOE|box|wot_anime_r:
   expected: 4
   source: "Scryfall 2026-06-30 — anime frame CN 64-83; Primal Vigor has no anime print in WOT"
+
+WOE|box|wot_m:
+  expected: 15
+  source: "Scryfall 2026-06-30 — standard-frame mythics CN<=63 only"
+
+WOE|draft_box|woe_draft_wot_am:
+  expected: 15
+  source: "Scryfall 2026-06-30 — anime-frame mythics CN 64-83"

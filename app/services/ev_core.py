@@ -845,7 +845,7 @@ def slot_woe_draft_enchanting_tales() -> Slot:
     q_u = _q("set:wot", "rarity:uncommon", "cn<=63", "game:paper")
     q_r = _q("set:wot", "rarity:rare",     "cn<=63", "game:paper")
     q_ar = _q("set:wot", "rarity:rare",     "cn>=64", "game:paper")
-    q_am = _q("set:wot", "rarity:mythic",             "game:paper")
+    q_am = _q("set:wot", "rarity:mythic", "cn>=64", "cn<=83", "game:paper")
     return Slot(
         name="Enchanting Tales / WOT (always present)",
         outcomes=[
@@ -1052,7 +1052,7 @@ def slot_woe_enchanting_tales() -> Slot:
     w = _WOT_RARITY_WEIGHTS
     q_u = _q("set:wot", "rarity:uncommon", "finish:nonfoil", "game:paper")
     q_r = _q("set:wot", "rarity:rare",     "finish:nonfoil", "game:paper")
-    q_m = _q("set:wot", "rarity:mythic",   "finish:nonfoil", "game:paper")
+    q_m = _q("set:wot", "rarity:mythic",   "cn<=63", "finish:nonfoil", "game:paper")
     q_anime_r = _q(f"({name_or_clause(_WOT_ANIME_RARES)})",
                    "set:wot", "cn>=64", "cn<=83", "finish:nonfoil", "game:paper")
     q_anime_m = _q(f"({name_or_clause(_WOT_ANIME_MYTHICS)})",
