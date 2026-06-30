@@ -1,2 +1,3 @@
-# Generated output from gate1_composition.py — do not commit
-*.csv
+# Generated output — do not commit
+*
+!.gitignore
