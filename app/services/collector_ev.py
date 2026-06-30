@@ -516,7 +516,7 @@ def model_lci_collector_box() -> ProductModel:
 # ---------------------------------------------------------------------------
 def model_ltr_collector_box() -> ProductModel:
     sc = "ltr"
-    q_sr  = _q(f"set:{sc}", '"Sol Ring"', "game:paper", "lang:en")
+    q_sr  = _q("set:ltc", "sol ring", "game:paper", "lang:en")
     q_fsc_rm   = _q(f"set:{sc}", "rarity:rare",   "is:showcase", "game:paper", "lang:en")
     q_fsc_rm_m = _q(f"set:{sc}", "rarity:mythic", "is:showcase", "game:paper", "lang:en")
     p_fsc_r, p_fsc_m = _old(sc, 4 / 131, 2 / 131)
