@@ -295,6 +295,11 @@ MOM:
   ev_kind: collector_box
   product_kind: collector_box
   default_sort: price
+- key: jumpstart_box
+  label: Jumpstart Booster Display
+  ebay_query: March of the Machine jumpstart booster display MTG
+  product_kind: draft_box
+  default_sort: price
 LTR:
 - key: set_box
   label: Set Booster Box
@@ -316,6 +321,16 @@ LTR:
   ev_set_code: LTR
   ev_kind: collector_box
   product_kind: collector_box
+  default_sort: price
+- key: jumpstart_box
+  label: Jumpstart Booster Display
+  ebay_query: Lord of the Rings jumpstart booster display MTG
+  product_kind: draft_box
+  default_sort: price
+- key: jumpstart_v2_box
+  label: Jumpstart Booster Display Volume 2
+  ebay_query: Lord of the Rings Jumpstart Volume 2 booster display MTG
+  product_kind: draft_box
   default_sort: price
 CMM:
 - key: set_box
@@ -383,6 +398,11 @@ ONE:
   ev_kind: collector_box
   product_kind: collector_box
   default_sort: price
+- key: jumpstart_box
+  label: Jumpstart Booster Display
+  ebay_query: Phyrexia All Will Be One jumpstart booster display MTG
+  product_kind: draft_box
+  default_sort: price
 STX:
 - key: set_box
   label: Set Booster Box
@@ -426,6 +446,11 @@ BRO:
   ev_set_code: BRO
   ev_kind: collector_box
   product_kind: collector_box
+  default_sort: price
+- key: jumpstart_box
+  label: Jumpstart Booster Display
+  ebay_query: The Brothers War jumpstart booster display MTG
+  product_kind: draft_box
   default_sort: price
 MH2:
 - key: draft_box
@@ -585,41 +610,6 @@ DMU:
 - key: jumpstart_box
   label: Jumpstart Booster Display
   ebay_query: Dominaria United jumpstart booster display MTG
-  product_kind: draft_box
-  default_sort: price
-
-# ── Part B: Missing jumpstart entries for sets already in catalog ─────────────
-
-BRO:
-- key: jumpstart_box
-  label: Jumpstart Booster Display
-  ebay_query: The Brothers War jumpstart booster display MTG
-  product_kind: draft_box
-  default_sort: price
-
-ONE:
-- key: jumpstart_box
-  label: Jumpstart Booster Display
-  ebay_query: Phyrexia All Will Be One jumpstart booster display MTG
-  product_kind: draft_box
-  default_sort: price
-
-MOM:
-- key: jumpstart_box
-  label: Jumpstart Booster Display
-  ebay_query: March of the Machine jumpstart booster display MTG
-  product_kind: draft_box
-  default_sort: price
-
-LTR:
-- key: jumpstart_box
-  label: Jumpstart Booster Display
-  ebay_query: Lord of the Rings jumpstart booster display MTG
-  product_kind: draft_box
-  default_sort: price
-- key: jumpstart_v2_box
-  label: Jumpstart Booster Display Volume 2
-  ebay_query: Lord of the Rings Jumpstart Volume 2 booster display MTG
   product_kind: draft_box
   default_sort: price
 
