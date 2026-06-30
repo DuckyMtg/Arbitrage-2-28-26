@@ -1,0 +1,23 @@
+# Gate 1 composition expectations — ground-truth oracle for QueryPool card counts.
+#
+# Format: each key is "{SET_CODE}|{kind}|{pool_label}", value has:
+#   expected: <int>   # expected primary_count from Scryfall
+#   source: <str>     # where this count was verified (e.g. "Scryfall 2025-06-30")
+#
+# Status classification uses this file:
+#   PASS    — primary_count matches expected
+#   MISMATCH — primary_count != expected
+#   Pools with no entry here are UNVERIFIED (harness still runs and reports them).
+#
+# This file is meant to grow as pools are manually verified. Hand-edit freely.
+#
+# Examples (uncomment to activate):
+# BLB|box|blb_main_rare:
+#   expected: 60
+#   source: "Scryfall 2025-06-30"
+# BLB|box|blb_main_mythic:
+#   expected: 20
+#   source: "Scryfall 2025-06-30"
+# OTJ|box|otj_main_rare:
+#   expected: 60
+#   source: "Scryfall 2025-06-30"
