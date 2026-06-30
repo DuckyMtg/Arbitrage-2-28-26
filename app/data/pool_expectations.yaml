@@ -22,6 +22,14 @@
 #   expected: 60
 #   source: "Scryfall 2025-06-30"
 
+RVR|collector_box|rvr_fsc_r:
+  expected: 59
+  source: "Scryfall 2026-06-30"
+
+RVR|collector_box|rvr_fsc_m:
+  expected: 16
+  source: "Scryfall 2026-06-30"
+
 ONE|collector_box|one_cmd_m:
   expected: 0
   source: "Scryfall 2026-06-30 — ONE has no extended-art mythics"

@@ -710,8 +710,8 @@ def model_rvr_collector_box() -> ProductModel:
     sc = "rvr"
     q_ret_cu = _q(f"set:{sc}", "(rarity:common or rarity:uncommon)", "frame:1997", "game:paper", "lang:en")
     p_fsc_r, p_fsc_m = _old(sc, 2 / 199, 1 / 199)
-    q_fsc_r = _q(f"set:{sc}", "rarity:rare",   "is:extendedart", "game:paper", "-is:serialized", "lang:en")
-    q_fsc_m = _q(f"set:{sc}", "rarity:mythic", "is:extendedart", "game:paper", "-is:serialized", "lang:en")
+    q_fsc_r = _q(f"set:{sc}", "rarity:rare",   "frame:1997", "game:paper", "-is:serialized", "lang:en")
+    q_fsc_m = _q(f"set:{sc}", "rarity:mythic", "frame:1997", "game:paper", "-is:serialized", "lang:en")
     q_ser   = _q(f"set:{sc}", "is:serialized", "game:paper")
     var_slot = Slot(
         "Foil Showcase R/M (99%) / Serialised (1%)",
