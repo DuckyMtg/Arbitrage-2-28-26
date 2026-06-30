@@ -54,6 +54,26 @@ ONE|collector_box|one_ext_m:
   expected: 0
   source: "Scryfall 2026-06-30 — ONE has no extended-art mythics"
 
+MH3|draft_box|mh3_main_retro_r:
+  expected: 27
+  source: "Scryfall 2026-06-30"
+
+MH3|draft_box|mh3_main_retro_m:
+  expected: 9
+  source: "Scryfall 2026-06-30"
+
+MH3|draft_box|mh3_ntm_retro_any:
+  expected: 27
+  source: "Scryfall 2026-06-30"
+
+MH3|draft_box|mh3_wc_borderless_rm:
+  expected: 77
+  source: "Scryfall 2026-06-30"
+
+MH3|draft_box|mh3_wc_retro_any:
+  expected: 59
+  source: "Scryfall 2026-06-30"
+
 MH3|draft_box|mh3_foil_borderless:
   expected: 68
   source: "Scryfall 2026-06-30"
