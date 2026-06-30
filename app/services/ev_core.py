@@ -1056,7 +1056,7 @@ def slot_woe_enchanting_tales() -> Slot:
     q_anime_r = _q(f"({name_or_clause(_WOT_ANIME_RARES)})",
                    "set:wot", "finish:nonfoil", "game:paper")
     q_anime_m = _q(f"({name_or_clause(_WOT_ANIME_MYTHICS)})",
-                   "set:wot", "finish:nonfoil", "game:paper")
+                   "set:wot", "cn>=64", "cn<=83", "finish:nonfoil", "game:paper")
     return Slot(
         name="Enchanting Tales (dedicated)",
         outcomes=[
