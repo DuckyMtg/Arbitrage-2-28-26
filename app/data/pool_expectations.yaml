@@ -22,6 +22,14 @@
 #   expected: 60
 #   source: "Scryfall 2025-06-30"
 
+ONE|collector_box|one_cmd_m:
+  expected: 0
+  source: "Scryfall 2026-06-30 — ONE has no extended-art mythics"
+
+ONE|collector_box|one_ext_m:
+  expected: 0
+  source: "Scryfall 2026-06-30 — ONE has no extended-art mythics"
+
 MH3|draft_box|mh3_foil_borderless:
   expected: 68
   source: "Scryfall 2026-06-30"
