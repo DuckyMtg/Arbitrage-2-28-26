@@ -16,6 +16,56 @@ MH3:
   ev_kind: collector_box
   product_kind: collector_box
   default_sort: price
+- key: starter_kit
+  label: Starter Kit
+  ebay_query: Modern Horizons 3 starter kit MTG
+  product_kind: starter_kit
+  default_sort: price
+- key: creative_energy
+  label: Creative Energy
+  ebay_query: Creative Energy Modern Horizons 3 Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: eldrazi_incursion
+  label: Eldrazi Incursion
+  ebay_query: Eldrazi Incursion Modern Horizons 3 Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: graveyard_overdrive
+  label: Graveyard Overdrive
+  ebay_query: Graveyard Overdrive Modern Horizons 3 Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: tricky_terrain
+  label: Tricky Terrain
+  ebay_query: Tricky Terrain Modern Horizons 3 Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: creative_energy_ce
+  label: Creative Energy (Collector's Edition)
+  ebay_query: Creative Energy Modern Horizons 3 Commander Collectors Edition MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: eldrazi_incursion_ce
+  label: Eldrazi Incursion (Collector's Edition)
+  ebay_query: Eldrazi Incursion Modern Horizons 3 Commander Collectors Edition MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: graveyard_overdrive_ce
+  label: Graveyard Overdrive (Collector's Edition)
+  ebay_query: Graveyard Overdrive Modern Horizons 3 Commander Collectors Edition MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: tricky_terrain_ce
+  label: Tricky Terrain (Collector's Edition)
+  ebay_query: Tricky Terrain Modern Horizons 3 Commander Collectors Edition MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Deck Display (Set of 4)
+  ebay_query: Modern Horizons 3 Commander Deck Display MTG
+  product_kind: commander_deck_set
+  default_sort: price
 OTJ:
 - key: play_box
   label: Play Booster Box
@@ -33,6 +83,36 @@ OTJ:
   ev_set_code: OTJ
   ev_kind: collector_box
   product_kind: collector_box
+  default_sort: price
+- key: desert_bloom
+  label: Desert Bloom
+  ebay_query: Desert Bloom Outlaws Thunder Junction Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: grand_larceny
+  label: Grand Larceny
+  ebay_query: Grand Larceny Outlaws Thunder Junction Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: most_wanted
+  label: Most Wanted
+  ebay_query: Most Wanted Outlaws Thunder Junction Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: quick_draw
+  label: Quick Draw
+  ebay_query: Quick Draw Outlaws Thunder Junction Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: grand_larceny_deluxe
+  label: Grand Larceny (Deluxe Commander Kit)
+  ebay_query: Grand Larceny Deluxe Commander Kit Outlaws Thunder Junction MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Deck Display (Set of 4)
+  ebay_query: Outlaws Thunder Junction Commander Deck Display MTG
+  product_kind: commander_deck_set
   default_sort: price
 WOE:
 - key: set_box
@@ -58,6 +138,21 @@ WOE:
   ev_set_code: WOE
   ev_kind: collector_box
   product_kind: collector_box
+  default_sort: price
+- key: fae_dominion
+  label: Fae Dominion
+  ebay_query: Fae Dominion Wilds of Eldraine Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: virtue_and_valor
+  label: Virtue and Valor
+  ebay_query: Virtue and Valor Wilds of Eldraine Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Decks Set of 2
+  ebay_query: Wilds of Eldraine Commander Deck Set of 2 MTG
+  product_kind: commander_deck_set
   default_sort: price
 ECL:
 - key: play_box
@@ -104,6 +199,56 @@ BLB:
   ev_kind: collector_box
   product_kind: collector_box
   default_sort: price
+- key: bundle
+  label: Bundle
+  ebay_query: Bloomburrow bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: starter_kit
+  label: Starter Kit
+  ebay_query: Bloomburrow starter kit MTG
+  product_kind: starter_kit
+  default_sort: price
+- key: animated_army
+  label: Animated Army
+  ebay_query: Animated Army Bloomburrow Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: family_matters
+  label: Family Matters
+  ebay_query: Family Matters Bloomburrow Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: peace_offering
+  label: Peace Offering
+  ebay_query: Peace Offering Bloomburrow Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: squirreled_away
+  label: Squirreled Away
+  ebay_query: Squirreled Away Bloomburrow Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: animated_army_deluxe
+  label: Animated Army (Deluxe Commander Kit)
+  ebay_query: Animated Army Deluxe Commander Kit Bloomburrow MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: family_matters_deluxe
+  label: Family Matters (Deluxe Commander Kit)
+  ebay_query: Family Matters Deluxe Commander Kit Bloomburrow MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: squirreled_away_deluxe
+  label: Squirreled Away (Deluxe Commander Kit)
+  ebay_query: Squirreled Away Deluxe Commander Kit Bloomburrow MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Deck Display (Set of 4)
+  ebay_query: Bloomburrow Commander Deck Display MTG
+  product_kind: commander_deck_set
+  default_sort: price
 DSK:
 - key: play_box
   label: Play Booster Box
@@ -118,6 +263,31 @@ DSK:
   ev_set_code: DSK
   ev_kind: collector_box
   product_kind: collector_box
+  default_sort: price
+- key: bundle
+  label: Bundle
+  ebay_query: Duskmourn bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: death_toll
+  label: Death Toll
+  ebay_query: Death Toll Duskmourn Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: endless_punishment
+  label: Endless Punishment
+  ebay_query: Endless Punishment Duskmourn Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: miracle_worker
+  label: Miracle Worker
+  ebay_query: Miracle Worker Duskmourn Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Deck Display (Set of 3)
+  ebay_query: Duskmourn Commander Deck Display MTG
+  product_kind: commander_deck_set
   default_sort: price
 FDN:
 - key: play_box
@@ -134,6 +304,36 @@ FDN:
   ev_kind: collector_box
   product_kind: collector_box
   default_sort: price
+- key: bundle
+  label: Bundle
+  ebay_query: Foundations bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: calling_all_angels
+  label: Calling All Angels
+  ebay_query: Calling All Angels Foundations Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: keen_engineering
+  label: Keen Engineering
+  ebay_query: Keen Engineering Foundations Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: tramplesaurus_rex
+  label: Tramplesaurus Rex
+  ebay_query: Tramplesaurus Rex Foundations Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: wretched_ranks
+  label: Wretched Ranks
+  ebay_query: Wretched Ranks Foundations Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Deck Display (Set of 4)
+  ebay_query: Foundations Commander Deck Display MTG
+  product_kind: commander_deck_set
+  default_sort: price
 DFT:
 - key: play_box
   label: Play Booster Box
@@ -148,6 +348,26 @@ DFT:
   ev_set_code: DFT
   ev_kind: collector_box
   product_kind: collector_box
+  default_sort: price
+- key: bundle
+  label: Bundle
+  ebay_query: Aetherdrift bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: eternal_might
+  label: Eternal Might
+  ebay_query: Eternal Might Aetherdrift Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: living_energy
+  label: Living Energy
+  ebay_query: Living Energy Aetherdrift Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Decks Set of 2
+  ebay_query: Aetherdrift Commander Deck Set of 2 MTG
+  product_kind: commander_deck_set
   default_sort: price
 INR:
 - key: play_box
@@ -164,6 +384,11 @@ INR:
   ev_kind: collector_box
   product_kind: collector_box
   default_sort: price
+- key: bundle
+  label: Bundle
+  ebay_query: Innistrad Remastered bundle MTG
+  product_kind: bundle
+  default_sort: price
 TDM:
 - key: play_box
   label: Play Booster Box
@@ -178,6 +403,41 @@ TDM:
   ev_set_code: TDM
   ev_kind: collector_box
   product_kind: collector_box
+  default_sort: price
+- key: bundle
+  label: Bundle
+  ebay_query: Tarkir Dragonstorm bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: abzan_armor
+  label: Abzan Armor
+  ebay_query: Abzan Armor Tarkir Dragonstorm Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: jeskai_striker
+  label: Jeskai Striker
+  ebay_query: Jeskai Striker Tarkir Dragonstorm Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: mardu_surge
+  label: Mardu Surge
+  ebay_query: Mardu Surge Tarkir Dragonstorm Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: sultai_arisen
+  label: Sultai Arisen
+  ebay_query: Sultai Arisen Tarkir Dragonstorm Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: temur_roar
+  label: Temur Roar
+  ebay_query: Temur Roar Tarkir Dragonstorm Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Deck Display (Set of 5)
+  ebay_query: Tarkir Dragonstorm Commander Deck Display MTG
+  product_kind: commander_deck_set
   default_sort: price
 FIN:
 - key: play_box
@@ -194,6 +454,91 @@ FIN:
   ev_kind: collector_box
   product_kind: collector_box
   default_sort: price
+- key: bundle
+  label: Bundle
+  ebay_query: Final Fantasy bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: scene_box_children
+  label: 'Scene Box: Children of Fate'
+  ebay_query: Final Fantasy scene box Children of Fate MTG
+  product_kind: scene_box
+  default_sort: price
+- key: starter_kit
+  label: Starter Kit
+  ebay_query: Final Fantasy starter kit MTG
+  product_kind: starter_kit
+  default_sort: price
+- key: counter_blitz
+  label: Counter Blitz
+  ebay_query: Counter Blitz Final Fantasy Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: limit_break
+  label: Limit Break
+  ebay_query: Limit Break Final Fantasy Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: revival_trance
+  label: Revival Trance
+  ebay_query: Revival Trance Final Fantasy Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: scions_and_spellcraft
+  label: Scions & Spellcraft
+  ebay_query: Scions Spellcraft Final Fantasy Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: counter_blitz_ce
+  label: Counter Blitz (Collector's Edition)
+  ebay_query: Counter Blitz Final Fantasy Commander Collectors Edition MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: limit_break_ce
+  label: Limit Break (Collector's Edition)
+  ebay_query: Limit Break Final Fantasy Commander Collectors Edition MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: revival_trance_ce
+  label: Revival Trance (Collector's Edition)
+  ebay_query: Revival Trance Final Fantasy Commander Collectors Edition MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: scions_spellcraft_ce
+  label: Scions & Spellcraft (Collector's Edition)
+  ebay_query: Scions Spellcraft Final Fantasy Commander Collectors Edition MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: limit_break_game_ed
+  label: FINAL FANTASY VII Limit Break (Game Edition)
+  ebay_query: Final Fantasy VII Limit Break Game Edition Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: counter_blitz_deluxe
+  label: Counter Blitz (Deluxe Kit)
+  ebay_query: Counter Blitz Deluxe Commander Kit Final Fantasy MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: limit_break_deluxe
+  label: Limit Break (Deluxe Kit)
+  ebay_query: Limit Break Deluxe Commander Kit Final Fantasy MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: revival_trance_deluxe
+  label: Revival Trance (Deluxe Kit)
+  ebay_query: Revival Trance Deluxe Commander Kit Final Fantasy MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: scions_spellcraft_deluxe
+  label: Scions & Spellcraft (Deluxe Kit)
+  ebay_query: Scions Spellcraft Deluxe Commander Kit Final Fantasy MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Deck Display (Set of 4)
+  ebay_query: Final Fantasy Commander Deck Display MTG
+  product_kind: commander_deck_set
+  default_sort: price
 EOE:
 - key: play_box
   label: Play Booster Box
@@ -209,6 +554,26 @@ EOE:
   ev_kind: collector_box
   product_kind: collector_box
   default_sort: price
+- key: bundle
+  label: Bundle
+  ebay_query: Edge of Eternities bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: counter_intelligence
+  label: Counter Intelligence
+  ebay_query: Counter Intelligence Edge of Eternities Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: world_shaper
+  label: World Shaper
+  ebay_query: World Shaper Edge of Eternities Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Decks Set of 2
+  ebay_query: Edge of Eternities Commander Deck Set of 2 MTG
+  product_kind: commander_deck_set
+  default_sort: price
 SPM:
 - key: play_box
   label: Play Booster Box
@@ -223,6 +588,21 @@ SPM:
   ev_set_code: SPM
   ev_kind: collector_box
   product_kind: collector_box
+  default_sort: price
+- key: bundle
+  label: Bundle
+  ebay_query: Spider-Man bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: scene_box_heroes
+  label: 'Scene Box: Heroes United'
+  ebay_query: Spider-Man scene box Heroes United MTG
+  product_kind: scene_box
+  default_sort: price
+- key: scene_box_villains
+  label: 'Scene Box: Villains Unleashed'
+  ebay_query: Spider-Man scene box Villains Unleashed MTG
+  product_kind: scene_box
   default_sort: price
 MB2:
 - key: display
@@ -257,6 +637,36 @@ MKM:
   ev_set_code: MKM
   ev_kind: collector_box
   product_kind: collector_box
+  default_sort: price
+- key: bundle
+  label: Bundle
+  ebay_query: Murders at Karlov Manor bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: blame_game
+  label: Blame Game
+  ebay_query: Blame Game Murders at Karlov Manor Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: deadly_disguise
+  label: Deadly Disguise
+  ebay_query: Deadly Disguise Murders at Karlov Manor Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: deep_clue_sea
+  label: Deep Clue Sea
+  ebay_query: Deep Clue Sea Murders at Karlov Manor Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: revenant_recon
+  label: Revenant Recon
+  ebay_query: Revenant Recon Murders at Karlov Manor Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Deck Display (Set of 4)
+  ebay_query: Murders at Karlov Manor Commander Deck Display MTG
+  product_kind: commander_deck_set
   default_sort: price
 RVR:
 - key: draft_box
@@ -300,6 +710,46 @@ MOM:
   ebay_query: March of the Machine jumpstart booster display MTG
   product_kind: draft_box
   default_sort: price
+- key: bundle
+  label: Bundle
+  ebay_query: March of the Machine bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: starter_kit
+  label: 2023 Arena Starter Kit
+  ebay_query: 2023 Arena Starter Kit MTG
+  product_kind: starter_kit
+  default_sort: price
+- key: call_for_backup
+  label: Call For Backup
+  ebay_query: Call For Backup March of the Machine Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: cavalry_charge
+  label: Cavalry Charge
+  ebay_query: Cavalry Charge March of the Machine Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: divine_convocation
+  label: Divine Convocation
+  ebay_query: Divine Convocation March of the Machine Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: growing_threat
+  label: Growing Threat
+  ebay_query: Growing Threat March of the Machine Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: tinker_time
+  label: Tinker Time
+  ebay_query: Tinker Time March of the Machine Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Deck Display (Set of 5)
+  ebay_query: March of the Machine Commander Deck Display Set of 5 MTG
+  product_kind: commander_deck_set
+  default_sort: price
 LTR:
 - key: set_box
   label: Set Booster Box
@@ -331,6 +781,56 @@ LTR:
   label: Jumpstart Booster Display Volume 2
   ebay_query: Lord of the Rings Jumpstart Volume 2 booster display MTG
   product_kind: draft_box
+  default_sort: price
+- key: bundle
+  label: Bundle
+  ebay_query: Lord of the Rings bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: scene_box_galadriel
+  label: 'Scene Box: The Might of Galadriel'
+  ebay_query: Lord of the Rings scene box Might of Galadriel MTG
+  product_kind: scene_box
+  default_sort: price
+- key: scene_box_witch_king
+  label: 'Scene Box: Flight of the Witch-King'
+  ebay_query: Lord of the Rings scene box Flight of the Witch-King MTG
+  product_kind: scene_box
+  default_sort: price
+- key: scene_box_aragorn
+  label: 'Scene Box: Aragorn at Helm''s Deep'
+  ebay_query: Lord of the Rings scene box Aragorn Helms Deep MTG
+  product_kind: scene_box
+  default_sort: price
+- key: starter_kit
+  label: Starter Kit
+  ebay_query: Lord of the Rings starter kit MTG
+  product_kind: starter_kit
+  default_sort: price
+- key: elven_council
+  label: Elven Council
+  ebay_query: Elven Council Lord of the Rings Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: food_and_fellowship
+  label: Food and Fellowship
+  ebay_query: Food and Fellowship Lord of the Rings Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: elven_council_deluxe
+  label: Elven Council (Deluxe Commander Kit)
+  ebay_query: Elven Council Deluxe Commander Kit Lord of the Rings MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: food_and_fellowship_deluxe
+  label: Food and Fellowship (Deluxe Commander Kit)
+  ebay_query: Food and Fellowship Deluxe Commander Kit Lord of the Rings MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Decks Set of 2
+  ebay_query: Lord of the Rings Commander Deck Set of 2 MTG
+  product_kind: commander_deck_set
   default_sort: price
 CMM:
 - key: set_box
@@ -376,6 +876,31 @@ LCI:
   ev_kind: collector_box
   product_kind: collector_box
   default_sort: price
+- key: bundle
+  label: Bundle
+  ebay_query: Lost Caverns of Ixalan bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: ahoy_mateys
+  label: Ahoy Mateys
+  ebay_query: Ahoy Mateys Lost Caverns of Ixalan Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: blood_rites
+  label: Blood Rites
+  ebay_query: Blood Rites Lost Caverns of Ixalan Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: veloci_ramp_tor
+  label: Veloci-Ramp-Tor
+  ebay_query: Veloci-Ramp-Tor Lost Caverns of Ixalan Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Deck Display (Set of 3)
+  ebay_query: Lost Caverns of Ixalan Commander Deck Display MTG
+  product_kind: commander_deck_set
+  default_sort: price
 ONE:
 - key: set_box
   label: Set Booster Box
@@ -402,6 +927,26 @@ ONE:
   label: Jumpstart Booster Display
   ebay_query: Phyrexia All Will Be One jumpstart booster display MTG
   product_kind: draft_box
+  default_sort: price
+- key: bundle
+  label: Bundle
+  ebay_query: Phyrexia All Will Be One bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: corrupting_influence
+  label: Corrupting Influence
+  ebay_query: Corrupting Influence Phyrexia All Will Be One Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: rebellion_rising
+  label: Rebellion Rising
+  ebay_query: Rebellion Rising Phyrexia All Will Be One Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Decks Set of 2
+  ebay_query: Phyrexia All Will Be One Commander Deck Set of 2 MTG
+  product_kind: commander_deck_set
   default_sort: price
 STX:
 - key: set_box
@@ -452,6 +997,26 @@ BRO:
   ebay_query: The Brothers War jumpstart booster display MTG
   product_kind: draft_box
   default_sort: price
+- key: bundle
+  label: Bundle
+  ebay_query: The Brothers War bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: urzas_iron_alliance
+  label: Urza's Iron Alliance
+  ebay_query: Urzas Iron Alliance Brothers War Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: mishras_burnished_banner
+  label: Mishra's Burnished Banner
+  ebay_query: Mishras Burnished Banner Brothers War Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Decks Set of 2
+  ebay_query: Brothers War Commander Deck Set of 2 MTG
+  product_kind: commander_deck_set
+  default_sort: price
 MH2:
 - key: draft_box
   label: Draft Booster Box
@@ -482,24 +1047,38 @@ MH2:
   ev_kind: collector_box
   product_kind: collector_box
   default_sort: price
-
-# ── Part A: Missing product types for auto-registered draft sets ─────────────
-# draft_box is already auto-generated from DRAFT_REGISTRY; only add missing types
-
 THB:
 - key: collector_box
   label: Collector Booster Box
   ebay_query: Theros Beyond Death collector booster box MTG
   product_kind: collector_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Theros Beyond Death bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: planeswalker_deck_ashiok
+  label: 'Planeswalker Deck: Ashiok'
+  ebay_query: Ashiok Planeswalker Deck Theros Beyond Death MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_elspeth
+  label: 'Planeswalker Deck: Elspeth'
+  ebay_query: Elspeth Planeswalker Deck Theros Beyond Death MTG
+  product_kind: planeswalker_deck
+  default_sort: price
 IKO:
 - key: collector_box
   label: Collector Booster Box
   ebay_query: Ikoria Lair of Behemoths collector booster box MTG
   product_kind: collector_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Ikoria bundle MTG
+  product_kind: bundle
+  default_sort: price
 M21:
 - key: set_box
   label: Set Booster Box
@@ -511,7 +1090,41 @@ M21:
   ebay_query: Core Set 2021 collector booster box MTG
   product_kind: collector_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Core Set 2021 bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: starter_kit
+  label: Arena Starter Kit
+  ebay_query: Arena Starter Kit Core Set 2021 MTG
+  product_kind: starter_kit
+  default_sort: price
+- key: planeswalker_deck_basri
+  label: 'Planeswalker Deck: Basri'
+  ebay_query: Basri Planeswalker Deck Core Set 2021 MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_chandra
+  label: 'Planeswalker Deck: Chandra'
+  ebay_query: Chandra Planeswalker Deck Core Set 2021 MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_garruk
+  label: 'Planeswalker Deck: Garruk'
+  ebay_query: Garruk Planeswalker Deck Core Set 2021 MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_liliana
+  label: 'Planeswalker Deck: Liliana'
+  ebay_query: Liliana Planeswalker Deck Core Set 2021 MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_teferi
+  label: 'Planeswalker Deck: Teferi'
+  ebay_query: Teferi Planeswalker Deck Core Set 2021 MTG
+  product_kind: planeswalker_deck
+  default_sort: price
 ZNR:
 - key: set_box
   label: Set Booster Box
@@ -523,7 +1136,11 @@ ZNR:
   ebay_query: Zendikar Rising collector booster box MTG
   product_kind: collector_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Zendikar Rising bundle MTG
+  product_kind: bundle
+  default_sort: price
 KHM:
 - key: set_box
   label: Set Booster Box
@@ -535,7 +1152,26 @@ KHM:
   ebay_query: Kaldheim collector booster box MTG
   product_kind: collector_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Kaldheim bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: elven_empire
+  label: Elven Empire
+  ebay_query: Elven Empire Kaldheim Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: phantom_premonition
+  label: Phantom Premonition
+  ebay_query: Phantom Premonition Kaldheim Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Decks Set of 2
+  ebay_query: Kaldheim Commander Deck Set of 2 MTG
+  product_kind: commander_deck_set
+  default_sort: price
 AFR:
 - key: set_box
   label: Set Booster Box
@@ -547,7 +1183,41 @@ AFR:
   ebay_query: Adventures in the Forgotten Realms collector booster box MTG
   product_kind: collector_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Adventures in the Forgotten Realms bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: starter_kit
+  label: 2021 Arena Starter Kit
+  ebay_query: 2021 Arena Starter Kit MTG
+  product_kind: starter_kit
+  default_sort: price
+- key: planar_portal
+  label: Planar Portal
+  ebay_query: Planar Portal Adventures Forgotten Realms Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: draconic_rage
+  label: Draconic Rage
+  ebay_query: Draconic Rage Adventures Forgotten Realms Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: dungeons_of_death
+  label: Dungeons of Death
+  ebay_query: Dungeons of Death Adventures Forgotten Realms Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: aura_of_courage
+  label: Aura of Courage
+  ebay_query: Aura of Courage Adventures Forgotten Realms Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Deck Display
+  ebay_query: Adventures Forgotten Realms Commander Deck Display MTG
+  product_kind: commander_deck_set
+  default_sort: price
 MID:
 - key: set_box
   label: Set Booster Box
@@ -559,7 +1229,26 @@ MID:
   ebay_query: Innistrad Midnight Hunt collector booster box MTG
   product_kind: collector_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Innistrad Midnight Hunt bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: coven_counters
+  label: Coven Counters
+  ebay_query: Coven Counters Innistrad Midnight Hunt Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: undead_unleashed
+  label: Undead Unleashed
+  ebay_query: Undead Unleashed Innistrad Midnight Hunt Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Decks Set of 2
+  ebay_query: Innistrad Midnight Hunt Commander Deck Set of 2 MTG
+  product_kind: commander_deck_set
+  default_sort: price
 VOW:
 - key: set_box
   label: Set Booster Box
@@ -571,7 +1260,26 @@ VOW:
   ebay_query: Innistrad Crimson Vow collector booster box MTG
   product_kind: collector_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Innistrad Crimson Vow bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: spirit_squadron
+  label: Spirit Squadron
+  ebay_query: Spirit Squadron Innistrad Crimson Vow Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: vampiric_bloodline
+  label: Vampiric Bloodline
+  ebay_query: Vampiric Bloodline Innistrad Crimson Vow Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Decks Set of 2
+  ebay_query: Innistrad Crimson Vow Commander Deck Set of 2 MTG
+  product_kind: commander_deck_set
+  default_sort: price
 NEO:
 - key: set_box
   label: Set Booster Box
@@ -583,7 +1291,26 @@ NEO:
   ebay_query: Kamigawa Neon Dynasty collector booster box MTG
   product_kind: collector_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Kamigawa Neon Dynasty bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: buckle_up
+  label: Buckle Up
+  ebay_query: Buckle Up Kamigawa Neon Dynasty Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: upgrades_unleashed
+  label: Upgrades Unleashed
+  ebay_query: Upgrades Unleashed Kamigawa Neon Dynasty Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Decks Set of 2
+  ebay_query: Kamigawa Neon Dynasty Commander Deck Set of 2 MTG
+  product_kind: commander_deck_set
+  default_sort: price
 SNC:
 - key: set_box
   label: Set Booster Box
@@ -595,7 +1322,46 @@ SNC:
   ebay_query: Streets of New Capenna collector booster box MTG
   product_kind: collector_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Streets of New Capenna bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: starter_kit
+  label: 2022 Arena Starter Kit
+  ebay_query: 2022 Arena Starter Kit MTG
+  product_kind: starter_kit
+  default_sort: price
+- key: bedecked_brokers
+  label: Bedecked Brokers
+  ebay_query: Bedecked Brokers Streets New Capenna Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: cabaretti_cacophony
+  label: Cabaretti Cacophony
+  ebay_query: Cabaretti Cacophony Streets New Capenna Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: maestros_massacre
+  label: Maestros Massacre
+  ebay_query: Maestros Massacre Streets New Capenna Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: obscura_operation
+  label: Obscura Operation
+  ebay_query: Obscura Operation Streets New Capenna Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: riveteers_rampage
+  label: Riveteers Rampage
+  ebay_query: Riveteers Rampage Streets New Capenna Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Deck Display
+  ebay_query: Streets New Capenna Commander Deck Display MTG
+  product_kind: commander_deck_set
+  default_sort: price
 DMU:
 - key: set_box
   label: Set Booster Box
@@ -612,9 +1378,26 @@ DMU:
   ebay_query: Dominaria United jumpstart booster display MTG
   product_kind: draft_box
   default_sort: price
-
-# ── Part C: Recent/upcoming sets ──────────────────────────────────────────────
-
+- key: bundle
+  label: Bundle
+  ebay_query: Dominaria United bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: legends_legacy
+  label: Legends' Legacy
+  ebay_query: Legends Legacy Dominaria United Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: painbow
+  label: Painbow
+  ebay_query: Painbow Dominaria United Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Decks Set of 2
+  ebay_query: Dominaria United Commander Deck Set of 2 MTG
+  product_kind: commander_deck_set
+  default_sort: price
 MSH:
 - key: play_box
   label: Play Booster Box
@@ -631,7 +1414,72 @@ MSH:
   ebay_query: Marvel Super Heroes collector booster box MTG
   product_kind: collector_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Marvel Super Heroes bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: scene_box_heroes
+  label: 'Scene Box: Heroes United'
+  ebay_query: Marvel Super Heroes scene box Heroes United MTG
+  product_kind: scene_box
+  default_sort: price
+- key: scene_box_villains
+  label: 'Scene Box: Villains Unleashed'
+  ebay_query: Marvel Super Heroes scene box Villains Unleashed MTG
+  product_kind: scene_box
+  default_sort: price
+- key: beginner_box
+  label: Beginner Box
+  ebay_query: Marvel Super Heroes beginner box MTG
+  product_kind: beginner_box
+  default_sort: price
+- key: avengers_assemble
+  label: Avengers Assemble
+  ebay_query: Avengers Assemble Marvel Super Heroes Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: doom_prevails
+  label: Doom Prevails
+  ebay_query: Doom Prevails Marvel Super Heroes Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: the_fantastic_four
+  label: The Fantastic Four
+  ebay_query: The Fantastic Four Marvel Super Heroes Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: wakanda_forever
+  label: Wakanda Forever
+  ebay_query: Wakanda Forever Marvel Super Heroes Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: avengers_assemble_ce
+  label: Avengers Assemble (Collector's Edition)
+  ebay_query: Avengers Assemble Marvel Super Heroes Commander Collectors Edition MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: doom_prevails_ce
+  label: Doom Prevails (Collector's Edition)
+  ebay_query: Doom Prevails Marvel Super Heroes Commander Collectors Edition MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: fantastic_four_ce
+  label: The Fantastic Four (Collector's Edition)
+  ebay_query: The Fantastic Four Marvel Super Heroes Commander Collectors Edition
+    MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: wakanda_forever_ce
+  label: Wakanda Forever (Collector's Edition)
+  ebay_query: Wakanda Forever Marvel Super Heroes Commander Collectors Edition MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Deck Display (Set of 4)
+  ebay_query: Marvel Super Heroes Commander Deck Display MTG
+  product_kind: commander_deck_set
+  default_sort: price
 SOS:
 - key: play_box
   label: Play Booster Box
@@ -643,7 +1491,41 @@ SOS:
   ebay_query: Secrets of Strixhaven collector booster box MTG
   product_kind: collector_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Secrets of Strixhaven bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: lorehold_spirit
+  label: Lorehold Spirit
+  ebay_query: Lorehold Spirit Secrets of Strixhaven Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: prismari_artistry
+  label: Prismari Artistry
+  ebay_query: Prismari Artistry Secrets of Strixhaven Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: quandrix_unlimited
+  label: Quandrix Unlimited
+  ebay_query: Quandrix Unlimited Secrets of Strixhaven Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: silverquill_influence
+  label: Silverquill Influence
+  ebay_query: Silverquill Influence Secrets of Strixhaven Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: witherbloom_pestilence
+  label: Witherbloom Pestilence
+  ebay_query: Witherbloom Pestilence Secrets of Strixhaven Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Deck Display (Set of 5)
+  ebay_query: Secrets of Strixhaven Commander Deck Display MTG
+  product_kind: commander_deck_set
+  default_sort: price
 TMT:
 - key: play_box
   label: Play Booster Box
@@ -655,23 +1537,23 @@ TMT:
   ebay_query: Teenage Mutant Ninja Turtles collector booster box MTG
   product_kind: collector_box
   default_sort: price
-
-# ── Part D: Special/Commander/Remastered sets ──────────────────────────────────
-
+- key: bundle
+  label: Bundle
+  ebay_query: Teenage Mutant Ninja Turtles bundle MTG
+  product_kind: bundle
+  default_sort: price
 PIP:
 - key: collector_box
   label: Collector Booster Box
   ebay_query: Fallout collector booster box MTG
   product_kind: collector_box
   default_sort: price
-
 WHO:
 - key: collector_box
   label: Collector Booster Box
   ebay_query: Doctor Who collector booster box MTG
   product_kind: collector_box
   default_sort: price
-
 MAT:
 - key: epilogue_box
   label: Epilogue Booster Box
@@ -683,14 +1565,12 @@ MAT:
   ebay_query: March of the Machine Aftermath collector booster box MTG
   product_kind: collector_box
   default_sort: price
-
 CLU:
 - key: booster_box
   label: Booster Box
   ebay_query: Ravnica Clue Edition booster box MTG
   product_kind: draft_box
   default_sort: price
-
 DMR:
 - key: draft_box
   label: Draft Booster Box
@@ -702,28 +1582,24 @@ DMR:
   ebay_query: Dominaria Remastered collector booster box MTG
   product_kind: collector_box
   default_sort: price
-
 TSR:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Time Spiral Remastered booster box MTG
   product_kind: draft_box
   default_sort: price
-
 DBL:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Innistrad Double Feature booster box MTG
   product_kind: draft_box
   default_sort: price
-
 30A:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: 30th Anniversary Edition booster box MTG
   product_kind: draft_box
   default_sort: price
-
 UNF:
 - key: draft_box
   label: Draft Booster Box
@@ -735,7 +1611,6 @@ UNF:
   ebay_query: Unfinity collector booster box MTG
   product_kind: collector_box
   default_sort: price
-
 CLB:
 - key: draft_box
   label: Draft Booster Box
@@ -747,7 +1622,6 @@ CLB:
   ebay_query: Commander Legends Battle for Baldurs Gate collector booster box MTG
   product_kind: collector_box
   default_sort: price
-
 CMR:
 - key: draft_box
   label: Draft Booster Box
@@ -759,39 +1633,30 @@ CMR:
   ebay_query: Commander Legends collector booster box MTG
   product_kind: collector_box
   default_sort: price
-
-# ── Part E: Standalone Jumpstart sets ─────────────────────────────────────────
-
 TLE:
 - key: jumpstart_box
   label: Jumpstart Booster Display
   ebay_query: Avatar Last Airbender Eternal Jumpstart booster display MTG
   product_kind: draft_box
   default_sort: price
-
 J25:
 - key: jumpstart_box
   label: Jumpstart Booster Display
   ebay_query: Foundations Jumpstart booster display MTG
   product_kind: draft_box
   default_sort: price
-
 J22:
 - key: jumpstart_box
   label: Jumpstart Booster Display
   ebay_query: Jumpstart 2022 booster display MTG
   product_kind: draft_box
   default_sort: price
-
 JMP:
 - key: jumpstart_box
   label: Jumpstart Booster Display
   ebay_query: Jumpstart booster display MTG
   product_kind: draft_box
   default_sort: price
-
-# ── Part F: Mystery Booster ────────────────────────────────────────────────────
-
 MB1:
 - key: retail_box
   label: Retail Booster Box
@@ -808,9 +1673,6 @@ MB1:
   ebay_query: Mystery Booster 2021 convention booster display MTG
   product_kind: draft_box
   default_sort: price
-
-# ── Part G: Pre-2020 standard sets (2014–2019) ────────────────────────────────
-
 ELD:
 - key: draft_box
   label: Draft Booster Box
@@ -822,861 +1684,1862 @@ ELD:
   ebay_query: Throne of Eldraine collector booster box MTG
   product_kind: collector_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Throne of Eldraine bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: planeswalker_deck_oko
+  label: 'Planeswalker Deck: Oko'
+  ebay_query: Oko Planeswalker Deck Throne of Eldraine MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_rowan
+  label: 'Planeswalker Deck: Rowan'
+  ebay_query: Rowan Planeswalker Deck Throne of Eldraine MTG
+  product_kind: planeswalker_deck
+  default_sort: price
 M20:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Core Set 2020 booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Core Set 2020 bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: starter_kit
+  label: Spellslinger Starter Kit
+  ebay_query: Spellslinger Starter Kit Core Set 2020 MTG
+  product_kind: starter_kit
+  default_sort: price
+- key: planeswalker_deck_ajani
+  label: 'Planeswalker Deck: Ajani'
+  ebay_query: Ajani Planeswalker Deck Core Set 2020 MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_chandra
+  label: 'Planeswalker Deck: Chandra'
+  ebay_query: Chandra Planeswalker Deck Core Set 2020 MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_sorin
+  label: 'Planeswalker Deck: Sorin'
+  ebay_query: Sorin Planeswalker Deck Core Set 2020 MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_vivien
+  label: 'Planeswalker Deck: Vivien'
+  ebay_query: Vivien Planeswalker Deck Core Set 2020 MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_yanling
+  label: 'Planeswalker Deck: Mu Yanling'
+  ebay_query: Mu Yanling Planeswalker Deck Core Set 2020 MTG
+  product_kind: planeswalker_deck
+  default_sort: price
 WAR:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: War of the Spark booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: War of the Spark bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: planeswalker_deck_gideon
+  label: 'Planeswalker Deck: Gideon'
+  ebay_query: Gideon Planeswalker Deck War of the Spark MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_jace
+  label: 'Planeswalker Deck: Jace'
+  ebay_query: Jace Planeswalker Deck War of the Spark MTG
+  product_kind: planeswalker_deck
+  default_sort: price
 RNA:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Ravnica Allegiance booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Ravnica Allegiance bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: planeswalker_deck_domri
+  label: 'Planeswalker Deck: Domri'
+  ebay_query: Domri Planeswalker Deck Ravnica Allegiance MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_dovin
+  label: 'Planeswalker Deck: Dovin'
+  ebay_query: Dovin Planeswalker Deck Ravnica Allegiance MTG
+  product_kind: planeswalker_deck
+  default_sort: price
 UMA:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Ultimate Masters booster box MTG
   product_kind: draft_box
   default_sort: price
-
 GRN:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Guilds of Ravnica booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Guilds of Ravnica bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: planeswalker_deck_ral
+  label: 'Planeswalker Deck: Ral'
+  ebay_query: Ral Planeswalker Deck Guilds of Ravnica MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_vraska
+  label: 'Planeswalker Deck: Vraska'
+  ebay_query: Vraska Planeswalker Deck Guilds of Ravnica MTG
+  product_kind: planeswalker_deck
+  default_sort: price
 M19:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Core Set 2019 booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Core Set 2019 bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: planeswalker_deck_ajani
+  label: 'Planeswalker Deck: Ajani'
+  ebay_query: Ajani Planeswalker Deck Core Set 2019 MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_liliana
+  label: 'Planeswalker Deck: Liliana'
+  ebay_query: Liliana Planeswalker Deck Core Set 2019 MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_sarkhan
+  label: 'Planeswalker Deck: Sarkhan'
+  ebay_query: Sarkhan Planeswalker Deck Core Set 2019 MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_tezzeret
+  label: 'Planeswalker Deck: Tezzeret'
+  ebay_query: Tezzeret Planeswalker Deck Core Set 2019 MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_vivien
+  label: 'Planeswalker Deck: Vivien'
+  ebay_query: Vivien Planeswalker Deck Core Set 2019 MTG
+  product_kind: planeswalker_deck
+  default_sort: price
 BBD:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Battlebond booster box MTG
   product_kind: draft_box
   default_sort: price
-
 DOM:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Dominaria booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Dominaria bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: planeswalker_deck_chandra
+  label: 'Planeswalker Deck: Chandra'
+  ebay_query: Chandra Planeswalker Deck Dominaria MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_teferi
+  label: 'Planeswalker Deck: Teferi'
+  ebay_query: Teferi Planeswalker Deck Dominaria MTG
+  product_kind: planeswalker_deck
+  default_sort: price
 A25:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Masters 25 booster box MTG
   product_kind: draft_box
   default_sort: price
-
 RIX:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Rivals of Ixalan booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Rivals of Ixalan bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: planeswalker_deck_angrath
+  label: 'Planeswalker Deck: Angrath'
+  ebay_query: Angrath Planeswalker Deck Rivals of Ixalan MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_vraska
+  label: 'Planeswalker Deck: Vraska'
+  ebay_query: Vraska Planeswalker Deck Rivals of Ixalan MTG
+  product_kind: planeswalker_deck
+  default_sort: price
 UST:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Unstable booster box MTG
   product_kind: draft_box
   default_sort: price
-
 IMA:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Iconic Masters booster box MTG
   product_kind: draft_box
   default_sort: price
-
 XLN:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Ixalan booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Ixalan bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: planeswalker_deck_huatli
+  label: 'Planeswalker Deck: Huatli'
+  ebay_query: Huatli Planeswalker Deck Ixalan MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_jace
+  label: 'Planeswalker Deck: Jace'
+  ebay_query: Jace Planeswalker Deck Ixalan MTG
+  product_kind: planeswalker_deck
+  default_sort: price
 HOU:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Hour of Devastation booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Hour of Devastation bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: planeswalker_deck_nicol_bolas
+  label: 'Planeswalker Deck: Nicol Bolas'
+  ebay_query: Nicol Bolas Planeswalker Deck Hour of Devastation MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_nissa
+  label: 'Planeswalker Deck: Nissa'
+  ebay_query: Nissa Planeswalker Deck Hour of Devastation MTG
+  product_kind: planeswalker_deck
+  default_sort: price
 AKH:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Amonkhet booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Amonkhet bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: planeswalker_deck_gideon
+  label: 'Planeswalker Deck: Gideon'
+  ebay_query: Gideon Planeswalker Deck Amonkhet MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_liliana
+  label: 'Planeswalker Deck: Liliana'
+  ebay_query: Liliana Planeswalker Deck Amonkhet MTG
+  product_kind: planeswalker_deck
+  default_sort: price
 MM3:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Modern Masters 2017 booster box MTG
   product_kind: draft_box
   default_sort: price
-
 AER:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Aether Revolt booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Aether Revolt bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: planeswalker_deck_ajani
+  label: 'Planeswalker Deck: Ajani'
+  ebay_query: Ajani Planeswalker Deck Aether Revolt MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_tezzeret
+  label: 'Planeswalker Deck: Tezzeret'
+  ebay_query: Tezzeret Planeswalker Deck Aether Revolt MTG
+  product_kind: planeswalker_deck
+  default_sort: price
 KLD:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Kaladesh booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Kaladesh bundle MTG
+  product_kind: bundle
+  default_sort: price
+- key: planeswalker_deck_chandra
+  label: 'Planeswalker Deck: Chandra'
+  ebay_query: Chandra Planeswalker Deck Kaladesh MTG
+  product_kind: planeswalker_deck
+  default_sort: price
+- key: planeswalker_deck_nissa
+  label: 'Planeswalker Deck: Nissa'
+  ebay_query: Nissa Planeswalker Deck Kaladesh MTG
+  product_kind: planeswalker_deck
+  default_sort: price
 CN2:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Conspiracy Take the Crown booster box MTG
   product_kind: draft_box
   default_sort: price
-
 EMN:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Eldritch Moon booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Eldritch Moon bundle MTG
+  product_kind: bundle
+  default_sort: price
 EMA:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Eternal Masters booster box MTG
   product_kind: draft_box
   default_sort: price
-
 SOI:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Shadows over Innistrad booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Shadows over Innistrad bundle MTG
+  product_kind: bundle
+  default_sort: price
 OGW:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Oath of the Gatewatch booster box MTG
   product_kind: draft_box
   default_sort: price
-
 BFZ:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Battle for Zendikar booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Battle for Zendikar bundle MTG
+  product_kind: bundle
+  default_sort: price
 ORI:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Magic Origins booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Magic Origins bundle MTG
+  product_kind: bundle
+  default_sort: price
 MM2:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Modern Masters 2015 booster box MTG
   product_kind: draft_box
   default_sort: price
-
 MH1:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Modern Horizons booster box MTG
   product_kind: draft_box
   default_sort: price
-
 DTK:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Dragons of Tarkir booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Dragons of Tarkir bundle MTG
+  product_kind: bundle
+  default_sort: price
 FRF:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Fate Reforged booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Fate Reforged bundle MTG
+  product_kind: bundle
+  default_sort: price
 KTK:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Khans of Tarkir booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Khans of Tarkir bundle MTG
+  product_kind: bundle
+  default_sort: price
 M15:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Magic 2015 booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Magic 2015 bundle MTG
+  product_kind: bundle
+  default_sort: price
 CNS:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Conspiracy booster box MTG
   product_kind: draft_box
   default_sort: price
-
 JOU:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Journey into Nyx booster box MTG
   product_kind: draft_box
   default_sort: price
-
 BNG:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Born of the Gods booster box MTG
   product_kind: draft_box
   default_sort: price
-
 THS:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Theros booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Theros bundle MTG
+  product_kind: bundle
+  default_sort: price
 M14:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Magic 2014 booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Magic 2014 bundle MTG
+  product_kind: bundle
+  default_sort: price
 MMA:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Modern Masters booster box MTG
   product_kind: draft_box
   default_sort: price
-
 DGM:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Dragon's Maze booster box MTG
   product_kind: draft_box
   default_sort: price
-
 GTC:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Gatecrash booster box MTG
   product_kind: draft_box
   default_sort: price
-
 RTR:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Return to Ravnica booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Return to Ravnica bundle MTG
+  product_kind: bundle
+  default_sort: price
 M13:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Magic 2013 booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Magic 2013 bundle MTG
+  product_kind: bundle
+  default_sort: price
 AVR:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Avacyn Restored booster box MTG
   product_kind: draft_box
   default_sort: price
-
 DKA:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Dark Ascension booster box MTG
   product_kind: draft_box
   default_sort: price
-
 ISD:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Innistrad booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Innistrad bundle MTG
+  product_kind: bundle
+  default_sort: price
 M12:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Magic 2012 booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Magic 2012 bundle MTG
+  product_kind: bundle
+  default_sort: price
 NPH:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: New Phyrexia booster box MTG
   product_kind: draft_box
   default_sort: price
-
 MBS:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Mirrodin Besieged booster box MTG
   product_kind: draft_box
   default_sort: price
-
 SOM:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Scars of Mirrodin booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Scars of Mirrodin bundle MTG
+  product_kind: bundle
+  default_sort: price
 M11:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Magic 2011 booster box MTG
   product_kind: draft_box
   default_sort: price
-
 ROE:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Rise of the Eldrazi booster box MTG
   product_kind: draft_box
   default_sort: price
-
 WWK:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Worldwake booster box MTG
   product_kind: draft_box
   default_sort: price
-
 ZEN:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Zendikar booster box MTG
   product_kind: draft_box
   default_sort: price
-
+- key: bundle
+  label: Bundle
+  ebay_query: Zendikar bundle MTG
+  product_kind: bundle
+  default_sort: price
 M10:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Magic 2010 booster box MTG
   product_kind: draft_box
   default_sort: price
-
-# ── Part H: Classic era (2003–2009) ───────────────────────────────────────────
-
 ARB:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Alara Reborn booster box MTG
   product_kind: draft_box
   default_sort: price
-
 CON:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Conflux booster box MTG
   product_kind: draft_box
   default_sort: price
-
 ALA:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Shards of Alara booster box MTG
   product_kind: draft_box
   default_sort: price
-
 EVE:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Eventide booster box MTG
   product_kind: draft_box
   default_sort: price
-
 SHM:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Shadowmoor booster box MTG
   product_kind: draft_box
   default_sort: price
-
 MOR:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Morningtide booster box MTG
   product_kind: draft_box
   default_sort: price
-
 LRW:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Lorwyn booster box MTG
   product_kind: draft_box
   default_sort: price
-
 10E:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Tenth Edition booster box MTG
   product_kind: draft_box
   default_sort: price
-
 FUT:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Future Sight booster box MTG
   product_kind: draft_box
   default_sort: price
-
 PLC:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Planar Chaos booster box MTG
   product_kind: draft_box
   default_sort: price
-
 TSP:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Time Spiral booster box MTG
   product_kind: draft_box
   default_sort: price
-
 CSP:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Coldsnap booster box MTG
   product_kind: draft_box
   default_sort: price
-
 DIS:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Dissension booster box MTG
   product_kind: draft_box
   default_sort: price
-
 GPT:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Guildpact booster box MTG
   product_kind: draft_box
   default_sort: price
-
 RAV:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Ravnica City of Guilds booster box MTG
   product_kind: draft_box
   default_sort: price
-
 9ED:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Ninth Edition booster box MTG
   product_kind: draft_box
   default_sort: price
-
 SOK:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Saviors of Kamigawa booster box MTG
   product_kind: draft_box
   default_sort: price
-
 BOK:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Betrayers of Kamigawa booster box MTG
   product_kind: draft_box
   default_sort: price
-
 UNH:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Unhinged booster box MTG
   product_kind: draft_box
   default_sort: price
-
 CHK:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Champions of Kamigawa booster box MTG
   product_kind: draft_box
   default_sort: price
-
 5DN:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Fifth Dawn booster box MTG
   product_kind: draft_box
   default_sort: price
-
 DST:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Darksteel booster box MTG
   product_kind: draft_box
   default_sort: price
-
 MRD:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Mirrodin booster box MTG
   product_kind: draft_box
   default_sort: price
-
 8ED:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Eighth Edition booster box MTG
   product_kind: draft_box
   default_sort: price
-
 SCG:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Scourge booster box MTG
   product_kind: draft_box
   default_sort: price
-
 LGN:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Legions booster box MTG
   product_kind: draft_box
   default_sort: price
-
 ONS:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Onslaught booster box MTG
   product_kind: draft_box
   default_sort: price
-
 JUD:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Judgment booster box MTG
   product_kind: draft_box
   default_sort: price
-
 TOR:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Torment booster box MTG
   product_kind: draft_box
   default_sort: price
-
 ODY:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Odyssey booster box MTG
   product_kind: draft_box
   default_sort: price
-
 APC:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Apocalypse booster box MTG
   product_kind: draft_box
   default_sort: price
-
 7ED:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Seventh Edition booster box MTG
   product_kind: draft_box
   default_sort: price
-
 PLS:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Planeshift booster box MTG
   product_kind: draft_box
   default_sort: price
-
 INV:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Invasion booster box MTG
   product_kind: draft_box
   default_sort: price
-
-# ── Part I: Vintage era (pre-2001, "Magic the Gathering" suffix) ───────────────
-
 PCY:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Prophecy booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 NEM:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Nemesis booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 MMQ:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Mercadian Masques booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 UDS:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Urza's Destiny booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 6ED:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Classic Sixth Edition booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 ULG:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Urza's Legacy booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 USG:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Urza's Saga booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 UGL:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Unglued booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 P02:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Portal Second Age booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 EXO:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Exodus booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 STH:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Stronghold booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 TMP:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Tempest booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 WTH:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Weatherlight booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 PTK:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Portal Three Kingdoms booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 POR:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Portal booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 5ED:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Fifth Edition booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 VIS:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Visions booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 MIR:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Mirage booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 REN:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Renaissance booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 RIN:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Rinascimento booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 ALL:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Alliances booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 HML:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Homelands booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 CHR:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Chronicles booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 ICE:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Ice Age booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 4ED:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Fourth Edition booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 FEM:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Fallen Empires booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 DRK:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: The Dark booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 SUM:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Summer Magic booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 LEG:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Legends booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 3ED:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Revised Edition booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 ATQ:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Antiquities booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 ARN:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Arabian Nights booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 2ED:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Unlimited Edition booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 LEB:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Beta booster box Magic the Gathering
   product_kind: draft_box
   default_sort: price
-
 LEA:
 - key: draft_box
   label: Draft Booster Box
   ebay_query: Alpha booster box Magic the Gathering
   product_kind: draft_box
+  default_sort: price
+C13:
+- key: eternal_bargain
+  label: Eternal Bargain
+  ebay_query: Eternal Bargain Commander 2013 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: power_hungry
+  label: Power Hungry
+  ebay_query: Power Hungry Commander 2013 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: mind_seize
+  label: Mind Seize
+  ebay_query: Mind Seize Commander 2013 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: evasive_maneuvers
+  label: Evasive Maneuvers
+  ebay_query: Evasive Maneuvers Commander 2013 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: nature_of_the_beast
+  label: Nature of the Beast
+  ebay_query: Nature of the Beast Commander 2013 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander 2013 Set of 5
+  ebay_query: Commander 2013 Set of 5 decks MTG
+  product_kind: commander_deck_set
+  default_sort: price
+C14:
+- key: guided_by_nature
+  label: Guided by Nature
+  ebay_query: Guided by Nature Commander 2014 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: sworn_to_darkness
+  label: Sworn to Darkness
+  ebay_query: Sworn to Darkness Commander 2014 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: forged_in_stone
+  label: Forged in Stone
+  ebay_query: Forged in Stone Commander 2014 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: peer_through_time
+  label: Peer Through Time
+  ebay_query: Peer Through Time Commander 2014 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: built_from_scratch
+  label: Built from Scratch
+  ebay_query: Built from Scratch Commander 2014 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander 2014 Set of 5
+  ebay_query: Commander 2014 Set of 5 decks MTG
+  product_kind: commander_deck_set
+  default_sort: price
+C15:
+- key: plunder_the_graves
+  label: Plunder the Graves
+  ebay_query: Plunder the Graves Commander 2015 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: swell_the_host
+  label: Swell the Host
+  ebay_query: Swell the Host Commander 2015 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: call_the_spirits
+  label: Call the Spirits
+  ebay_query: Call the Spirits Commander 2015 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: wade_into_battle
+  label: Wade into Battle
+  ebay_query: Wade into Battle Commander 2015 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: seize_control
+  label: Seize Control
+  ebay_query: Seize Control Commander 2015 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander 2015 Set of 5
+  ebay_query: Commander 2015 Set of 5 decks MTG
+  product_kind: commander_deck_set
+  default_sort: price
+C16:
+- key: breed_lethality
+  label: Breed Lethality
+  ebay_query: Breed Lethality Commander 2016 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: invent_superiority
+  label: Invent Superiority
+  ebay_query: Invent Superiority Commander 2016 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: stalwart_unity
+  label: Stalwart Unity
+  ebay_query: Stalwart Unity Commander 2016 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: entropic_uprising
+  label: Entropic Uprising
+  ebay_query: Entropic Uprising Commander 2016 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: open_hostility
+  label: Open Hostility
+  ebay_query: Open Hostility Commander 2016 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander 2016 Set of 5
+  ebay_query: Commander 2016 Set of 5 decks MTG
+  product_kind: commander_deck_set
+  default_sort: price
+C17:
+- key: draconic_domination
+  label: Draconic Domination
+  ebay_query: Draconic Domination Commander 2017 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: vampiric_bloodlust
+  label: Vampiric Bloodlust
+  ebay_query: Vampiric Bloodlust Commander 2017 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: feline_ferocity
+  label: Feline Ferocity
+  ebay_query: Feline Ferocity Commander 2017 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: arcane_wizardry
+  label: Arcane Wizardry
+  ebay_query: Arcane Wizardry Commander 2017 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander 2017 Set of 4
+  ebay_query: Commander 2017 Set of 4 decks MTG
+  product_kind: commander_deck_set
+  default_sort: price
+C18:
+- key: natures_vengeance
+  label: Nature's Vengeance
+  ebay_query: Nature's Vengeance Commander 2018 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: adaptive_enchantment
+  label: Adaptive Enchantment
+  ebay_query: Adaptive Enchantment Commander 2018 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: subjective_reality
+  label: Subjective Reality
+  ebay_query: Subjective Reality Commander 2018 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: exquisite_invention
+  label: Exquisite Invention
+  ebay_query: Exquisite Invention Commander 2018 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander 2018 Set of 4
+  ebay_query: Commander 2018 Set of 4 decks MTG
+  product_kind: commander_deck_set
+  default_sort: price
+C19:
+- key: primal_genesis
+  label: Primal Genesis
+  ebay_query: Primal Genesis Commander 2019 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: merciless_rage
+  label: Merciless Rage
+  ebay_query: Merciless Rage Commander 2019 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: faceless_menace
+  label: Faceless Menace
+  ebay_query: Faceless Menace Commander 2019 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: mystic_intellect
+  label: Mystic Intellect
+  ebay_query: Mystic Intellect Commander 2019 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander 2019 Set of 4
+  ebay_query: Commander 2019 Set of 4 decks MTG
+  product_kind: commander_deck_set
+  default_sort: price
+C20:
+- key: arcane_maelstrom
+  label: Arcane Maelstrom
+  ebay_query: Arcane Maelstrom Commander 2020 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: enhanced_evolution
+  label: Enhanced Evolution
+  ebay_query: Enhanced Evolution Commander 2020 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: timeless_wisdom
+  label: Timeless Wisdom
+  ebay_query: Timeless Wisdom Commander 2020 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: symbiotic_swarm
+  label: Symbiotic Swarm
+  ebay_query: Symbiotic Swarm Commander 2020 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: ruthless_regiment
+  label: Ruthless Regiment
+  ebay_query: Ruthless Regiment Commander 2020 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander 2020 Set of 5
+  ebay_query: Commander 2020 Set of 5 decks MTG
+  product_kind: commander_deck_set
+  default_sort: price
+C21:
+- key: silverquill_statement
+  label: Silverquill Statement
+  ebay_query: Silverquill Statement Commander 2021 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: witherbloom_witchcraft
+  label: Witherbloom Witchcraft
+  ebay_query: Witherbloom Witchcraft Commander 2021 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: quantum_quandrix
+  label: Quantum Quandrix
+  ebay_query: Quantum Quandrix Commander 2021 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: lorehold_legacies
+  label: Lorehold Legacies
+  ebay_query: Lorehold Legacies Commander 2021 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: prismari_performance
+  label: Prismari Performance
+  ebay_query: Prismari Performance Commander 2021 MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander 2021 Set of 5
+  ebay_query: Commander 2021 Strixhaven Set of 5 decks MTG
+  product_kind: commander_deck_set
+  default_sort: price
+W40K:
+- key: necron_dynasties
+  label: Necron Dynasties
+  ebay_query: Necron Dynasties Warhammer 40000 Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: forces_of_the_imperium
+  label: Forces of the Imperium
+  ebay_query: Forces of the Imperium Warhammer 40000 Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: tyranid_swarm
+  label: Tyranid Swarm
+  ebay_query: Tyranid Swarm Warhammer 40000 Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: the_ruinous_powers
+  label: The Ruinous Powers
+  ebay_query: The Ruinous Powers Warhammer 40000 Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: necron_dynasties_ce
+  label: Necron Dynasties (Collector's Edition)
+  ebay_query: Necron Dynasties Warhammer 40000 Commander Collectors Edition MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: forces_of_the_imperium_ce
+  label: Forces of the Imperium (Collector's Edition)
+  ebay_query: Forces of the Imperium Warhammer 40000 Commander Collectors Edition
+    MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: tyranid_swarm_ce
+  label: Tyranid Swarm (Collector's Edition)
+  ebay_query: Tyranid Swarm Warhammer 40000 Commander Collectors Edition MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: the_ruinous_powers_ce
+  label: The Ruinous Powers (Collector's Edition)
+  ebay_query: The Ruinous Powers Warhammer 40000 Commander Collectors Edition MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Deck Display
+  ebay_query: Warhammer 40000 Commander Deck Display MTG
+  product_kind: commander_deck_set
+  default_sort: price
+LEC:
+- key: blight_curse
+  label: Blight Curse
+  ebay_query: Blight Curse Lorwyn Eclipsed Commander MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Commander Decks Set of 2
+  ebay_query: Lorwyn Eclipsed Commander Deck Set of 2 MTG
+  product_kind: commander_deck_set
+  default_sort: price
+CMA:
+- key: commander_anthology
+  label: Commander Anthology
+  ebay_query: Commander Anthology MTG
+  product_kind: commander_deck_set
+  default_sort: price
+CM2:
+- key: commander_anthology_2
+  label: Commander Anthology Volume II
+  ebay_query: Commander Anthology Volume II MTG
+  product_kind: commander_deck_set
+  default_sort: price
+SCD:
+- key: draconic_destruction
+  label: Draconic Destruction
+  ebay_query: Draconic Destruction Starter Commander Deck MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: chaos_incarnate
+  label: Chaos Incarnate
+  ebay_query: Chaos Incarnate Starter Commander Deck MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: grave_danger
+  label: Grave Danger
+  ebay_query: Grave Danger Starter Commander Deck MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: token_triumph
+  label: Token Triumph
+  ebay_query: Token Triumph Starter Commander Deck MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: first_flight
+  label: First Flight
+  ebay_query: First Flight Starter Commander Deck MTG
+  product_kind: commander_deck
+  default_sort: price
+- key: commander_deck_set
+  label: Starter Commander Decks Set of 5
+  ebay_query: Starter Commander Decks Set of 5 MTG
+  product_kind: commander_deck_set
+  default_sort: price
+DD1:
+- key: duel_deck
+  label: 'Duel Decks: Elves vs. Goblins'
+  ebay_query: Duel Decks Elves vs Goblins MTG
+  product_kind: duel_deck
+  default_sort: price
+DDC:
+- key: duel_deck
+  label: 'Duel Decks: Jace vs. Chandra'
+  ebay_query: Duel Decks Jace vs Chandra MTG
+  product_kind: duel_deck
+  default_sort: price
+DDD:
+- key: duel_deck
+  label: 'Duel Decks: Divine vs. Demonic'
+  ebay_query: Duel Decks Divine vs Demonic MTG
+  product_kind: duel_deck
+  default_sort: price
+DDE:
+- key: duel_deck
+  label: 'Duel Decks: Garruk vs. Liliana'
+  ebay_query: Duel Decks Garruk vs Liliana MTG
+  product_kind: duel_deck
+  default_sort: price
+DDF:
+- key: duel_deck
+  label: 'Duel Decks: Phyrexia vs. the Coalition'
+  ebay_query: Duel Decks Phyrexia vs the Coalition MTG
+  product_kind: duel_deck
+  default_sort: price
+DDG:
+- key: duel_deck
+  label: 'Duel Decks: Elspeth vs. Tezzeret'
+  ebay_query: Duel Decks Elspeth vs Tezzeret MTG
+  product_kind: duel_deck
+  default_sort: price
+DDH:
+- key: duel_deck
+  label: 'Duel Decks: Knights vs. Dragons'
+  ebay_query: Duel Decks Knights vs Dragons MTG
+  product_kind: duel_deck
+  default_sort: price
+DDI:
+- key: duel_deck
+  label: 'Duel Decks: Venser vs. Koth'
+  ebay_query: Duel Decks Venser vs Koth MTG
+  product_kind: duel_deck
+  default_sort: price
+DDJ:
+- key: duel_deck
+  label: 'Duel Decks: Izzet vs. Golgari'
+  ebay_query: Duel Decks Izzet vs Golgari MTG
+  product_kind: duel_deck
+  default_sort: price
+DDK:
+- key: duel_deck
+  label: 'Duel Decks: Sorin vs. Tibalt'
+  ebay_query: Duel Decks Sorin vs Tibalt MTG
+  product_kind: duel_deck
+  default_sort: price
+DDL:
+- key: duel_deck
+  label: 'Duel Decks: Heroes vs. Monsters'
+  ebay_query: Duel Decks Heroes vs Monsters MTG
+  product_kind: duel_deck
+  default_sort: price
+DDM:
+- key: duel_deck
+  label: 'Duel Decks: Jace vs. Vraska'
+  ebay_query: Duel Decks Jace vs Vraska MTG
+  product_kind: duel_deck
+  default_sort: price
+DDN:
+- key: duel_deck
+  label: 'Duel Decks: Speed vs. Cunning'
+  ebay_query: Duel Decks Speed vs Cunning MTG
+  product_kind: duel_deck
+  default_sort: price
+DDO:
+- key: duel_deck
+  label: 'Duel Decks: Elspeth vs. Kiora'
+  ebay_query: Duel Decks Elspeth vs Kiora MTG
+  product_kind: duel_deck
+  default_sort: price
+DDP:
+- key: duel_deck
+  label: 'Duel Decks: Zendikar vs. Eldrazi'
+  ebay_query: Duel Decks Zendikar vs Eldrazi MTG
+  product_kind: duel_deck
+  default_sort: price
+DDQ:
+- key: duel_deck
+  label: 'Duel Decks: Blessed vs. Cursed'
+  ebay_query: Duel Decks Blessed vs Cursed MTG
+  product_kind: duel_deck
+  default_sort: price
+DDS:
+- key: duel_deck
+  label: 'Duel Decks: Mind vs. Might'
+  ebay_query: Duel Decks Mind vs Might MTG
+  product_kind: duel_deck
+  default_sort: price
+DDT:
+- key: duel_deck
+  label: 'Duel Decks: Elves vs. Inventors'
+  ebay_query: Duel Decks Elves vs Inventors MTG
+  product_kind: duel_deck
+  default_sort: price
+DDU:
+- key: duel_deck
+  label: 'Duel Decks: Merfolk vs. Goblins'
+  ebay_query: Duel Decks Merfolk vs Goblins MTG
+  product_kind: duel_deck
+  default_sort: price
+DDV:
+- key: duel_deck
+  label: 'Duel Decks: Nissa vs. Ob Nixilis'
+  ebay_query: Duel Decks Nissa vs Ob Nixilis MTG
+  product_kind: duel_deck
+  default_sort: price
+DD3:
+- key: duel_deck
+  label: Duel Decks Anthology
+  ebay_query: Duel Decks Anthology MTG
+  product_kind: duel_deck
+  default_sort: price
+V08:
+- key: from_the_vault
+  label: 'From the Vault: Dragons'
+  ebay_query: From the Vault Dragons MTG
+  product_kind: from_the_vault
+  default_sort: price
+V09:
+- key: from_the_vault
+  label: 'From the Vault: Exiled'
+  ebay_query: From the Vault Exiled MTG
+  product_kind: from_the_vault
+  default_sort: price
+V10:
+- key: from_the_vault
+  label: 'From the Vault: Relics'
+  ebay_query: From the Vault Relics MTG
+  product_kind: from_the_vault
+  default_sort: price
+V11:
+- key: from_the_vault
+  label: 'From the Vault: Legends'
+  ebay_query: From the Vault Legends MTG
+  product_kind: from_the_vault
+  default_sort: price
+V12:
+- key: from_the_vault
+  label: 'From the Vault: Realms'
+  ebay_query: From the Vault Realms MTG
+  product_kind: from_the_vault
+  default_sort: price
+V13:
+- key: from_the_vault
+  label: 'From the Vault: Twenty'
+  ebay_query: From the Vault Twenty MTG
+  product_kind: from_the_vault
+  default_sort: price
+V14:
+- key: from_the_vault
+  label: 'From the Vault: Annihilation'
+  ebay_query: From the Vault Annihilation MTG
+  product_kind: from_the_vault
+  default_sort: price
+V15:
+- key: from_the_vault
+  label: 'From the Vault: Angels'
+  ebay_query: From the Vault Angels MTG
+  product_kind: from_the_vault
+  default_sort: price
+V16:
+- key: from_the_vault
+  label: 'From the Vault: Lore'
+  ebay_query: From the Vault Lore MTG
+  product_kind: from_the_vault
+  default_sort: price
+V17:
+- key: from_the_vault
+  label: 'From the Vault: Transform'
+  ebay_query: From the Vault Transform MTG
+  product_kind: from_the_vault
+  default_sort: price
+HOP:
+- key: planechase
+  label: Planechase
+  ebay_query: Planechase MTG
+  product_kind: planechase
+  default_sort: price
+PC2:
+- key: planechase_2012
+  label: Planechase 2012
+  ebay_query: Planechase 2012 MTG
+  product_kind: planechase
+  default_sort: price
+PCA:
+- key: planechase_anthology
+  label: Planechase Anthology
+  ebay_query: Planechase Anthology MTG
+  product_kind: planechase
+  default_sort: price
+ARC:
+- key: archenemy
+  label: Archenemy
+  ebay_query: Archenemy MTG
+  product_kind: archenemy
+  default_sort: price
+E01:
+- key: archenemy_nicol_bolas
+  label: 'Archenemy: Nicol Bolas'
+  ebay_query: Archenemy Nicol Bolas MTG
+  product_kind: archenemy
+  default_sort: price
+SS1:
+- key: signature_spellbook
+  label: 'Signature Spellbook: Jace'
+  ebay_query: Signature Spellbook Jace MTG
+  product_kind: signature_spellbook
+  default_sort: price
+SS2:
+- key: signature_spellbook
+  label: 'Signature Spellbook: Gideon'
+  ebay_query: Signature Spellbook Gideon MTG
+  product_kind: signature_spellbook
+  default_sort: price
+SS3:
+- key: signature_spellbook
+  label: 'Signature Spellbook: Chandra'
+  ebay_query: Signature Spellbook Chandra MTG
+  product_kind: signature_spellbook
+  default_sort: price
+CC1:
+- key: commander_collection
+  label: 'Commander Collection: Green'
+  ebay_query: Commander Collection Green MTG
+  product_kind: commander_collection
+  default_sort: price
+CC2:
+- key: commander_collection
+  label: 'Commander Collection: Black'
+  ebay_query: Commander Collection Black MTG
+  product_kind: commander_collection
+  default_sort: price
+GN1:
+- key: game_night
+  label: Game Night
+  ebay_query: Magic Game Night MTG
+  product_kind: game_night
+  default_sort: price
+GN2:
+- key: game_night_2019
+  label: Game Night 2019
+  ebay_query: Magic Game Night 2019 MTG
+  product_kind: game_night
+  default_sort: price
+GNFD:
+- key: game_night_ffa
+  label: 'Magic Game Night: Free-For-All'
+  ebay_query: Magic Game Night Free-For-All MTG
+  product_kind: game_night
+  default_sort: price
+UND:
+- key: unsanctioned
+  label: Unsanctioned
+  ebay_query: Unsanctioned MTG
+  product_kind: unsanctioned
+  default_sort: price
+Q06:
+- key: hazoret_aggro
+  label: Hazoret Aggro
+  ebay_query: Hazoret Aggro Challenger Deck 2018 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: vehicle_rush
+  label: Vehicle Rush
+  ebay_query: Vehicle Rush Challenger Deck 2018 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: second_sun_control
+  label: Second Sun Control
+  ebay_query: Second Sun Control Challenger Deck 2018 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: counter_surge
+  label: Counter Surge
+  ebay_query: Counter Surge Challenger Deck 2018 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: challenger_deck_set
+  label: Challenger Decks 2018 Set of 4
+  ebay_query: Challenger Decks 2018 Set of 4 MTG
+  product_kind: commander_deck_set
+  default_sort: price
+Q07:
+- key: arcane_tempo
+  label: Arcane Tempo
+  ebay_query: Arcane Tempo Challenger Deck 2019 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: deadly_discovery
+  label: Deadly Discovery
+  ebay_query: Deadly Discovery Challenger Deck 2019 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: lightning_aggro
+  label: Lightning Aggro
+  ebay_query: Lightning Aggro Challenger Deck 2019 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: united_assault
+  label: United Assault
+  ebay_query: United Assault Challenger Deck 2019 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: challenger_deck_set
+  label: Challenger Decks 2019 Set of 4
+  ebay_query: Challenger Decks 2019 Set of 4 MTG
+  product_kind: commander_deck_set
+  default_sort: price
+Q08:
+- key: cavalcade_charge
+  label: Cavalcade Charge
+  ebay_query: Cavalcade Charge Challenger Deck 2020 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: final_adventure
+  label: Final Adventure
+  ebay_query: Final Adventure Challenger Deck 2020 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: allied_fires
+  label: Allied Fires
+  ebay_query: Allied Fires Challenger Deck 2020 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: flash_of_ferocity
+  label: Flash of Ferocity
+  ebay_query: Flash of Ferocity Challenger Deck 2020 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: challenger_deck_set
+  label: Challenger Decks 2020 Set of 4
+  ebay_query: Challenger Decks 2020 Set of 4 MTG
+  product_kind: commander_deck_set
+  default_sort: price
+Q09:
+- key: mono_red_aggro
+  label: Mono Red Aggro
+  ebay_query: Mono Red Aggro Challenger Deck 2021 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: mono_green_stompy
+  label: Mono Green Stompy
+  ebay_query: Mono Green Stompy Challenger Deck 2021 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: dimir_rogues
+  label: Dimir Rogues
+  ebay_query: Dimir Rogues Challenger Deck 2021 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: azorius_control
+  label: Azorius Control
+  ebay_query: Azorius Control Challenger Deck 2021 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: challenger_deck_set
+  label: Challenger Decks 2021 Set of 4
+  ebay_query: Challenger Decks 2021 Set of 4 MTG
+  product_kind: commander_deck_set
+  default_sort: price
+Q10:
+- key: dimir_control
+  label: Dimir Control
+  ebay_query: Dimir Control Challenger Deck 2022 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: rakdos_vampires
+  label: Rakdos Vampires
+  ebay_query: Rakdos Vampires Challenger Deck 2022 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: mono_white_aggro
+  label: Mono White Aggro
+  ebay_query: Mono White Aggro Challenger Deck 2022 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: gruul_stompy
+  label: Gruul Stompy
+  ebay_query: Gruul Stompy Challenger Deck 2022 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: challenger_deck_set
+  label: Challenger Decks 2022 Set of 4
+  ebay_query: Challenger Decks 2022 Set of 4 MTG
+  product_kind: commander_deck_set
+  default_sort: price
+PCCD21:
+- key: lotus_field_combo
+  label: Lotus Field Combo
+  ebay_query: Lotus Field Combo Pioneer Challenger Deck 2021 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: azorius_spirits
+  label: Azorius Spirits
+  ebay_query: Azorius Spirits Pioneer Challenger Deck 2021 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: mono_red_burn
+  label: Mono Red Burn
+  ebay_query: Mono Red Burn Pioneer Challenger Deck 2021 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: orzhov_auras
+  label: Orzhov Auras
+  ebay_query: Orzhov Auras Pioneer Challenger Deck 2021 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: challenger_deck_set
+  label: Pioneer Challenger Decks 2021 Set of 4
+  ebay_query: Pioneer Challenger Decks 2021 Set of 4 MTG
+  product_kind: commander_deck_set
+  default_sort: price
+PCCD22:
+- key: izzet_phoenix
+  label: Izzet Phoenix
+  ebay_query: Izzet Phoenix Pioneer Challenger Deck 2022 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: gruul_stompy
+  label: Gruul Stompy
+  ebay_query: Gruul Stompy Pioneer Challenger Deck 2022 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: dimir_control
+  label: Dimir Control
+  ebay_query: Dimir Control Pioneer Challenger Deck 2022 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: orzhov_humans
+  label: Orzhov Humans
+  ebay_query: Orzhov Humans Pioneer Challenger Deck 2022 MTG
+  product_kind: challenger_deck
+  default_sort: price
+- key: challenger_deck_set
+  label: Pioneer Challenger Decks 2022 Set of 4
+  ebay_query: Pioneer Challenger Decks 2022 Set of 4 MTG
+  product_kind: commander_deck_set
   default_sort: price
