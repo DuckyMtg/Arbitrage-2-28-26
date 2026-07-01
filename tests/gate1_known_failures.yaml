@@ -1,0 +1,16 @@
+# Quarantined FAIL_ZERO pools.
+#
+# These pools are known to return zero results from Scryfall and have no
+# working fallback. They are excluded from the new-failure ratchet in
+# test_gate1_composition.py::test_fail_zero_ratchet.
+#
+# Rules:
+#   - A new FAIL_ZERO pool NOT listed here causes the ratchet test to FAIL
+#     (you must either fix the query or add it here with a comment explaining why).
+#   - A pool listed here that is no longer FAIL_ZERO causes the test to FAIL
+#     (remove it from this file — the quarantine only shrinks).
+#
+# Format: one "SET|kind|pool_label" key per line.
+
+- WOE|box|woe_land_showcase_f
+- WOE|box|woe_land_showcase_nf
