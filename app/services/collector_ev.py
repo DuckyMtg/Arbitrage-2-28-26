@@ -584,7 +584,7 @@ def model_mh3_collector_box() -> ProductModel:
         _fl(sc, "is:fullart"),        # Eldrazi land
         Slot("Retro C/U NF",   [(1.0, _qp("mh3_ret_cu_nf", q_ret_cu, f=False))], strict_probs=True),
         Slot("Foil Retro C/U", [(1.0, _qp("mh3_fret_cu",   q_ret_cu))],          strict_probs=True),
-        _frm(sc, 1 / 90, 1 / 180),
+        _frm(sc, 1 / 90, 1 / 180, xr="-frame:1997", xm="-frame:1997"),
         _cmd_var(sc, q_cmd, 0.0881, "Showcase Commander (91.19% NF / 8.81% foil)"),
         _treat(sc, 1 / 83, 1 / 166, "is:extendedart", foil=False, n=2.0, lbl="2x Showcase R/M NF", tag="mh3_sc_nf"),
         _treat(sc, 1 / 83, 1 / 166, "is:extendedart", foil=True,       lbl="Foil Showcase R/M",    tag="mh3_fsc"),
