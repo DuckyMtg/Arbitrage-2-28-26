@@ -1791,7 +1791,7 @@ def slot_eoe_wildcard() -> Slot:
     q_u   = _q("set:eoe", "rarity:uncommon", "is:booster", "game:paper")
     q_r   = _q("set:eoe", "rarity:rare",     "is:booster", "game:paper")
     q_m   = _q("set:eoe", "rarity:mythic",   "is:booster", "game:paper")
-    q_eos = _q("set:eos", "game:paper")
+    q_eos = _q("set:eos", "cn<=45", "game:paper")
     return Slot(
         name="Wildcard (1 slot)",
         outcomes=[
