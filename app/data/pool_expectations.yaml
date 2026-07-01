@@ -38,6 +38,10 @@ STX|collector_box|stx_less:
   expected: 5
   source: "Scryfall 2026-06-30"
 
+RVR|collector_box|rvr_fl:
+  expected: 20
+  source: "Scryfall 2026-06-30 — 10 shock lands × 2 regular-frame prints (CN 273-291 + CN 292-301)"
+
 RVR|collector_box|rvr_fsc_r:
   expected: 59
   source: "Scryfall 2026-06-30"

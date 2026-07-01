@@ -723,7 +723,7 @@ def model_rvr_collector_box() -> ProductModel:
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fc(sc, 4),
         _fu(sc, 3),
-        _fl(sc),
+        _fl(sc, "rarity:rare -frame:1997 finish:foil"),
         Slot("2x Retro C/U NF",   [(2.0, _qp("rvr_ret_cu_nf", q_ret_cu, f=False))], strict_probs=False),
         Slot("Foil Retro C/U",    [(1.0, _qp("rvr_fret_cu",   q_ret_cu))],           strict_probs=True),
         _frm(sc, 1 / 70,  1 / 140, old=True),
