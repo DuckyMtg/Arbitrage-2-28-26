@@ -271,8 +271,8 @@ def model_cmm_collector_box() -> ProductModel:
         "Foil Borderless R/M (96.8%) / Textured R/M (3.2%)",
         [(0.968 * p_fsc_r, _qp("cmm_fsc_r", q_sc_r)),
          (0.968 * p_fsc_m, _qp("cmm_fsc_m", q_sc_m)),
-         (0.032 * p_tx_r,  _qp("cmm_tx_r",  q_tx_r)),
-         (0.032 * p_tx_m,  _qp("cmm_tx_m",  q_tx_m))],
+         (0.032 * p_tx_r,  _qp("cmm_tx_r",  q_tx_r, unique="cards")),
+         (0.032 * p_tx_m,  _qp("cmm_tx_m",  q_tx_m, unique="cards"))],
         strict_probs=True, renormalize=True,
     )
     q_sc_c = _q(f"set:{sc}", "rarity:common",   "is:borderless", "game:paper")
