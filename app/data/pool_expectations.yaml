@@ -38,6 +38,10 @@ STX|collector_box|stx_less:
   expected: 5
   source: "Scryfall 2026-06-30"
 
+RVR|collector_box|rvr_fl:
+  expected: 20
+  source: "Scryfall 2026-06-30 — 10 shock lands × 2 regular-frame prints (CN 273-291 + CN 292-301)"
+
 RVR|collector_box|rvr_fsc_r:
   expected: 59
   source: "Scryfall 2026-06-30"
@@ -90,6 +94,14 @@ LTR|collector_box|ltr_sol:
   expected: 1
   source: "Scryfall 2026-06-30"
 
+LTR|collector_box|ltr_fsc_m:
+  expected: 20
+  source: "Scryfall 2026-06-30 — scene-art showcase mythics CN 456-709; unique=cards selects these"
+
+EOE|box|eoe_wc_eos:
+  expected: 45
+  source: "Scryfall 2026-06-30 — standard-art EOS lands CN 1-45 (alternate art CN 46-90 in set/collector boxes)"
+
 FIN|collector_box|fin_fic_f:
   expected: 44
   source: "Scryfall 2026-06-30"
@@ -97,3 +109,15 @@ FIN|collector_box|fin_fic_f:
 WOE|box|wot_anime_m:
   expected: 8
   source: "Scryfall 2026-06-30 — anime frame mythics CN 64-83 from _WOT_ANIME_MYTHICS"
+
+WOE|box|wot_anime_r:
+  expected: 4
+  source: "Scryfall 2026-06-30 — anime frame CN 64-83; Primal Vigor has no anime print in WOT"
+
+WOE|box|wot_m:
+  expected: 15
+  source: "Scryfall 2026-06-30 — standard-frame mythics CN<=63 only"
+
+WOE|draft_box|woe_draft_wot_am:
+  expected: 15
+  source: "Scryfall 2026-06-30 — anime-frame mythics CN 64-83"

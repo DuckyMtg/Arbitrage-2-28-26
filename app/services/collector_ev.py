@@ -271,8 +271,8 @@ def model_cmm_collector_box() -> ProductModel:
         "Foil Borderless R/M (96.8%) / Textured R/M (3.2%)",
         [(0.968 * p_fsc_r, _qp("cmm_fsc_r", q_sc_r)),
          (0.968 * p_fsc_m, _qp("cmm_fsc_m", q_sc_m)),
-         (0.032 * p_tx_r,  _qp("cmm_tx_r",  q_tx_r)),
-         (0.032 * p_tx_m,  _qp("cmm_tx_m",  q_tx_m))],
+         (0.032 * p_tx_r,  _qp("cmm_tx_r",  q_tx_r, unique="cards")),
+         (0.032 * p_tx_m,  _qp("cmm_tx_m",  q_tx_m, unique="cards"))],
         strict_probs=True, renormalize=True,
     )
     q_sc_c = _q(f"set:{sc}", "rarity:common",   "is:borderless", "game:paper")
@@ -530,7 +530,9 @@ def model_ltr_collector_box() -> ProductModel:
     q_sc_u = _q(f"set:{sc}", "rarity:uncommon", "is:showcase", "game:paper", "lang:en")
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fc(sc, 3),       # 4th foil_common handled by sol_slot variant below
-        _fu(sc, 2),
+        Slot("2x Foil Uncommon", [(2.0, _qp("ltr_fu",
+            _q(f"set:{sc}", "rarity:uncommon", "-is:showcase", "game:paper", "lang:en")))],
+            strict_probs=False),
         _fb(sc),
         _frm(sc, 1 / 70, 1 / 140, old=True),
         _treat(sc, 2 / 65,  1 / 65,  "is:extendedart", foil=False, old=True, lbl="Extended Core R/M NF",      tag="ltr_ext_c"),
@@ -540,8 +542,8 @@ def model_ltr_collector_box() -> ProductModel:
         _treat(sc, 8 / 179, 4 / 179, "is:borderless",  foil=False, old=True, lbl="Borderless Scene NF",        tag="ltr_bl"),
         Slot("Foil Showcase Uncommon", [(1.0, _qp("ltr_fsc_u", q_sc_u))], strict_probs=True),
         Slot("Foil Showcase R/M",
-             [(p_fsc_r, _qp("ltr_fsc_r", q_fsc_rm)),
-              (p_fsc_m, _qp("ltr_fsc_m", q_fsc_rm_m))],
+             [(p_fsc_r, _qp("ltr_fsc_r", q_fsc_rm,   unique="cards")),
+              (p_fsc_m, _qp("ltr_fsc_m", q_fsc_rm_m, unique="cards"))],
              strict_probs=True, renormalize=True),
         sol_slot,
     ])
@@ -582,7 +584,7 @@ def model_mh3_collector_box() -> ProductModel:
         _fl(sc, "is:fullart"),        # Eldrazi land
         Slot("Retro C/U NF",   [(1.0, _qp("mh3_ret_cu_nf", q_ret_cu, f=False))], strict_probs=True),
         Slot("Foil Retro C/U", [(1.0, _qp("mh3_fret_cu",   q_ret_cu))],          strict_probs=True),
-        _frm(sc, 1 / 90, 1 / 180),
+        _frm(sc, 1 / 90, 1 / 180, xr="-frame:1997", xm="-frame:1997"),
         _cmd_var(sc, q_cmd, 0.0881, "Showcase Commander (91.19% NF / 8.81% foil)"),
         _treat(sc, 1 / 83, 1 / 166, "is:extendedart", foil=False, n=2.0, lbl="2x Showcase R/M NF", tag="mh3_sc_nf"),
         _treat(sc, 1 / 83, 1 / 166, "is:extendedart", foil=True,       lbl="Foil Showcase R/M",    tag="mh3_fsc"),
@@ -723,7 +725,7 @@ def model_rvr_collector_box() -> ProductModel:
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fc(sc, 4),
         _fu(sc, 3),
-        _fl(sc),
+        _fl(sc, "rarity:rare -frame:1997 finish:foil"),
         Slot("2x Retro C/U NF",   [(2.0, _qp("rvr_ret_cu_nf", q_ret_cu, f=False))], strict_probs=False),
         Slot("Foil Retro C/U",    [(1.0, _qp("rvr_fret_cu",   q_ret_cu))],           strict_probs=True),
         _frm(sc, 1 / 70,  1 / 140, old=True),
