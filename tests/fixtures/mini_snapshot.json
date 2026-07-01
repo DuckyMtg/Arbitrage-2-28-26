@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-01T00:00:00+00:00",
+  "pools": [
+    {
+      "_comment": "FAIL_ZERO: primary returns 0, fallback also empty — both broken queries",
+      "set": "STX",
+      "kind": "collector_box",
+      "slot_name": "Mystical Archive (Less Common)",
+      "pool_label": "stx_less",
+      "query": "set:stx is:showcase rarity:uncommon game:paper lang:en",
+      "unique": "prints",
+      "price_field": "usd_foil",
+      "primary_count": 0,
+      "count_prints": 0,
+      "count_cards": 0,
+      "fallback_query": null,
+      "fallback_count": null,
+      "avg_prints": 0.0,
+      "avg_cards": 0.0
+    },
+    {
+      "_comment": "PASS / normal pool: clean nonfoil rare pool with no special treatments",
+      "set": "BLB",
+      "kind": "box",
+      "slot_name": "Rare / Mythic",
+      "pool_label": "blb_main_rare",
+      "query": "set:blb rarity:rare finish:nonfoil game:paper lang:en",
+      "unique": "prints",
+      "price_field": "usd",
+      "primary_count": 60,
+      "count_prints": 60,
+      "count_cards": 60,
+      "fallback_query": null,
+      "fallback_count": null,
+      "avg_prints": 2.47,
+      "avg_cards": 2.47
+    },
+    {
+      "_comment": "INFLATION_SUSPECT: LTR showcase R/M has 3 print tiers per card; unique=prints inflates avg",
+      "set": "LTR",
+      "kind": "collector_box",
+      "slot_name": "Foil Showcase R/M",
+      "pool_label": "ltr_fsc_m",
+      "query": "set:ltr is:showcase rarity:mythic game:paper lang:en",
+      "unique": "prints",
+      "price_field": "usd_foil",
+      "primary_count": 32,
+      "count_prints": 32,
+      "count_cards": 20,
+      "fallback_query": null,
+      "fallback_count": null,
+      "avg_prints": 18.30,
+      "avg_cards": 28.94
+    }
+  ]
+}
