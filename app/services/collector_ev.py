@@ -530,7 +530,9 @@ def model_ltr_collector_box() -> ProductModel:
     q_sc_u = _q(f"set:{sc}", "rarity:uncommon", "is:showcase", "game:paper", "lang:en")
     return ProductModel(set_code=sc, packs_per_box=12, slots=[
         _fc(sc, 3),       # 4th foil_common handled by sol_slot variant below
-        _fu(sc, 2),
+        Slot("2x Foil Uncommon", [(2.0, _qp("ltr_fu",
+            _q(f"set:{sc}", "rarity:uncommon", "-is:showcase", "game:paper", "lang:en")))],
+            strict_probs=False),
         _fb(sc),
         _frm(sc, 1 / 70, 1 / 140, old=True),
         _treat(sc, 2 / 65,  1 / 65,  "is:extendedart", foil=False, old=True, lbl="Extended Core R/M NF",      tag="ltr_ext_c"),
