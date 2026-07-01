@@ -90,6 +90,10 @@ LTR|collector_box|ltr_sol:
   expected: 1
   source: "Scryfall 2026-06-30"
 
+LTR|collector_box|ltr_fsc_m:
+  expected: 20
+  source: "Scryfall 2026-06-30 — scene-art showcase mythics CN 456-709; unique=cards selects these"
+
 FIN|collector_box|fin_fic_f:
   expected: 44
   source: "Scryfall 2026-06-30"

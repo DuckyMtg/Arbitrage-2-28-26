@@ -540,8 +540,8 @@ def model_ltr_collector_box() -> ProductModel:
         _treat(sc, 8 / 179, 4 / 179, "is:borderless",  foil=False, old=True, lbl="Borderless Scene NF",        tag="ltr_bl"),
         Slot("Foil Showcase Uncommon", [(1.0, _qp("ltr_fsc_u", q_sc_u))], strict_probs=True),
         Slot("Foil Showcase R/M",
-             [(p_fsc_r, _qp("ltr_fsc_r", q_fsc_rm)),
-              (p_fsc_m, _qp("ltr_fsc_m", q_fsc_rm_m))],
+             [(p_fsc_r, _qp("ltr_fsc_r", q_fsc_rm,   unique="cards")),
+              (p_fsc_m, _qp("ltr_fsc_m", q_fsc_rm_m, unique="cards"))],
              strict_probs=True, renormalize=True),
         sol_slot,
     ])
