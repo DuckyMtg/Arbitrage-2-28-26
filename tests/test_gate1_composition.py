@@ -97,7 +97,7 @@ def pools_by_key(snapshot: dict) -> dict[str, dict]:
 def _load_expectations() -> dict[str, dict]:
     if not _EXPECTATIONS_PATH.exists():
         return {}
-    with open(_EXPECTATIONS_PATH) as f:
+    with open(_EXPECTATIONS_PATH, encoding="utf-8") as f:
         data = yaml.safe_load(f) or {}
     return {k: v for k, v in data.items() if isinstance(v, dict)}
 
@@ -183,7 +183,7 @@ def _is_fail_zero(pool: dict, expected_count: Optional[int]) -> bool:
 def _load_known_failures() -> set[str]:
     if not _KNOWN_FAILURES_PATH.exists():
         return set()
-    with open(_KNOWN_FAILURES_PATH) as f:
+    with open(_KNOWN_FAILURES_PATH, encoding="utf-8") as f:
         data = yaml.safe_load(f) or []
     return set(data)
 

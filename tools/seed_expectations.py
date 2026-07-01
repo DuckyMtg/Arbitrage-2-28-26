@@ -53,7 +53,7 @@ PRICE_DIFF_THRESHOLD = 1.00  # USD
 # ---------------------------------------------------------------------------
 
 def _load_snapshot(path: Path) -> dict:
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         return json.load(f)
 
 
@@ -63,7 +63,7 @@ def _load_existing(path: Path) -> dict[str, dict]:
         return {}
     try:
         import yaml
-        with open(path) as f:
+        with open(path, encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}
         return {k: v for k, v in data.items() if isinstance(v, dict)}
     except Exception as exc:
@@ -191,7 +191,7 @@ def _write_yaml(path: Path, data: dict[str, dict]) -> None:
             lines.append(f"  unique: {entry['unique']!r}")
         lines.append(f"  source: {entry['source']!r}")
         lines.append("")
-    path.write_text("\n".join(lines))
+    path.write_text("\n".join(lines), encoding="utf-8")
 
 
 # ---------------------------------------------------------------------------

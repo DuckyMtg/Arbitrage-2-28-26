@@ -38,6 +38,9 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 log = logging.getLogger(__name__)
 
@@ -90,7 +93,7 @@ def load_expectations(repo_root: Path = _REPO_ROOT) -> dict[str, dict]:
         return {}
     try:
         import yaml
-        with open(path) as f:
+        with open(path, encoding="utf-8") as f:
             data = yaml.safe_load(f) or {}
         return {k: v for k, v in data.items() if isinstance(v, dict)}
     except Exception as exc:
@@ -103,7 +106,7 @@ def load_expectations(repo_root: Path = _REPO_ROOT) -> dict[str, dict]:
 # ---------------------------------------------------------------------------
 
 def load_snapshot(path: Path) -> dict:
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         return json.load(f)
 
 
@@ -154,7 +157,8 @@ def build_reports(
         kind: str = rec["kind"]
         exp_key = f"{set_code}|{kind}|{rec['pool_label']}"
         exp_entry = expectations.get(exp_key)
-        expected_count: Optional[int] = exp_entry.get("expected") if exp_entry else None
+        expected_count: Optional[int] = exp_entry.get(
+            "expected") if exp_entry else None
 
         primary_count: int = rec["primary_count"]
         count_prints: int = rec.get("count_prints", 0)
@@ -206,7 +210,7 @@ def build_reports(
 # ---------------------------------------------------------------------------
 
 def write_csv(reports: list[PoolReport], path: Path) -> None:
-    with open(path, "w", newline="") as f:
+    with open(path, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow([
             "set_code", "kind", "slot_name", "pool_label", "query", "unique",
@@ -244,14 +248,16 @@ def print_summary(reports: list[PoolReport], snapshot_path: Path, generated_at: 
         print(f"  {s:<22} {n:>4}")
     print()
 
-    attention_statuses = {"FETCH_ERROR", "FAIL_ZERO", "FALLBACK_USED", "MISMATCH", "INFLATION_SUSPECT"}
+    attention_statuses = {"FETCH_ERROR", "FAIL_ZERO",
+                          "FALLBACK_USED", "MISMATCH", "INFLATION_SUSPECT"}
     attention = [r for r in reports if r.status in attention_statuses]
     if attention:
         print(f"{'─'*72}")
         print("Pools requiring attention:")
         print(f"{'─'*72}")
         col_w = [6, 15, 18, 24, 8, 10]
-        headers = ["SET", "KIND", "STATUS", "POOL_LABEL", "PRIMARY", "INFLATION"]
+        headers = ["SET", "KIND", "STATUS",
+                   "POOL_LABEL", "PRIMARY", "INFLATION"]
         print("  ".join(h.ljust(w) for h, w in zip(headers, col_w)))
         print("  ".join("-" * w for w in col_w))
         for r in attention:
@@ -270,7 +276,8 @@ def print_summary(reports: list[PoolReport], snapshot_path: Path, generated_at: 
 # ---------------------------------------------------------------------------
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Gate 1: offline composition report")
+    parser = argparse.ArgumentParser(
+        description="Gate 1: offline composition report")
     parser.add_argument("--snapshot", metavar="PATH", type=Path,
                         default=DEFAULT_SNAPSHOT,
                         help=f"Snapshot JSON (default: {DEFAULT_SNAPSHOT})")
@@ -280,7 +287,8 @@ def main() -> None:
     args = parser.parse_args()
 
     if not args.snapshot.exists():
-        log.error("Snapshot not found: %s — run tools/gate1_collect.py first", args.snapshot)
+        log.error(
+            "Snapshot not found: %s — run tools/gate1_collect.py first", args.snapshot)
         sys.exit(1)
 
     snapshot = load_snapshot(args.snapshot)
@@ -307,7 +315,8 @@ def age_warning(generated_at: str) -> None:
         ts = datetime.fromisoformat(generated_at)
         age = datetime.now(timezone.utc) - ts
         if age.days > 30:
-            log.warning("Snapshot is %d days old — consider re-running gate1_collect.py", age.days)
+            log.warning(
+                "Snapshot is %d days old — consider re-running gate1_collect.py", age.days)
     except Exception:
         pass
 

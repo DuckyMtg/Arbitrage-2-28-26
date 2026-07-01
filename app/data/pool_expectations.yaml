@@ -2,122 +2,4322 @@
 #
 # Format: each key is "{SET_CODE}|{kind}|{pool_label}", value has:
 #   expected: <int>   # expected primary_count from Scryfall
-#   source: <str>     # where this count was verified (e.g. "Scryfall 2025-06-30")
+#   unique:   <str>   # unique mode used (prints or cards)
+#   source: <str>     # where this count was verified
 #
 # Status classification uses this file:
-#   PASS    — primary_count matches expected
-#   MISMATCH — primary_count != expected
-#   Pools with no entry here are UNVERIFIED (harness still runs and reports them).
-#
-# This file is meant to grow as pools are manually verified. Hand-edit freely.
-#
-# Examples (uncomment to activate):
-# BLB|box|blb_main_rare:
-#   expected: 60
-#   source: "Scryfall 2025-06-30"
-# BLB|box|blb_main_mythic:
-#   expected: 20
-#   source: "Scryfall 2025-06-30"
-# OTJ|box|otj_main_rare:
-#   expected: 60
-#   source: "Scryfall 2025-06-30"
+#   PASS    — count at recorded unique mode matches expected
+#   MISMATCH — count != expected
+#   Pools with no entry here are UNVERIFIED.
 
-OTJ|box|otp_m:
-  expected: 30
-  source: "Scryfall 2026-06-30"
+2X2|collector_box|2x2_eth_m:
+  expected: 40
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
 
-OTJ|box|otp_r:
-  expected: 30
-  source: "Scryfall 2026-06-30"
+2X2|collector_box|2x2_eth_r:
+  expected: 120
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
 
-OTJ|box|otp_u:
-  expected: 20
-  source: "Scryfall 2026-06-30"
+2X2|collector_box|2x2_fc:
+  expected: 101
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
 
-STX|collector_box|stx_less:
-  expected: 5
-  source: "Scryfall 2026-06-30"
+2X2|collector_box|2x2_fm:
+  expected: 80
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
 
-RVR|collector_box|rvr_fl:
-  expected: 20
-  source: "Scryfall 2026-06-30 — 10 shock lands × 2 regular-frame prints (CN 273-291 + CN 292-301)"
+2X2|collector_box|2x2_fr:
+  expected: 242
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
 
-RVR|collector_box|rvr_fsc_r:
-  expected: 59
-  source: "Scryfall 2026-06-30"
-
-RVR|collector_box|rvr_fsc_m:
-  expected: 16
-  source: "Scryfall 2026-06-30"
-
-ONE|collector_box|one_cmd_m:
-  expected: 0
-  source: "Scryfall 2026-06-30 — ONE has no extended-art mythics"
-
-ONE|collector_box|one_ext_m:
-  expected: 0
-  source: "Scryfall 2026-06-30 — ONE has no extended-art mythics"
-
-MH3|draft_box|mh3_main_retro_r:
-  expected: 27
-  source: "Scryfall 2026-06-30"
-
-MH3|draft_box|mh3_main_retro_m:
+2X2|collector_box|2x2_fsc_c:
   expected: 9
-  source: "Scryfall 2026-06-30"
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
 
-MH3|draft_box|mh3_ntm_retro_any:
-  expected: 27
-  source: "Scryfall 2026-06-30"
-
-MH3|draft_box|mh3_wc_borderless_rm:
-  expected: 77
-  source: "Scryfall 2026-06-30"
-
-MH3|draft_box|mh3_wc_retro_any:
-  expected: 59
-  source: "Scryfall 2026-06-30"
-
-MH3|draft_box|mh3_foil_borderless:
-  expected: 68
-  source: "Scryfall 2026-06-30"
-
-MH3|draft_box|mh3_foil_retro:
-  expected: 59
-  source: "Scryfall 2026-06-30"
-
-MH2|collector_box|mh2_ext_m:
-  expected: 0
-  source: "Scryfall 2026-06-30 — MH2 has no extended-art mythics"
-
-LTR|collector_box|ltr_sol:
-  expected: 1
-  source: "Scryfall 2026-06-30"
-
-LTR|collector_box|ltr_fsc_m:
+2X2|collector_box|2x2_fsc_m:
   expected: 20
-  source: "Scryfall 2026-06-30 — scene-art showcase mythics CN 456-709; unique=cards selects these"
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+2X2|collector_box|2x2_fsc_r:
+  expected: 30
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+2X2|collector_box|2x2_fsc_u:
+  expected: 21
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+2X2|collector_box|2x2_fu:
+  expected: 101
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+2X2|collector_box|2x2_sc_c:
+  expected: 9
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+2X2|collector_box|2x2_sc_nf_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+2X2|collector_box|2x2_sc_nf_r:
+  expected: 30
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+2X2|collector_box|2x2_sc_u:
+  expected: 21
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+2X2|collector_box|2x2_tx_m:
+  expected: 40
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+2X2|collector_box|2x2_tx_r:
+  expected: 120
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+2X2|draft_box|2x2_f1_foil_c:
+  expected: 92
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+2X2|draft_box|2x2_f1_foil_m:
+  expected: 40
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+2X2|draft_box|2x2_f1_foil_r:
+  expected: 120
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+2X2|draft_box|2x2_f1_foil_u:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+2X2|draft_box|2x2_f2_foil_c:
+  expected: 92
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+2X2|draft_box|2x2_f2_foil_m:
+  expected: 40
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+2X2|draft_box|2x2_f2_foil_r:
+  expected: 120
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+2X2|draft_box|2x2_f2_foil_u:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+2X2|draft_box|2x2_rm1_m:
+  expected: 40
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+2X2|draft_box|2x2_rm1_r:
+  expected: 120
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+2X2|draft_box|2x2_rm2_m:
+  expected: 40
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+2X2|draft_box|2x2_rm2_r:
+  expected: 120
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+2X2|draft_box|2x2_uncommon:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|box|acr_bf_bl_m:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|box|acr_bf_bl_r:
+  expected: 22
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|box|acr_bf_bl_r_f:
+  expected: 22
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|box|acr_bf_sc_m:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|box|acr_bf_sc_r:
+  expected: 14
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|box|acr_bf_sc_r_f:
+  expected: 14
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|box|acr_foil_m:
+  expected: 14
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|box|acr_foil_r:
+  expected: 32
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|box|acr_foil_u:
+  expected: 54
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|box|acr_main_m:
+  expected: 14
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|box|acr_main_r:
+  expected: 32
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|box|acr_scene_m:
+  expected: 1
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|box|acr_scene_r:
+  expected: 5
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|box|acr_unc3:
+  expected: 54
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|collector_box|acr_bl_m:
+  expected: 19
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|collector_box|acr_bl_r:
+  expected: 22
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|collector_box|acr_eth_m:
+  expected: 14
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|collector_box|acr_eth_r:
+  expected: 32
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|collector_box|acr_eth_u:
+  expected: 49
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|collector_box|acr_ext_nf_m:
+  expected: 1
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|collector_box|acr_ext_nf_r:
+  expected: 17
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|collector_box|acr_fb:
+  expected: 14
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|collector_box|acr_fm:
+  expected: 30
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|collector_box|acr_fr:
+  expected: 71
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|collector_box|acr_fsc_m:
+  expected: 5
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|collector_box|acr_fsc_r:
+  expected: 14
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|collector_box|acr_fsc_u:
+  expected: 9
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ACR|collector_box|acr_fu:
+  expected: 122
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+AFR|draft_box|afr_common:
+  expected: 106
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+AFR|draft_box|afr_draft_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+AFR|draft_box|afr_draft_foil_r:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+AFR|draft_box|afr_draft_foil_u:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+AFR|draft_box|afr_land_basic_nf:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+AFR|draft_box|afr_main_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+AFR|draft_box|afr_main_rare:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+AFR|draft_box|afr_uncommon:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|box|blb_foil_c:
+  expected: 86
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|box|blb_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|box|blb_foil_r:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|box|blb_foil_u:
+  expected: 100
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|box|blb_land_any_f:
+  expected: 30
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|box|blb_land_any_nf:
+  expected: 30
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|box|blb_main_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|box|blb_main_rare:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|box|blb_spg:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|box|blb_uncommon:
+  expected: 100
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|box|blb_wc_common:
+  expected: 101
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|box|blb_wc_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|box|blb_wc_rare:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|box|blb_wc_uncommon:
+  expected: 100
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|collector_box|blb_cmd_f:
+  expected: 213
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|collector_box|blb_cmd_nf:
+  expected: 213
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|collector_box|blb_fb:
+  expected: 30
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|collector_box|blb_fc:
+  expected: 118
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|collector_box|blb_fm:
+  expected: 22
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|collector_box|blb_fr:
+  expected: 65
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|collector_box|blb_fsc_m:
+  expected: 9
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|collector_box|blb_fsc_r:
+  expected: 40
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|collector_box|blb_fu:
+  expected: 105
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|collector_box|blb_sc_nf_m:
+  expected: 9
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BLB|collector_box|blb_sc_nf_r:
+  expected: 40
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|box|bro_brr_m:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|box|bro_brr_r:
+  expected: 30
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|box|bro_brr_sch_m:
+  expected: 30
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|box|bro_brr_sch_r:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|box|bro_brr_sch_u:
+  expected: 36
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|box|bro_brr_u:
+  expected: 18
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|box|bro_foil_c:
+  expected: 106
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|box|bro_foil_m:
+  expected: 26
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|box|bro_foil_r:
+  expected: 63
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|box|bro_foil_u:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|box|bro_land_basic_f:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|box|bro_land_basic_nf:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|box|bro_list_plst:
+  expected: 4321
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|box|bro_main_mythic:
+  expected: 26
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|box|bro_main_rare:
+  expected: 63
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|box|bro_wc_common:
+  expected: 121
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|box|bro_wc_mythic:
+  expected: 26
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|box|bro_wc_rare:
+  expected: 63
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|box|bro_wc_uncommon:
+  expected: 80
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|collector_box|bro_bfm:
+  expected: 19
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|collector_box|bro_bfr:
+  expected: 58
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|collector_box|bro_cmd_m:
+  expected: 6
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|collector_box|bro_cmd_r:
+  expected: 21
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|collector_box|bro_ext_m:
+  expected: 19
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|collector_box|bro_ext_r:
+  expected: 58
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|collector_box|bro_fb:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|collector_box|bro_fc:
+  expected: 121
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|collector_box|bro_fm:
+  expected: 26
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|collector_box|bro_fr:
+  expected: 70
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|collector_box|bro_ftr:
+  expected: 15
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|collector_box|bro_fu:
+  expected: 85
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|collector_box|bro_tr_nf:
+  expected: 15
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|collector_box|brr_bm:
+  expected: 15
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|collector_box|brr_br:
+  expected: 30
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|collector_box|brr_u:
+  expected: 54
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|draft_box|bro_draft_foil_m:
+  expected: 26
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|draft_box|bro_draft_foil_r:
+  expected: 63
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|draft_box|bro_draft_foil_u:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+BRO|draft_box|bro_uncommon:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|box|cmm_foil_c:
+  expected: 135
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|box|cmm_foil_m:
+  expected: 35
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|box|cmm_foil_r:
+  expected: 135
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|box|cmm_foil_u:
+  expected: 135
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|box|cmm_land_retro_basic_f:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|box|cmm_land_retro_basic_nf:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|box|cmm_leg_m:
+  expected: 35
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|box|cmm_leg_r:
+  expected: 135
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|box|cmm_list_plst:
+  expected: 4321
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|box|cmm_nonleg_m:
+  expected: 35
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|box|cmm_nonleg_r:
+  expected: 135
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|box|cmm_wc_common:
+  expected: 145
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|box|cmm_wc_mythic:
+  expected: 35
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|box|cmm_wc_rare:
+  expected: 135
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|box|cmm_wc_uncommon:
+  expected: 135
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|collector_box|cmm_cmd_f_m:
+  expected: 7
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|collector_box|cmm_cmd_f_r:
+  expected: 28
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|collector_box|cmm_cmd_nf_m:
+  expected: 7
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|collector_box|cmm_cmd_nf_r:
+  expected: 28
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|collector_box|cmm_eth_m:
+  expected: 39
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|collector_box|cmm_eth_r:
+  expected: 135
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|collector_box|cmm_fb:
+  expected: 34
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|collector_box|cmm_fc:
+  expected: 211
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|collector_box|cmm_fm:
+  expected: 109
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|collector_box|cmm_fr:
+  expected: 412
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|collector_box|cmm_fsc_c:
+  expected: 12
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|collector_box|cmm_fsc_r:
+  expected: 35
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|collector_box|cmm_fsc_u:
+  expected: 18
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|collector_box|cmm_fu:
+  expected: 236
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|collector_box|cmm_sc_c:
+  expected: 12
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|collector_box|cmm_sc_nf_m:
+  expected: 18
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|collector_box|cmm_sc_nf_r:
+  expected: 35
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|collector_box|cmm_sc_u:
+  expected: 18
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|collector_box|cmm_tx_m:
+  expected: 70
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|collector_box|cmm_tx_r:
+  expected: 277
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|draft_box|cmm_draft_foil_c:
+  expected: 135
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|draft_box|cmm_draft_foil_m:
+  expected: 35
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|draft_box|cmm_draft_foil_r:
+  expected: 135
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|draft_box|cmm_draft_foil_u:
+  expected: 135
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+CMM|draft_box|cmm_uncommon:
+  expected: 135
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DFT|box|dft_foil_c:
+  expected: 96
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DFT|box|dft_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DFT|box|dft_foil_r:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DFT|box|dft_foil_u:
+  expected: 100
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DFT|box|dft_land_basic_f:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DFT|box|dft_land_basic_nf:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DFT|box|dft_main_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DFT|box|dft_main_rare:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DFT|box|dft_spg:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DFT|box|dft_wc_common:
+  expected: 111
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DFT|box|dft_wc_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DFT|box|dft_wc_rare:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DFT|box|dft_wc_uncommon:
+  expected: 100
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DFT|collector_box|dft_bfm:
+  expected: 23
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DFT|collector_box|dft_bfr:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DFT|collector_box|dft_cmd_f:
+  expected: 17
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DFT|collector_box|dft_cmd_nf:
+  expected: 17
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DFT|collector_box|dft_fc:
+  expected: 131
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DFT|collector_box|dft_frev_cu:
+  expected: 2
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DFT|collector_box|dft_fu:
+  expected: 123
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DFT|collector_box|dft_rev_cu:
+  expected: 2
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DMU|draft_box|dmu_common:
+  expected: 106
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DMU|draft_box|dmu_draft_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DMU|draft_box|dmu_draft_foil_r:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DMU|draft_box|dmu_draft_foil_u:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DMU|draft_box|dmu_land_basic_nf:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DMU|draft_box|dmu_main_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DMU|draft_box|dmu_main_rare:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DMU|draft_box|dmu_uncommon:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|box|dsk_foil_c:
+  expected: 96
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|box|dsk_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|box|dsk_foil_r:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|box|dsk_foil_u:
+  expected: 100
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|box|dsk_land_basic_f:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|box|dsk_land_basic_nf:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|box|dsk_main_mythic:
+  expected: 27
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|box|dsk_main_rare:
+  expected: 68
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|box|dsk_spg:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|box|dsk_uncommon:
+  expected: 100
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|box|dsk_wc_common:
+  expected: 108
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|box|dsk_wc_mythic:
+  expected: 27
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|box|dsk_wc_rare:
+  expected: 68
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|box|dsk_wc_uncommon:
+  expected: 104
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|collector_box|dsk_bfm:
+  expected: 25
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|collector_box|dsk_bfr:
+  expected: 59
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|collector_box|dsk_cmd_f:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|collector_box|dsk_cmd_nf:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|collector_box|dsk_fb:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|collector_box|dsk_fc:
+  expected: 108
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|collector_box|dsk_fm:
+  expected: 22
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|collector_box|dsk_fr:
+  expected: 68
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+DSK|collector_box|dsk_fu:
+  expected: 113
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|box|ecl_foil_c:
+  expected: 86
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|box|ecl_foil_m:
+  expected: 22
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|box|ecl_foil_r:
+  expected: 65
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|box|ecl_foil_su:
+  expected: 15
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|box|ecl_foil_tm:
+  expected: 28
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|box|ecl_foil_tr:
+  expected: 65
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|box|ecl_foil_u:
+  expected: 100
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|box|ecl_land_f:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|box|ecl_land_nf:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|box|ecl_main_m:
+  expected: 22
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|box|ecl_main_r:
+  expected: 65
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|box|ecl_main_tm:
+  expected: 43
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|box|ecl_main_tr:
+  expected: 67
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|box|ecl_spg:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|box|ecl_uncommon:
+  expected: 100
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|box|ecl_wc_c:
+  expected: 96
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|box|ecl_wc_m:
+  expected: 22
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|box|ecl_wc_r:
+  expected: 65
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|box|ecl_wc_su:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|box|ecl_wc_tm:
+  expected: 43
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|box|ecl_wc_tr:
+  expected: 67
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|box|ecl_wc_u:
+  expected: 100
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|collector_box|ecc_rm:
+  expected: 111
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|collector_box|ecl_bfm:
+  expected: 28
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|collector_box|ecl_bfr:
+  expected: 65
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|collector_box|ecl_fc:
+  expected: 96
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|collector_box|ecl_fm:
+  expected: 22
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|collector_box|ecl_fr:
+  expected: 66
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ECL|collector_box|ecl_fu:
+  expected: 115
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+EOE|box|eoe_foil_c:
+  expected: 86
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+EOE|box|eoe_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+EOE|box|eoe_foil_r:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+EOE|box|eoe_foil_u:
+  expected: 100
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+EOE|box|eoe_land_basic_f:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+EOE|box|eoe_land_basic_nf:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+EOE|box|eoe_main_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+EOE|box|eoe_main_rare:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+EOE|box|eoe_spg:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+EOE|box|eoe_wc_common:
+  expected: 96
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
 
 EOE|box|eoe_wc_eos:
   expected: 45
-  source: "Scryfall 2026-06-30 — standard-art EOS lands CN 1-45 (alternate art CN 46-90 in set/collector boxes)"
+  source: 'Scryfall 2026-06-30 â€” standard-art EOS lands CN 1-45 (alternate art CN 46-90 in set/collector boxes)'
+
+EOE|box|eoe_wc_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+EOE|box|eoe_wc_rare:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+EOE|box|eoe_wc_uncommon:
+  expected: 100
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+EOE|collector_box|eoe_bfm:
+  expected: 25
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+EOE|collector_box|eoe_bfr:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+EOE|collector_box|eoe_cmd:
+  expected: 34
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+EOE|collector_box|eoe_fc:
+  expected: 101
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+EOE|collector_box|eoe_fm:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+EOE|collector_box|eoe_fr:
+  expected: 61
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+EOE|collector_box|eoe_fu:
+  expected: 105
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+EOE|collector_box|eoe_ssl_nf:
+  expected: 55
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|box|fdn_foil_c:
+  expected: 95
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|box|fdn_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|box|fdn_foil_r:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|box|fdn_foil_u:
+  expected: 101
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|box|fdn_land_basic_f:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|box|fdn_land_basic_nf:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|box|fdn_main_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|box|fdn_main_rare:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|box|fdn_spg:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|box|fdn_uncommon:
+  expected: 101
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|box|fdn_wc_common:
+  expected: 110
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|box|fdn_wc_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|box|fdn_wc_rare:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|box|fdn_wc_uncommon:
+  expected: 101
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|collector_box|fdn_bfm:
+  expected: 23
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|collector_box|fdn_bfr:
+  expected: 44
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|collector_box|fdn_fb:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|collector_box|fdn_fc:
+  expected: 206
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|collector_box|fdn_fr1_m:
+  expected: 38
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|collector_box|fdn_fr1_r:
+  expected: 139
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|collector_box|fdn_fr2_m:
+  expected: 38
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|collector_box|fdn_fr2_r:
+  expected: 139
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|collector_box|fdn_fu:
+  expected: 201
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|collector_box|fdn_sc1_m:
+  expected: 9
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|collector_box|fdn_sc1_r:
+  expected: 38
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|collector_box|fdn_sc2_m:
+  expected: 9
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FDN|collector_box|fdn_sc2_r:
+  expected: 38
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FIN|box|fin_fca:
+  expected: 64
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FIN|box|fin_foil_c:
+  expected: 96
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FIN|box|fin_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FIN|box|fin_foil_r:
+  expected: 74
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FIN|box|fin_foil_u:
+  expected: 110
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FIN|box|fin_land_basic_f:
+  expected: 16
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FIN|box|fin_land_basic_nf:
+  expected: 16
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FIN|box|fin_land_nonbasic_f:
+  expected: 24
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FIN|box|fin_land_nonbasic_nf:
+  expected: 24
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FIN|box|fin_main_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FIN|box|fin_main_rare:
+  expected: 74
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FIN|box|fin_wc_common:
+  expected: 106
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FIN|box|fin_wc_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FIN|box|fin_wc_rare:
+  expected: 74
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FIN|box|fin_wc_uncommon:
+  expected: 110
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FIN|collector_box|fin_bfm:
+  expected: 21
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FIN|collector_box|fin_bfr:
+  expected: 69
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FIN|collector_box|fin_fb:
+  expected: 21
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FIN|collector_box|fin_fc:
+  expected: 117
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
 
 FIN|collector_box|fin_fic_f:
   expected: 44
-  source: "Scryfall 2026-06-30"
+  source: 'Scryfall 2026-06-30'
+
+FIN|collector_box|fin_fm:
+  expected: 22
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FIN|collector_box|fin_fr:
+  expected: 85
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FIN|collector_box|fin_tta_f:
+  expected: 58
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+FIN|collector_box|fin_tta_nf:
+  expected: 58
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+IKO|draft_box|iko_common:
+  expected: 116
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+IKO|draft_box|iko_draft_foil_m:
+  expected: 15
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+IKO|draft_box|iko_draft_foil_r:
+  expected: 53
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+IKO|draft_box|iko_draft_foil_u:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+IKO|draft_box|iko_land_basic_nf:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+IKO|draft_box|iko_main_mythic:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+IKO|draft_box|iko_main_rare:
+  expected: 53
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+IKO|draft_box|iko_uncommon:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|box|inr_foil_c:
+  expected: 89
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|box|inr_foil_m:
+  expected: 24
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|box|inr_foil_r:
+  expected: 73
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|box|inr_foil_u:
+  expected: 104
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|box|inr_main_mythic:
+  expected: 24
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|box|inr_main_rare:
+  expected: 73
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|box|inr_retro_c:
+  expected: 35
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|box|inr_retro_m:
+  expected: 17
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|box|inr_retro_r:
+  expected: 24
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|box|inr_retro_u:
+  expected: 76
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|box|inr_wc_common:
+  expected: 89
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|box|inr_wc_mythic:
+  expected: 24
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|box|inr_wc_rare:
+  expected: 73
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|box|inr_wc_uncommon:
+  expected: 104
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|collector_box|inr_bfm:
+  expected: 13
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|collector_box|inr_bfr:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|collector_box|inr_fb:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|collector_box|inr_fc:
+  expected: 138
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|collector_box|inr_fm:
+  expected: 41
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|collector_box|inr_fr:
+  expected: 98
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|collector_box|inr_fsc_cu:
+  expected: 2
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|collector_box|inr_fu:
+  expected: 184
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|collector_box|inr_ret_cu:
+  expected: 121
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+INR|collector_box|inr_sc_cu:
+  expected: 2
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+KHM|draft_box|khm_common:
+  expected: 116
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+KHM|draft_box|khm_draft_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+KHM|draft_box|khm_draft_foil_r:
+  expected: 64
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+KHM|draft_box|khm_draft_foil_u:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+KHM|draft_box|khm_land_basic_nf:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+KHM|draft_box|khm_main_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+KHM|draft_box|khm_main_rare:
+  expected: 64
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+KHM|draft_box|khm_uncommon:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|box|lci_foil_c:
+  expected: 113
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|box|lci_foil_m:
+  expected: 22
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|box|lci_foil_r:
+  expected: 64
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|box|lci_foil_u:
+  expected: 92
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|box|lci_land_cave_fullart_f:
+  expected: 5
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|box|lci_land_cave_fullart_nf:
+  expected: 5
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|box|lci_list_plst:
+  expected: 4321
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|box|lci_main_mythic:
+  expected: 48
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|box|lci_main_rare:
+  expected: 91
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|box|lci_spg:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|box|lci_wc_common:
+  expected: 123
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|box|lci_wc_mythic:
+  expected: 48
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|box|lci_wc_rare:
+  expected: 91
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|box|lci_wc_uncommon:
+  expected: 106
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|collector_box|lci_ext_c_m:
+  expected: 10
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|collector_box|lci_ext_c_r:
+  expected: 38
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|collector_box|lci_ext_m_m:
+  expected: 2
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|collector_box|lci_ext_m_r:
+  expected: 38
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|collector_box|lci_fc:
+  expected: 123
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|collector_box|lci_fm:
+  expected: 22
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|collector_box|lci_fr:
+  expected: 65
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|collector_box|lci_fsc_m:
+  expected: 11
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|collector_box|lci_fsc_r:
+  expected: 8
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|collector_box|lci_fu:
+  expected: 111
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|collector_box|lci_neon:
+  expected: 64
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|collector_box|lci_sc_m:
+  expected: 11
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|collector_box|lci_sc_r:
+  expected: 8
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|collector_box|lci_sc_u:
+  expected: 14
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|collector_box|rex_f:
+  expected: 26
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|collector_box|rex_nf:
+  expected: 26
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|draft_box|lci_draft_foil_m:
+  expected: 22
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|draft_box|lci_draft_foil_r:
+  expected: 64
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|draft_box|lci_draft_foil_u:
+  expected: 92
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LCI|draft_box|lci_uncommon:
+  expected: 92
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|box|ltr_foil_c:
+  expected: 106
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|box|ltr_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|box|ltr_foil_r:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|box|ltr_foil_u:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|box|ltr_land_basic_nf:
+  expected: 30
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|box|ltr_list_plst:
+  expected: 4321
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|box|ltr_main_mythic:
+  expected: 28
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|box|ltr_main_rare:
+  expected: 78
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|box|ltr_wc_common:
+  expected: 129
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|box|ltr_wc_mythic:
+  expected: 28
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|box|ltr_wc_rare:
+  expected: 78
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|box|ltr_wc_uncommon:
+  expected: 97
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|collector_box|ltr_bl_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|collector_box|ltr_bl_r:
+  expected: 30
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|collector_box|ltr_ext_c_m:
+  expected: 11
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|collector_box|ltr_ext_c_r:
+  expected: 46
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|collector_box|ltr_ext_j_m:
+  expected: 11
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|collector_box|ltr_ext_j_r:
+  expected: 46
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|collector_box|ltr_fc:
+  expected: 243
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|collector_box|ltr_fc4:
+  expected: 243
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|collector_box|ltr_fm:
+  expected: 25
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|collector_box|ltr_fr:
+  expected: 78
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|collector_box|ltr_fsc_m:
+  expected: 20
+  source: 'Scryfall 2026-06-30 â€” scene-art showcase mythics CN 456-709; unique=cards selects these'
+
+LTR|collector_box|ltr_fsc_r:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|collector_box|ltr_fsc_u:
+  expected: 108
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|collector_box|ltr_fu:
+  expected: 102
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|collector_box|ltr_sc_rm_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|collector_box|ltr_sc_rm_r:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|collector_box|ltr_sc_u_nf:
+  expected: 108
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|collector_box|ltr_sol:
+  expected: 1
+  source: 'Scryfall 2026-06-30'
+
+LTR|collector_box|ltr_surge:
+  expected: 88
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|draft_box|ltr_draft_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|draft_box|ltr_draft_foil_r:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|draft_box|ltr_draft_foil_u:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+LTR|draft_box|ltr_uncommon:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+M21|draft_box|m21_common:
+  expected: 116
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+M21|draft_box|m21_draft_foil_m:
+  expected: 15
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+M21|draft_box|m21_draft_foil_r:
+  expected: 53
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+M21|draft_box|m21_draft_foil_u:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+M21|draft_box|m21_land_basic_nf:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+M21|draft_box|m21_main_mythic:
+  expected: 18
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+M21|draft_box|m21_main_rare:
+  expected: 53
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+M21|draft_box|m21_uncommon:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH2|collector_box|mh2_bf_f_m:
+  expected: 24
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH2|collector_box|mh2_bf_f_r:
+  expected: 64
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH2|collector_box|mh2_bf_nf_m:
+  expected: 24
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH2|collector_box|mh2_bf_nf_r:
+  expected: 64
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH2|collector_box|mh2_eth_b:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH2|collector_box|mh2_eth_cu:
+  expected: 53
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH2|collector_box|mh2_eth_rm_m:
+  expected: 10
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH2|collector_box|mh2_eth_rm_r:
+  expected: 47
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH2|collector_box|mh2_ext_m:
+  expected: 0
+  source: 'Scryfall 2026-06-30 â€” MH2 has no extended-art mythics'
+
+MH2|collector_box|mh2_ext_r:
+  expected: 39
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH2|collector_box|mh2_fbf_cu:
+  expected: 25
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH2|collector_box|mh2_fc:
+  expected: 134
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH2|collector_box|mh2_fu:
+  expected: 125
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH2|collector_box|mh2_sk_cu:
+  expected: 25
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH2|draft_box|mh2_draft_foil_m:
+  expected: 24
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH2|draft_box|mh2_draft_foil_r:
+  expected: 78
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH2|draft_box|mh2_draft_foil_u:
+  expected: 100
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH2|draft_box|mh2_main_mythic:
+  expected: 24
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH2|draft_box|mh2_main_rare:
+  expected: 78
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH2|draft_box|mh2_reprint:
+  expected: 42
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH2|draft_box|mh2_uncommon:
+  expected: 100
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_basic_f:
+  expected: 1
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_basic_nf:
+  expected: 1
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_eldrazi_f:
+  expected: 6
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_eldrazi_nf:
+  expected: 6
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_foil_borderless:
+  expected: 68
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_foil_c:
+  expected: 85
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_foil_cmdr_mythic:
+  expected: 41
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_foil_dfc_u:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_foil_m:
+  expected: 24
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_foil_r:
+  expected: 78
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_foil_retro:
+  expected: 59
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_foil_snow_wastes:
+  expected: 1
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_foil_u:
+  expected: 121
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_lc_common:
+  expected: 85
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_main_borderless:
+  expected: 77
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_main_regular_m:
+  expected: 24
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_main_regular_r:
+  expected: 78
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_main_retro_m:
+  expected: 9
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_main_retro_r:
+  expected: 27
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_ntm_borderless_any:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_ntm_borderless_m:
+  expected: 25
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_ntm_m_reg:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_ntm_r_reg:
+  expected: 55
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_ntm_retro_any:
+  expected: 27
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_ntm_u_reg:
+  expected: 102
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_spg:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_wc_borderless_rm:
+  expected: 77
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_wc_c:
+  expected: 85
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_wc_cmdr_mythic:
+  expected: 80
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_wc_dfc_u:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_wc_m:
+  expected: 24
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_wc_r:
+  expected: 78
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_wc_retro_any:
+  expected: 59
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_wc_snow_wastes:
+  expected: 3
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|box|mh3_wc_u:
+  expected: 122
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|collector_box|mh3_cmd_f:
+  expected: 48
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|collector_box|mh3_cmd_nf:
+  expected: 48
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|collector_box|mh3_fc:
+  expected: 117
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|collector_box|mh3_fl:
+  expected: 18
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|collector_box|mh3_fm:
+  expected: 34
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|collector_box|mh3_fr:
+  expected: 91
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|collector_box|mh3_fret_cu:
+  expected: 23
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|collector_box|mh3_fsc_m:
+  expected: 1
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|collector_box|mh3_fsc_r:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|collector_box|mh3_fu:
+  expected: 148
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|collector_box|mh3_ret_cu_nf:
+  expected: 23
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|collector_box|mh3_sc_nf_m:
+  expected: 1
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MH3|collector_box|mh3_sc_nf_r:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MID|draft_box|mid_common:
+  expected: 105
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MID|draft_box|mid_draft_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MID|draft_box|mid_draft_foil_r:
+  expected: 64
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MID|draft_box|mid_draft_foil_u:
+  expected: 83
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MID|draft_box|mid_land_basic_nf:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MID|draft_box|mid_main_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MID|draft_box|mid_main_rare:
+  expected: 64
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MID|draft_box|mid_uncommon:
+  expected: 83
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|box|mkm_dual_bl:
+  expected: 10
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|box|mkm_dual_reg:
+  expected: 10
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|box|mkm_foil_c:
+  expected: 86
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|box|mkm_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|box|mkm_foil_r:
+  expected: 70
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|box|mkm_foil_u:
+  expected: 100
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|box|mkm_main_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|box|mkm_main_rare:
+  expected: 70
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|box|mkm_spg:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|box|mkm_uncommon:
+  expected: 100
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|box|mkm_wc_m:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|box|mkm_wc_r:
+  expected: 70
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|collector_box|mkm_cmd_f:
+  expected: 215
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|collector_box|mkm_cmd_nf:
+  expected: 215
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|collector_box|mkm_ext_m_m:
+  expected: 4
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|collector_box|mkm_ext_m_r:
+  expected: 30
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|collector_box|mkm_fal:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|collector_box|mkm_fc:
+  expected: 107
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|collector_box|mkm_fm:
+  expected: 26
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|collector_box|mkm_fr:
+  expected: 74
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|collector_box|mkm_fsc_cu:
+  expected: 31
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|collector_box|mkm_fsc_m:
+  expected: 15
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|collector_box|mkm_fsc_r:
+  expected: 25
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|collector_box|mkm_fu:
+  expected: 125
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|collector_box|mkm_sc_cu_nf:
+  expected: 31
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|collector_box|mkm_sc_m:
+  expected: 15
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MKM|collector_box|mkm_sc_r:
+  expected: 25
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|box|mom_list_plst:
+  expected: 4321
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|box|mom_main_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|box|mom_main_rare:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|box|mom_set_foil_c:
+  expected: 121
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|box|mom_set_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|box|mom_set_foil_r:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|box|mom_set_foil_u:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|box|mom_set_mul_m:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|box|mom_set_mul_r:
+  expected: 120
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|box|mom_set_mul_u:
+  expected: 80
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|box|mom_wc_common:
+  expected: 131
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|box|mom_wc_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|box|mom_wc_rare:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|box|mom_wc_uncommon:
+  expected: 80
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|collector_box|mom_bfm:
+  expected: 13
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|collector_box|mom_bfr:
+  expected: 18
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|collector_box|mom_ext_m:
+  expected: 2
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|collector_box|mom_ext_r:
+  expected: 37
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|collector_box|mom_fal:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|collector_box|mom_fc:
+  expected: 136
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|collector_box|mom_fm:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|collector_box|mom_fr:
+  expected: 66
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|collector_box|mom_fu:
+  expected: 90
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|collector_box|mul_eth_m:
+  expected: 15
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|collector_box|mul_eth_r:
+  expected: 30
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|collector_box|mul_halo_m:
+  expected: 15
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|collector_box|mul_halo_r:
+  expected: 30
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|collector_box|mul_trad_m:
+  expected: 15
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|collector_box|mul_trad_r:
+  expected: 30
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|draft_box|mom_draft_bat_m:
+  expected: 5
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|draft_box|mom_draft_bat_r:
+  expected: 11
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|draft_box|mom_draft_dfc_r:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|draft_box|mom_draft_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|draft_box|mom_draft_foil_r:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|draft_box|mom_draft_foil_u:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|draft_box|mom_draft_mul_m:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|draft_box|mom_draft_mul_r:
+  expected: 120
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|draft_box|mom_draft_mul_u:
+  expected: 80
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|draft_box|mom_draft_sfc_m:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|draft_box|mom_draft_sfc_r:
+  expected: 49
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+MOM|draft_box|mom_uncommon:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+NEO|draft_box|neo_common:
+  expected: 122
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+NEO|draft_box|neo_draft_foil_m:
+  expected: 18
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+NEO|draft_box|neo_draft_foil_r:
+  expected: 59
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+NEO|draft_box|neo_draft_foil_u:
+  expected: 88
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+NEO|draft_box|neo_main_mythic:
+  expected: 18
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+NEO|draft_box|neo_main_rare:
+  expected: 59
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+NEO|draft_box|neo_uncommon:
+  expected: 88
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|box|one_foil_c:
+  expected: 106
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|box|one_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|box|one_foil_r:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|box|one_foil_u:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|box|one_land_panorama_fullart_nf:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|box|one_list_plst:
+  expected: 4321
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|box|one_main_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|box|one_main_rare:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|box|one_wc_common:
+  expected: 111
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|box|one_wc_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|box|one_wc_rare:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|box|one_wc_uncommon:
+  expected: 80
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|collector_box|one_cmd_m:
+  expected: 0
+  source: 'Scryfall 2026-06-30 â€” ONE has no extended-art mythics'
+
+ONE|collector_box|one_cmd_r:
+  expected: 34
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|collector_box|one_ext_m:
+  expected: 0
+  source: 'Scryfall 2026-06-30 â€” ONE has no extended-art mythics'
+
+ONE|collector_box|one_ext_r:
+  expected: 34
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|collector_box|one_fc:
+  expected: 133
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|collector_box|one_fm:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|collector_box|one_fr:
+  expected: 66
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|collector_box|one_fsc_cu:
+  expected: 26
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|collector_box|one_fsc_m:
+  expected: 16
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|collector_box|one_fsc_r:
+  expected: 26
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|collector_box|one_fu:
+  expected: 99
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|collector_box|one_sc_cu_nf:
+  expected: 26
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|collector_box|one_sc_nf_m:
+  expected: 16
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|collector_box|one_sc_nf_r:
+  expected: 26
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|draft_box|one_draft_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|draft_box|one_draft_foil_r:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|draft_box|one_draft_foil_u:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ONE|draft_box|one_uncommon:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|box|otj_foil_c:
+  expected: 96
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|box|otj_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|box|otj_foil_r:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|box|otj_foil_u:
+  expected: 100
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|box|otj_land_dual_f:
+  expected: 12
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|box|otj_land_dual_nf:
+  expected: 12
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|box|otj_land_west_f:
+  expected: 5
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|box|otj_land_west_nf:
+  expected: 5
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|box|otj_list_big:
+  expected: 30
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|box|otj_list_spg:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|box|otj_main_borderless_m:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|box|otj_main_borderless_r:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|box|otj_main_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|box|otj_main_rare:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|box|otj_uncommon:
+  expected: 100
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|box|otj_wc_common:
+  expected: 96
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|box|otj_wc_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|box|otj_wc_rare:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|box|otj_wc_uncommon:
+  expected: 100
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|box|otp_m:
+  expected: 30
+  source: 'Scryfall 2026-06-30'
+
+OTJ|box|otp_r:
+  expected: 30
+  source: 'Scryfall 2026-06-30'
+
+OTJ|box|otp_u:
+  expected: 20
+  source: 'Scryfall 2026-06-30'
+
+OTJ|collector_box|otj_cmd_f:
+  expected: 206
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|collector_box|otj_cmd_nf:
+  expected: 206
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|collector_box|otj_fal:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|collector_box|otj_fc:
+  expected: 106
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|collector_box|otj_fin:
+  expected: 5
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|collector_box|otj_fm:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|collector_box|otj_fr:
+  expected: 61
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|collector_box|otj_fu:
+  expected: 105
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|collector_box|otj_sc_m:
+  expected: 8
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|collector_box|otj_sc_r:
+  expected: 5
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|collector_box|otp_bm:
+  expected: 15
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|collector_box|otp_br:
+  expected: 30
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|collector_box|otp_u_f:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+OTJ|collector_box|otp_u_nf:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+RVR|collector_box|rvr_bl_m:
+  expected: 13
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+RVR|collector_box|rvr_bl_r:
+  expected: 27
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+RVR|collector_box|rvr_fc:
+  expected: 135
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+RVR|collector_box|rvr_fl:
+  expected: 20
+  source: 'Scryfall 2026-06-30 â€” 10 shock lands Ã— 2 regular-frame prints (CN 273-291 + CN 292-301)'
+
+RVR|collector_box|rvr_fret_cu:
+  expected: 61
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+RVR|collector_box|rvr_fsc_m:
+  expected: 16
+  source: 'Scryfall 2026-06-30'
+
+RVR|collector_box|rvr_fsc_r:
+  expected: 59
+  source: 'Scryfall 2026-06-30'
+
+RVR|collector_box|rvr_fu:
+  expected: 126
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+RVR|collector_box|rvr_ret_cu_nf:
+  expected: 61
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+RVR|collector_box|rvr_ret_m:
+  expected: 16
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+RVR|collector_box|rvr_ret_r:
+  expected: 59
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+RVR|collector_box|rvr_ser:
+  expected: 64
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+RVR|draft_box|rvr_foil_c:
+  expected: 110
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+RVR|draft_box|rvr_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+RVR|draft_box|rvr_foil_r:
+  expected: 71
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+RVR|draft_box|rvr_foil_u:
+  expected: 90
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+RVR|draft_box|rvr_main_m:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+RVR|draft_box|rvr_main_r:
+  expected: 79
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+RVR|draft_box|rvr_mana_shock:
+  expected: 12
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+RVR|draft_box|rvr_mana_signet:
+  expected: 10
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+RVR|draft_box|rvr_retro_m:
+  expected: 26
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+RVR|draft_box|rvr_retro_r:
+  expected: 92
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+RVR|draft_box|rvr_uncommon:
+  expected: 90
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SNC|draft_box|snc_common:
+  expected: 106
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SNC|draft_box|snc_draft_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SNC|draft_box|snc_draft_foil_r:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SNC|draft_box|snc_draft_foil_u:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SNC|draft_box|snc_land_basic_nf:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SNC|draft_box|snc_main_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SNC|draft_box|snc_main_rare:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SNC|draft_box|snc_uncommon:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SPM|box|spm_foil_c:
+  expected: 70
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SPM|box|spm_foil_m:
+  expected: 15
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SPM|box|spm_foil_r:
+  expected: 53
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SPM|box|spm_foil_u:
+  expected: 55
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SPM|box|spm_land_any_f:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SPM|box|spm_land_any_nf:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SPM|box|spm_main_mythic:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SPM|box|spm_main_rare:
+  expected: 53
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SPM|box|spm_mar:
+  expected: 40
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SPM|box|spm_wc_common:
+  expected: 75
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SPM|box|spm_wc_mythic:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SPM|box|spm_wc_rare:
+  expected: 53
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SPM|box|spm_wc_uncommon:
+  expected: 55
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SPM|collector_box|spm_bfm:
+  expected: 15
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SPM|collector_box|spm_bfr:
+  expected: 53
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SPM|collector_box|spm_fc:
+  expected: 75
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SPM|collector_box|spm_fl:
+  expected: 23
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SPM|collector_box|spm_fm:
+  expected: 16
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SPM|collector_box|spm_fr:
+  expected: 53
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SPM|collector_box|spm_fu:
+  expected: 58
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SPM|collector_box|spm_src_f:
+  expected: 51
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+SPM|collector_box|spm_src_nf:
+  expected: 51
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|box|stx_foil_c:
+  expected: 110
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|box|stx_foil_m:
+  expected: 21
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|box|stx_foil_r:
+  expected: 69
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|box|stx_foil_u:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|box|stx_land_basic_f:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|box|stx_land_basic_nf:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|box|stx_list_plst:
+  expected: 4321
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|box|stx_main_mythic:
+  expected: 21
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|box|stx_main_rare:
+  expected: 70
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|box|stx_sta_m:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|box|stx_sta_r:
+  expected: 30
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|box|stx_sta_u:
+  expected: 18
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|box|stx_wc_common:
+  expected: 115
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|box|stx_wc_mythic:
+  expected: 21
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|box|stx_wc_rare:
+  expected: 70
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|box|stx_wc_uncommon:
+  expected: 80
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|collector_box|stx_alt_m:
+  expected: 12
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|collector_box|stx_alt_r:
+  expected: 70
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|collector_box|stx_eth_sta_rm:
+  expected: 45
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|collector_box|stx_eth_sta_u:
+  expected: 18
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|collector_box|stx_ext_bl:
+  expected: 9
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|collector_box|stx_ext_cmd_m:
+  expected: 12
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|collector_box|stx_ext_cmd_r:
+  expected: 69
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|collector_box|stx_fc:
+  expected: 115
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|collector_box|stx_fm:
+  expected: 21
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|collector_box|stx_fr:
+  expected: 71
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|collector_box|stx_fsta_u:
+  expected: 18
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|collector_box|stx_fu:
+  expected: 85
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|collector_box|stx_less:
+  expected: 5
+  source: 'Scryfall 2026-06-30'
+
+STX|draft_box|stx_draft_foil_m:
+  expected: 21
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|draft_box|stx_draft_foil_r:
+  expected: 69
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|draft_box|stx_draft_foil_u:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+STX|draft_box|stx_uncommon:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TDM|box|tdm_foil_c:
+  expected: 91
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TDM|box|tdm_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TDM|box|tdm_foil_r:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TDM|box|tdm_foil_u:
+  expected: 100
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TDM|box|tdm_main_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TDM|box|tdm_main_rare:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TDM|box|tdm_spg:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TDM|box|tdm_wc_common:
+  expected: 91
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TDM|box|tdm_wc_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TDM|box|tdm_wc_rare:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TDM|box|tdm_wc_uncommon:
+  expected: 100
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TDM|collector_box|tdm_bfm:
+  expected: 24
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TDM|collector_box|tdm_bfr:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TDM|collector_box|tdm_cmd:
+  expected: 1
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TDM|collector_box|tdm_drac_nf:
+  expected: 21
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TDM|collector_box|tdm_fc:
+  expected: 117
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TDM|collector_box|tdm_fdrac:
+  expected: 21
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TDM|collector_box|tdm_fm:
+  expected: 21
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TDM|collector_box|tdm_fr:
+  expected: 61
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TDM|collector_box|tdm_fu:
+  expected: 120
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+THB|draft_box|thb_common:
+  expected: 106
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+THB|draft_box|thb_draft_foil_m:
+  expected: 15
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+THB|draft_box|thb_draft_foil_r:
+  expected: 53
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+THB|draft_box|thb_draft_foil_u:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+THB|draft_box|thb_land_basic_nf:
+  expected: 5
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+THB|draft_box|thb_main_mythic:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+THB|draft_box|thb_main_rare:
+  expected: 53
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+THB|draft_box|thb_uncommon:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|box|tla_foil_c:
+  expected: 96
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|box|tla_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|box|tla_foil_r:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|box|tla_foil_su:
+  expected: 4
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|box|tla_foil_tm:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|box|tla_foil_tr:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|box|tla_foil_u:
+  expected: 110
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|box|tla_land_f:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|box|tla_land_nf:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|box|tla_main_m:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|box|tla_main_r:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|box|tla_main_tm:
+  expected: 24
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|box|tla_main_tr:
+  expected: 69
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|box|tla_source_material:
+  expected: 61
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|box|tla_uncommon:
+  expected: 110
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|box|tla_wc_c:
+  expected: 106
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|box|tla_wc_m:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|box|tla_wc_r:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|box|tla_wc_su:
+  expected: 4
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|box|tla_wc_tm:
+  expected: 24
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|box|tla_wc_tr:
+  expected: 69
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|box|tla_wc_u:
+  expected: 110
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|collector_box|tla_bfm:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|collector_box|tla_bfr:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|collector_box|tla_fc:
+  expected: 106
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|collector_box|tla_fl:
+  expected: 41
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|collector_box|tla_fm:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|collector_box|tla_fr:
+  expected: 61
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|collector_box|tla_fu:
+  expected: 114
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|collector_box|tla_src_f:
+  expected: 48
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|collector_box|tla_src_nf:
+  expected: 48
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|collector_box|tle_bm:
+  expected: 72
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|collector_box|tle_br:
+  expected: 67
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|collector_box|tle_fc:
+  expected: 84
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+TLA|collector_box|tle_fsc_u:
+  expected: 53
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+VOW|draft_box|vow_common:
+  expected: 105
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+VOW|draft_box|vow_draft_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+VOW|draft_box|vow_draft_foil_r:
+  expected: 64
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+VOW|draft_box|vow_draft_foil_u:
+  expected: 83
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+VOW|draft_box|vow_land_basic_nf:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+VOW|draft_box|vow_main_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+VOW|draft_box|vow_main_rare:
+  expected: 64
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+VOW|draft_box|vow_uncommon:
+  expected: 83
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|box|woe_foil_c:
+  expected: 106
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|box|woe_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|box|woe_foil_r:
+  expected: 60
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|box|woe_foil_u:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|box|woe_land_regular_f:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|box|woe_land_regular_nf:
+  expected: 15
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|box|woe_list_plst:
+  expected: 4321
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|box|woe_main_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|box|woe_main_rare:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|box|woe_wc_common:
+  expected: 116
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|box|woe_wc_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|box|woe_wc_rare:
+  expected: 60
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|box|woe_wc_uncommon:
+  expected: 80
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
 
 WOE|box|wot_anime_m:
   expected: 8
-  source: "Scryfall 2026-06-30 — anime frame mythics CN 64-83 from _WOT_ANIME_MYTHICS"
+  source: 'Scryfall 2026-06-30 â€” anime frame mythics CN 64-83 from _WOT_ANIME_MYTHICS'
 
 WOE|box|wot_anime_r:
   expected: 4
-  source: "Scryfall 2026-06-30 — anime frame CN 64-83; Primal Vigor has no anime print in WOT"
+  source: 'Scryfall 2026-06-30 â€” anime frame CN 64-83; Primal Vigor has no anime print in WOT'
 
 WOE|box|wot_m:
   expected: 15
-  source: "Scryfall 2026-06-30 — standard-frame mythics CN<=63 only"
+  source: 'Scryfall 2026-06-30 â€” standard-frame mythics CN<=63 only'
+
+WOE|box|wot_r:
+  expected: 40
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|box|wot_u:
+  expected: 18
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|collector_box|woe_bfm:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|collector_box|woe_bfr:
+  expected: 62
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|collector_box|woe_ext_f_m:
+  expected: 8
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|collector_box|woe_ext_f_r:
+  expected: 45
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|collector_box|woe_ext_nf_m:
+  expected: 8
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|collector_box|woe_ext_nf_r:
+  expected: 45
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|collector_box|woe_fal:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|collector_box|woe_fc:
+  expected: 118
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|collector_box|woe_fm:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|collector_box|woe_fr:
+  expected: 66
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|collector_box|woe_fu:
+  expected: 93
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|collector_box|woe_sc_m:
+  expected: 7
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|collector_box|woe_sc_r:
+  expected: 13
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|collector_box|wot_bm:
+  expected: 15
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|collector_box|wot_br:
+  expected: 30
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|collector_box|wot_u_f:
+  expected: 18
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|collector_box|wot_u_nf:
+  expected: 18
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|draft_box|woe_draft_foil_m:
+  expected: 35
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|draft_box|woe_draft_foil_r:
+  expected: 95
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|draft_box|woe_draft_foil_u:
+  expected: 108
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
 
 WOE|draft_box|woe_draft_wot_am:
   expected: 15
-  source: "Scryfall 2026-06-30 — anime-frame mythics CN 64-83"
+  source: 'Scryfall 2026-06-30 â€” anime-frame mythics CN 64-83'
+
+WOE|draft_box|woe_draft_wot_ar:
+  expected: 10
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|draft_box|woe_draft_wot_r:
+  expected: 30
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|draft_box|woe_draft_wot_u:
+  expected: 18
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+WOE|draft_box|woe_uncommon:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ZNR|draft_box|znr_common:
+  expected: 106
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ZNR|draft_box|znr_draft_foil_m:
+  expected: 20
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ZNR|draft_box|znr_draft_foil_r:
+  expected: 64
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ZNR|draft_box|znr_draft_foil_u:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ZNR|draft_box|znr_land_basic_nf:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ZNR|draft_box|znr_main_mythic:
+  expected: 20
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ZNR|draft_box|znr_main_rare:
+  expected: 64
+  unique: 'prints'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
+
+ZNR|draft_box|znr_uncommon:
+  expected: 80
+  unique: 'cards'
+  source: 'baseline-seed 2026-07-01T07:01:29.645747+00:00'
